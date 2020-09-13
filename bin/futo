@@ -1,0 +1,58 @@
+#!/bin/bash
+
+futopath=$HOME/.bin/futo
+
+source $futopath/bin/futo-package-init.sh
+source $futopath/bin/futo-package-remove.sh
+source $futopath/bin/futo-project-init.sh
+source $futopath/bin/futo-project-remove.sh
+
+name=$3
+
+case $1 in	
+	init)	futo project init $2 --firebase --gitlab;;
+	package)		
+		case $2 in
+			init) futo-package-init $name;;
+			remove) futo-package-remove $name;;
+		esac
+	;;		
+  project)
+		case $2 in
+			init) shift; shift;	futo-project-init $@;;
+			remove) futo-project-remove $name;;
+		
+			### FOR DEV PURPOSES ONLY (Not to create firebase project each time)
+			create)
+				shift; shift;
+				futo-project-init-pre $@
+				futo-project-init-vercel $@
+				futo-project-init-material-ui $@
+				projectid=$name-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
+				futo-project-init-post-firebase-setup $1 $projectid
+				mkdir $futopath/dev && tar -czvf $futopath/dev/stage.tar.gz .
+			;;
+			load)	mkdir $name && tar -xzvf $futopath/dev/stage.tar.gz -C $name;;
+			finish)
+				name=test
+				projectid=$FUTOTESTPROJECTID
+				futo-project-init-styling
+				futo-project-init-post-firebase $name $projectid
+			;;
+		esac
+	;;
+
+esac
+
+i=1
+if [ -f "/tmp/futo-$name" ]; then
+	while read line; do
+		echo
+		echo "$i. $line"
+		echo
+		i=$((i+1))
+	done < /tmp/futo-$name
+	echo
+	
+	rm /tmp/futo-$name
+fi
