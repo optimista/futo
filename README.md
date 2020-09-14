@@ -1,6 +1,6 @@
-# futo
+# Futo
 
-[Vercel](https://github.com/vercel/vercel) [Next.js](https://github.com/vercel/next.js/) extensive boilerplate generator that integrates [Material-UI](https://github.com/mui-org/material-ui), [Google's Firebase Firestore](https://firebase.google.com) (both client & server configuration & user authentication), creates [Gitlab](https://gitlab.com) group & repo and provides some basic structuring & templating.
+[Vercel](https://github.com/vercel/vercel) [Next.js](https://github.com/vercel/next.js/) broad boilerplate generator that integrates [Material-UI](https://github.com/mui-org/material-ui), [Google's Firebase Firestore](https://firebase.google.com) (both client & server configuration & user authentication), creates [Gitlab](https://gitlab.com) group & repo and provides some basic structuring & templating.
 
 ## Generated project...
 
