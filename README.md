@@ -22,9 +22,9 @@ Vercel Next.js extensive boilerplate generator that integrates Material-UI, Goog
 
 ## Prerequisites
 
-I suspect you have these: `expect, git, npm, sed, wget, vercel`\
+I suspect you have these: `expect, git, npm, sed, wget, vercel`  
 
-I suspect you might need these: `gcloud, gitlab, firebase`\
+I suspect you might need these: `gcloud, gitlab, firebase`  
 
 Also, I used `google-chrome-stable` as my browser to open links for configuration, but feel free to substitute all occurrences of `google-chrome-stable` with your preferred browser
 
@@ -34,10 +34,10 @@ Follow instructions on https://cloud.google.com/sdk/install and then log in usin
 
 ### Gitlab CLI Installation
 
-This should be enough to install it: `pip install python-gitlab`.\
-But in case follow instructions [here](https://python-gitlab.readthedocs.io/en/stable/install.html)\
+This should be enough to install it: `pip install python-gitlab`.  
+But in case follow instructions [here](https://python-gitlab.readthedocs.io/en/stable/install.html)  
 
-After that create a Gitlab personal access token here: https://gitlab.com/profile/personal_access_tokens (more [here](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html))\
+After that create a Gitlab personal access token here: https://gitlab.com/profile/personal_access_tokens (more [here](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html))  
 
 Create `~/.python-gitlab.cfg` with these contents:
 
@@ -52,7 +52,7 @@ url = https://gitlab.com
 private_token = your_gitlab_personal_access_token_you_just_generated
 ```
 
-And that should be it.\
+And that should be it.  
 
 More on configuring Gitlab CLI [here](https://python-gitlab.readthedocs.io/en/stable/cli.html#configuration).
 
@@ -62,7 +62,7 @@ This should be enough to install: `npm install -g firebase-tools`\
 (More on installation [here](https://firebase.google.com/docs/cli#windows-npm))\
 \
 After installation, log in using `firebase login` and that should be it.\
-But in case, more [here](https://firebase.google.com/docs/cli#sign-in-and-test-cli).\
+(More on login [here](https://firebase.google.com/docs/cli#sign-in-and-test-cli)).
 
 ### Path
 
