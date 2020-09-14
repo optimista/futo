@@ -1,6 +1,6 @@
 # futo
 
-Vercel Next.js extensive boilerplate generator that integrates Material-UI, Google's Firestore (both client & server configuration & user authentication), creates Gitlab group & repo and provides some basic structuring & templating.
+[Vercel](https://github.com/vercel/vercel) [Next.js](https://github.com/vercel/next.js/) extensive boilerplate generator that integrates [Material-UI](https://github.com/mui-org/material-ui), [Google's Firebase Firestore](https://firebase.google.com) (both client & server configuration & user authentication), creates [Gitlab](https://gitlab.com) group & repo and provides some basic structuring & templating.
 
 ## Generated project...
 
@@ -73,7 +73,7 @@ I did it like this in my `~/.profile`:
 for d in ~/.bin/*/bin; do export PATH="$PATH:$d"; done
 ```
 
-And I did put the script into `~/.bin
+And I did put the script into `~/.bin`
 
 ## Usage
 
