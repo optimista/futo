@@ -5,19 +5,17 @@ import { LoginActions, LoginFields, LoginTitle, useLoginForm } from 'auth'
 import { FocusLayout } from 'layouts'
 
 const Login = () => {
-  const [user, handleSubmit] = useLoginForm();
-
-  function onSubmit(e) { handleSubmit(e, () => Router.push("/")); }
+  const [form, user] = useLoginForm({ callback: () => Router.push("/") });
 
   return (
     <FocusLayout maxWidth="xs">
       <LoginTitle />
-      <form onSubmit={onSubmit}>
+      <form onSubmit={form.handleSubmit}>        
         <Box my={4}>
           <LoginFields user={user} />
         </Box>
         <Box alignItems="center" display="flex">
-          <LoginActions />
+          <LoginActions submitting={form.submitting} />
         </Box>
       </form>
     </FocusLayout>

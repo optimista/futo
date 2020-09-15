@@ -1,4 +1,4 @@
-const themeBase = createMuiTheme({
+const theme = createMuiTheme({
   palette: {
     primary: { main: '#000000'},
     secondary: { main: '#cccccc' },
@@ -19,22 +19,21 @@ const themeBase = createMuiTheme({
   }
 });
 
-const theme = createMuiTheme({
+export default createMuiTheme({
   overrides: {
     MuiAppBar: { root: { borderWidth: "0 0 1px 0" } },
-    MuiAvatar: { root: { height: themeBase.spacing(4), width: themeBase.spacing(4) } },
+    MuiAvatar: { root: { height: theme.spacing(4), width: theme.spacing(4) } },
     MuiBackdrop: { root: { backgroundColor: "rgba(255,255,255,0.6)" } },
     MuiButton: {
       root: {
         borderRadius: 2,
-        transition: "none",
         margin: "0 1rem",
         '&:first-child:not($sizeLarge)': { marginLeft: 0 },
         '&:last-child:not($sizeLarge)': { marginRight: 0 }
       },
       contained: { fontWeight: 400 },
       outlinedPrimary: {
-        borderColor: themeBase.palette.text.primary,
+        borderColor: theme.palette.text.primary,
         '&:hover': { backgroundColor: "transparent" }
       },
       sizeLarge: {
@@ -48,17 +47,17 @@ const theme = createMuiTheme({
     MuiCard: {
       root: {
         border: 0,
-        borderTop: "1px solid "+themeBase.palette.divider,
-        '&:last-of-type': { borderBottom: "1px solid "+themeBase.palette.divider }
+        borderTop: "1px solid "+theme.palette.divider,
+        '&:last-of-type': { borderBottom: "1px solid "+theme.palette.divider }
       }
     },
     MuiCardHeader: { action: { alignSelf: "auto", marginRight: 0, marginTop: 0 } },
-    MuiCardContent: { root: { paddingTop: 0, paddingLeft: themeBase.spacing(8) } },
-    MuiDialogActions: { root: { padding: themeBase.spacing(2, 3) } },
-    MuiDialogContent: { root: { padding: themeBase.spacing(2, 3) } },
-    MuiDialog: { paper: { padding: themeBase.spacing(3) } },
+    MuiCardContent: { root: { paddingTop: 0, paddingLeft: theme.spacing(8) } },
+    MuiDialogActions: { root: { padding: theme.spacing(2, 3) } },
+    MuiDialogContent: { root: { padding: theme.spacing(2, 3) } },
+    MuiDialog: { paper: { padding: theme.spacing(3) } },
     MuiFormControl: {
-      marginNormal: { marginBottom: themeBase.spacing(2), marginTop: themeBase.spacing(1) }
+      marginNormal: { marginBottom: theme.spacing(2), marginTop: theme.spacing(1) }
     },
     MuiIconButton: {
       colorPrimary: {
@@ -69,16 +68,21 @@ const theme = createMuiTheme({
       colorSecondary: {
         '&:hover': {
           backgroundColor: "transparent",
-          color: themeBase.palette.primary.main,
-          transition: 'color '+themeBase.transitions.duration.shorter+'ms '+themeBase.transitions.easing.easeInOut+' 0ms'
+          color: theme.palette.primary.main,
+          transition: theme.transitions.create('color', { duration: theme.transitions.duration.shorter, easing: theme.transitions.easing.easeInOut })
         }
       }
     },
     MuiInput: {
       underline: {
-        '&:after': { display: "none" },
-        '&:before': { borderBottomColor: themeBase.palette.type === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)' },
-        '&:hover:not($disabled):before, &$focused:before': { borderWidth: 1 }
+        '&:after': {
+          borderBottomWidth: 1, opacity: 0, transform: "none",
+          transition: theme.transitions.create('opacity', { duration: theme.transitions.duration.shorter, easing: theme.transitions.easing.easeInOut })
+        },
+        '&$focused:after': { opacity: 1 },
+        '&$error:after': { opacity: 1 },
+        '&:before': { borderBottomColor: theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)' },
+        '&:hover:not($disabled):before': { borderBottomWidth: 1 }
       }
     },
     MuiInputBase: { root: { lineHeight: "inherit" } },
@@ -92,15 +96,15 @@ const theme = createMuiTheme({
       input: { padding: "10px 12px" },
       inputMarginDense: { paddingBottom: 10, paddingTop: 10 },
       notchedOutline: {
-        borderColor: themeBase.palette.type === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)',
-        transition: 'border-color '+themeBase.transitions.duration.shorter+'ms '+themeBase.transitions.easing.easeInOut+' 0ms',
+        borderColor: theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)',
+        transition: theme.transitions.create('border-color', { duration: theme.transitions.duration.shorter, easing: theme.transitions.easing.easeInOut })
       }
     },
-    MuiList: { padding: { paddingBottom: themeBase.spacing(0.5), paddingTop: themeBase.spacing(0.5) } },
+    MuiList: { padding: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) } },
     MuiListItemIcon: { root: { color: "#bdbdbd", minWidth: "auto" } },
-    MuiListItemText: { inset: { paddingLeft: themeBase.spacing(1.5) } },
+    MuiListItemText: { inset: { paddingLeft: theme.spacing(1.5) } },
     MuiMenuItem: { root: {
-      paddingBottom: themeBase.spacing(0.5), paddingTop: themeBase.spacing(0.5)
+      paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5)
     } },
     MuiPaper: { rounded: { borderRadius: 2 } },
     MuiPopover: {
@@ -109,38 +113,18 @@ const theme = createMuiTheme({
       }
     }
   },
-  palette: themeBase.palette,
+  palette: theme.palette,
   props: {
-    MuiAppBar: {
-      color: "inherit",
-      elevation: 1,
-    },
-    MuiButton: {
-      color: "primary",
-      disableElevation: true,
-      variant: "contained"
-    },
-    MuiButtonBase: {
-      disableRipple: true,
-    },
+    MuiAppBar: { color: "inherit", elevation: 1 },
+    MuiButton: { color: "primary", disableElevation: true, variant: "contained" },
+    MuiButtonBase: { disableRipple: true },
+    MuiCircularProgress: { color: "inherit", size: 24 },
     MuiDialog: { fullWidth: true, maxWidth: "xs", PaperProps: { elevation: 0 }, scroll: "body" },
     MuiDialogTitle: { disableTypography: true },
-    MuiFilledInput: {
-      disableUnderline: true
-    },
-    MuiIconButton: {
-      color: "primary",
-      disableRipple: true,
-      disableFocusRipple: true,
-      size: "small"
-    },
-    MuiListItemText: {
-      disableTypography: true,
-      inset: true
-    },
-    MuiLink: {
-      component: Link
-    },
+    MuiFilledInput: { disableUnderline: true },
+    MuiIconButton: { color: "primary", disableRipple: true, disableFocusRipple: true, size: "small" },
+    MuiListItemText: { disableTypography: true, inset: true },
+    MuiLink: { component: Link },
     MuiMenu: {
       anchorOrigin: { vertical: 'top', horizontal: 'right' },
       getContentAnchorEl: null,
@@ -161,4 +145,4 @@ const theme = createMuiTheme({
     h5: { fontWeight: 500, lineHeight: 1.5 },
     button: { fontWeight: 300 }
   }
-})
+});

@@ -1,9 +1,11 @@
-import { Box, Button, Link } from '@material-ui/core'
+import { Box, Link } from '@material-ui/core'
 
-const LoginActions = () => (
+import { Submit } from 'core'
+
+const LoginActions = ({ submitting }) => (
   <>
     <Box flexGrow={1}><Link href="/join">Not have an account yet?</Link></Box>
-    <Button type="submit">log in</Button>
+    <Submit progress={submitting}>log in</Submit>
   </>
 )
 

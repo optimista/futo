@@ -101,9 +101,10 @@ futo-project-init-styling() {
 	sed -i '/^\/\/ Create a theme instance./d' app/utils/theme.js
 
 	### styling
-	sed -i '/^const theme/,/^});/d' app/utils/theme.js
+	sed -i '/^const theme/,/^export default theme;/d' app/utils/theme.js
 	sed -i "1i import { Fade } from '@material-ui/core'" app/utils/theme.js
-	sed -i -e "/^const Link/r $templates/app/utils/_theme.js" -e '/^const Link/a\\n' app/utils/theme.js
+	sed -i "/^const Link/r $templates/app/utils/_theme.js" app/utils/theme.js
+	sed -i '/^const Link/a\\' app/utils/theme.js
 
 	### add theme preview
 	cp $templates/pages/theme.js pages/theme.js

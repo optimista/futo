@@ -3,12 +3,10 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/
 import { LoginActions, LoginFields, LoginTitle, useLoginForm } from 'auth'
 
 const LoginDialog = props => {
-  const [user, handleSubmit] = useLoginForm();
-
-  function onSubmit(e) { handleSubmit(e, props.onClose); }
+  const [form, user] = useLoginForm({ callback: props.onClose });
 
   return (
-    <Dialog PaperProps={{ component: "form", onSubmit }} {...props}>
+    <Dialog PaperProps={{ component: "form", onSubmit: form.handleSubmit }} {...props}>
       <DialogTitle>
         <LoginTitle />
       </DialogTitle>
@@ -16,7 +14,7 @@ const LoginDialog = props => {
         <LoginFields user={user} />
       </DialogContent>
       <DialogActions>
-        <LoginActions />
+        <LoginActions submitting={form.submitting} />
       </DialogActions>
     </Dialog>
   )
