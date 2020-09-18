@@ -23,7 +23,8 @@ const PasswordConfirmForm = ({ actionCode, email, onError }) => {
 
   return (
     <>
-      <Typography variant="h5">Reset your password.</Typography>
+      <Typography paragraph variant="h5">Reset your password.</Typography>
+      <Typography variant="body2">After successfully changing your password, you will be immediately logged in.</Typography>
       <form onSubmit={form.handleSubmit}>
         <Box my={4}>
           <TextField error={Boolean(user.errors.password)} fullWidth helperText={user.errors.password || "New Password"} onChange={user.handleChange('password')} value={user.password} type="password" />
