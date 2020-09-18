@@ -15,9 +15,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PostDialog = ({ post, onClose, ...props }) => {
-  const form = useForm({
-    action: () => { const { content } = post; if (content !== "") { return post.id ? Posts.update(post.id, { content }) : Posts.create({ content }); }; },
-    callback: onClose
+  const form = useForm({ action: ({ fail, complete }) => {
+    const { content } = post; if (content !== "") { (post.id ? Posts.update(post.id, { content }) : Posts.create({ content })).then(() => { onClose(); complete(); })}; }
   });
 
   function handleKeyDown(e) { if (e.shiftKey && e.key === 'Enter') form.handleSubmit(e); } 
@@ -32,7 +31,7 @@ const PostDialog = ({ post, onClose, ...props }) => {
         <TextField autoFocus fullWidth margin="none" multiline onChange={post.handleChange('content')} onKeyDown={handleKeyDown} placeholder="What are you up to?" rowsMax={7} value={post.content}></TextField>
       </DialogContent>
       <DialogActions>
-        <Submit disabled={post.content === ""} progress={form.submitting}>{ post.id ? "Save" : "Post" }</Submit>
+        <Submit disabled={post.content === ""} progress={form.isLoading}>{ post.id ? "Save" : "Post" }</Submit>
       </DialogActions>
       <IconButton aria-label="Close" className={classes.closeButton} color="secondary" onClick={onClose}>
         <Close />

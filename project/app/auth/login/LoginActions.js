@@ -2,10 +2,10 @@ import { Box, Link } from '@material-ui/core'
 
 import { Submit } from 'core'
 
-const LoginActions = ({ submitting }) => (
+const LoginActions = ({ progress }) => (
   <>
     <Box flexGrow={1}><Link href="/join">Not have an account yet?</Link></Box>
-    <Submit progress={submitting}>log in</Submit>
+    <Submit progress={progress}>log in</Submit>
   </>
 )
 

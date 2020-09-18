@@ -1,6 +1,6 @@
 #!/bin/bash
 
-templates=$HOME/.bin/futo/templates
+project=$HOME/.bin/futo/project
 
 ### HELPERS
 import-secondary()
@@ -62,14 +62,14 @@ futo-project-init-material-ui()
 	mkdir src && wget -O src/theme.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/src/theme.js 
 
 	### pages/index.js (only change of pages/index.js here)
-	mkdir app && mkdir app/layouts && cp $templates/app/layouts/FocusLayout.js app/layouts/FocusLayout.js
+	mkdir app && mkdir app/layouts && cp $project/app/layouts/FocusLayout.js app/layouts/FocusLayout.js
 	echo "export { default as FocusLayout } from './FocusLayout'" > app/layouts/index.js
-	cp $templates/pages/index.js pages/index.js
+	cp $project/pages/index.js pages/index.js
 	sed -i "s/\(<Typography[^>]*>\)Name\(<\/Typography>\)/\1${name^}\2/" pages/index.js
 
 	### Creating app folder
 	npm install path
-	cp $templates/next.config.js next.config.js
+	cp $project/next.config.js next.config.js
 		
 	### Move theme to app/utils
 	mkdir app/utils && mv src/theme.js app/utils/theme.js && rm -rf src 
@@ -103,11 +103,11 @@ futo-project-init-styling() {
 	### styling
 	sed -i '/^const theme/,/^export default theme;/d' app/utils/theme.js
 	sed -i "1i import { Fade } from '@material-ui/core'" app/utils/theme.js
-	sed -i "/^const Link/r $templates/app/utils/_theme.js" app/utils/theme.js
+	sed -i "/^const Link/r $project/app/utils/_theme.js" app/utils/theme.js
 	sed -i '/^const Link/a\\' app/utils/theme.js
 
 	### add theme preview
-	cp $templates/pages/theme.js pages/theme.js
+	cp $project/pages/theme.js pages/theme.js
 }
 
 futo-project-init-post()
@@ -128,8 +128,8 @@ futo-project-init-post()
 				git add .
 				git commit -m "Initial commit"
 				git push -u origin master
-				url="https://zeit.co/optimista/$name/settings/git-integration?provider=gitlab"
-				echo "To finish git integration go to your browser to newly opened link $url and insert $name/$name to repository field" >> /tmp/futo-$name
+				url="https://vercel.com/$(vercel whoami)/$name/settings/git-integration?provider=gitlab"
+				echo "To finish gitlab integration go to your browser to newly opened link $url and insert $name/$name to repository field" >> /tmp/futo-$name
 				google-chrome-stable $url > /dev/null 2>&1
 			;;
 		esac
@@ -185,6 +185,12 @@ futo-project-init-post-firebase-setup()
 	echo "To finish integration with Firebase Authentication, go to your browser to newly opened link $url and enable E-mail/Password authentication." >> /tmp/futo-$name
 	google-chrome-stable $url > /dev/null 2>&1
 
+	# set template for password recovery
+	url=https://console.firebase.google.com/project/$projectid/authentication/emails#
+	echo "You can also set e-mail template for password recovery on another newly opened link $url. Don't forget to set your project public-facing name and action URL." >> /tmp/futo-$name
+	google-chrome-stable $url > /dev/null 2>&1
+	showtemplates="yes"
+	
 	# server-side service account
 	gcloud config set project $projectid
 	iamaccount=$( gcloud iam service-accounts list | grep firebase-adminsdk | sed 's/  */ /g' | cut -d ' ' -f 2 )
@@ -195,7 +201,7 @@ futo-project-init-post-firebase-setup()
 	# firestore.rules setup
 	sed -i "1i \rules_version = '2';" firestore.rules # update firestore.rules to 2nd version
 	sed -i "/match \/{document=\*\*} {/,/^ *}$/d" firestore.rules # remove previous rule
-	sed -i "/match/a\    match /posts/{post} {\n      allow read, write: if request.auth.uid != null;\n    }" firestore.rules
+	sed -i "/match/a\    match /posts/{post} {\n      allow read;\n      write: if request.auth.uid != null;\n    }" firestore.rules
 	firebase deploy --only firestore:rules
 }
 
@@ -207,8 +213,8 @@ futo-project-init-post-firebase()
 
 	# add Header.js
 	npm install @futo-ui/hooks @material-ui/icons
-	cp -r $templates/app/core app/core && cp $templates/public/name.png public/$name.png
-	cp -r $templates/app/auth app/auth
+	cp -r $project/app/core app/core && cp $project/public/name.png public/$name.png
+	cp -r $project/app/auth app/auth
 	sed -i "/<Typography[^>]*>/s/\(<Link[^>]*>\)name/\1$name/" app/core/Header.js
 	sed -i "/Avatar/{s/name.png/$name.png/;s/name/$name/}" app/core/Header.js
 
@@ -217,34 +223,40 @@ futo-project-init-post-firebase()
 	sed -i '/const FocusLayout/s/\(children\)/\1, header/' app/layouts/FocusLayout.js  
 	sed -i '/<Container[^>]*>/i\      { header && <Header /> }' app/layouts/FocusLayout.js
 
+	# don't forget to add locals so everything else ahead works
+	cp -r $project/app/locals app/locals
+
 	# create signup page
-	cp $templates/pages/join.js pages/join.js
+	cp $project/pages/join.js pages/join.js
 
 	# create login page
-	cp $templates/pages/login.js pages/login.js
+	cp $project/pages/login.js pages/login.js
+
+	# add password reset functionality
+	cp -r $project/pages/account pages/account
 
 	### FEED
 
 	# add PageLayout
-	cp $templates/app/layouts/PageLayout.js app/layouts/PageLayout.js
+	cp $project/app/layouts/PageLayout.js app/layouts/PageLayout.js
 	echo "export { default as PageLayout } from './PageLayout'" >> app/layouts/index.js
 
 	# create posts feed
 	npm install @futo-ui/utils
-	cp -r $templates/app/data app/data
-	cp -r $templates/app/posts app/posts
+	cp -r $project/app/data app/data
+	cp -r $project/app/posts app/posts
 
 	# add posts
 	npm install @material-ui/lab
-	cp $templates/pages/posts.js pages/posts.js
+	cp $project/pages/posts.js pages/posts.js
 
 	### SERVER-SIDE
 
 	### add server-side rendering (firebase-admin)
 	npm install firebase-admin
-	cp $templates/vercel.json vercel.json	
+	cp $project/vercel.json vercel.json	
 	sed -i "s/projectid/$projectid/" vercel.json
 
-	cp $templates/app/utils/server.js app/utils/server.js	
+	cp $project/app/utils/server.js app/utils/server.js	
 	sed -i "/databaseURL/s/projectid/$projectid/" app/utils/server.js
 }

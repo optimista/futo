@@ -1,6 +1,6 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 
-import { LoginActions, LoginFields, LoginTitle, useLoginForm } from 'auth'
+import { LoginActions, LoginFields, LoginLinks, LoginTitle, useLoginForm } from 'auth/login'
 
 const LoginDialog = props => {
   const [form, user] = useLoginForm({ callback: props.onClose });
@@ -14,8 +14,11 @@ const LoginDialog = props => {
         <LoginFields user={user} />
       </DialogContent>
       <DialogActions>
-        <LoginActions submitting={form.submitting} />
+        <LoginActions progress={form.isLoading} />
       </DialogActions>
+      <Box mx={3}>
+        <LoginLinks />
+      </Box>
     </Dialog>
   )
 }

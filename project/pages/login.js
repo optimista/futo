@@ -1,7 +1,7 @@
-import { Box } from '@material-ui/core'
+import { Box, Link, Typography } from '@material-ui/core'
 import Router from 'next/router'
 
-import { LoginActions, LoginFields, LoginTitle, useLoginForm } from 'auth'
+import { LoginActions, LoginFields, LoginLinks, LoginTitle, useLoginForm } from 'auth/login'
 import { FocusLayout } from 'layouts'
 
 const Login = () => {
@@ -10,12 +10,15 @@ const Login = () => {
   return (
     <FocusLayout maxWidth="xs">
       <LoginTitle />
-      <form onSubmit={form.handleSubmit}>        
+      <form onSubmit={form.handleSubmit}> 
         <Box my={4}>
           <LoginFields user={user} />
         </Box>
         <Box alignItems="center" display="flex">
           <LoginActions submitting={form.submitting} />
+        </Box>
+        <Box my={3}>
+          <LoginLinks />
         </Box>
       </form>
     </FocusLayout>

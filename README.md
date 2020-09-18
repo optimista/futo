@@ -10,15 +10,15 @@
 - includes an example of a realtime posts feed with an infinite scrolling and server prefetch [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching)
 - includes completely working user authentication through [Google's Firestore](https://firebase.google.com)
 - makes an initial commit to your [Gitlab](https://gitlab.com) account
-- includes a [theme](https://test-omega-mocha.vercel.app/theme.js) page where you can see a preview of UI items and their styling
+- includes a [theme](https://test-beta-five.vercel.app/theme.js) page where you can see a preview of UI items and their styling
 
 ## Demo
 
-- Is right [here](https://test-omega-mocha.vercel.app/)
-- [/login](https://test-omega-mocha.vercel.app/login)
-- [/join](https://test-omega-mocha.vercel.app/join)
-- [/posts](https://test-omega-mocha.vercel.app/posts)
-- [/theme](https://test-omega-mocha.vercel.app/theme)
+- Is right [here](https://test-beta-five.vercel.app/)
+- [/login](https://test-beta-five.vercel.app/login)
+- [/join](https://test-beta-five.vercel.app/join)
+- [/posts](https://test-beta-five.vercel.app/posts)
+- [/theme](https://test-beta-five.vercel.app/theme)
 
 ## Prerequisites
 

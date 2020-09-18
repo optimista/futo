@@ -1,10 +1,11 @@
-import { useDialog, useFirebaseAuth, useMenu } from '@futo-ui/hooks'
+import { useDialog, useMenu } from '@futo-ui/hooks'
 import { AppBar, Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Link, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Person } from '@material-ui/icons'
 import { forwardRef } from 'react'
 
-import { LoginDialog } from 'auth'
+import { useFirebaseAuth } from 'auth'
+import { LoginDialog } from 'auth/login'
 import { Menu } from 'core'
 import { firebase } from 'utils'
 
@@ -33,7 +34,7 @@ const AccountMenu = () => {
 }
 
 const Header = forwardRef(({ login }, ref) => {
-  const user = useFirebaseAuth(firebase);
+  const user = useFirebaseAuth();
   const [open, handleOpen, handleClose] = useDialog(false); 
 
   const classes = useStyles();
@@ -41,8 +42,8 @@ const Header = forwardRef(({ login }, ref) => {
     <>
       <AppBar position="fixed" ref={ref}>
         <Toolbar>
-          <Link href="/"><Avatar alt="name" src="/name.png" /></Link>
-          <Typography className={classes.title}><Link href="/" underline="none">name</Link></Typography>
+          <Link href="/"><Avatar alt="test" src="/test.png" /></Link>
+          <Typography className={classes.title}><Link href="/" underline="none">test</Link></Typography>
           { !user && <Button onClick={handleOpen} variant="outlined">log in</Button> } 
           { user && <AccountMenu /> }
         </Toolbar>
