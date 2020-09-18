@@ -201,7 +201,7 @@ futo-project-init-post-firebase-setup()
 	# firestore.rules setup
 	sed -i "1i \rules_version = '2';" firestore.rules # update firestore.rules to 2nd version
 	sed -i "/match \/{document=\*\*} {/,/^ *}$/d" firestore.rules # remove previous rule
-	sed -i "/match/a\    match /posts/{post} {\n      allow read;\n      write: if request.auth.uid != null;\n    }" firestore.rules
+	sed -i "/match/a\    match /posts/{post} {\n      allow read;\n      allow write: if request.auth.uid != null;\n    }" firestore.rules
 	firebase deploy --only firestore:rules
 }
 
