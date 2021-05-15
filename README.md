@@ -1,5 +1,3 @@
-# FUTO
-
 Collection of boilerplate generator scripts (`vc`, `mui`, `fbc`, `fbs`) which generate a web application project with following integrations
 
 ## 1. `vc` = Vercel / Next.js (1/4)
