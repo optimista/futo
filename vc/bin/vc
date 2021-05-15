@@ -1,0 +1,35 @@
+#!/bin/zsh
+
+dir=$HOME/.bin/vc
+
+# vc rm
+case $1 in
+  dev)
+    vercel dev;;
+  ls)
+    vercel ls;;
+  --prod)
+    vercel --prod;;
+  rm)
+    name=$2
+    $dir/exp/vc-rm $name
+    rm -rf $name
+    ;;
+  *)
+    name=$1
+    ccname=${${(C)name}//-} # camel case name
+
+    # Init
+    vercel init nextjs $name
+    cd $name
+    npm i
+    vercel --confirm
+
+    # Clean-up
+    rm -rf pages/api pages/_app.js public/vercel.svg styles
+
+    # pages/index.js 
+    cp $dir/src/pages/index.js pages/index.js 
+    sed -i '' "s/MyApp/$ccname/" pages/index.js
+    ;; 
+esac

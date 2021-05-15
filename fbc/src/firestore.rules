@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function auth() { return request.auth != null; }
+    function owns(resource) { return resource.data.profileId == request.auth.uid; }
+    function usernameValid(username) { return 1 <= username.size() && username.size() <= 16 && username.matches("[a-zA-Z0-9._]*") && !username.matches(".*[._]{2}.*") && !username.matches("[._].*") && !username.matches(".*[._]"); }
+
+    // Unique username
+    // Check: https://medium.com/@brianneisler/firestore-enforcing-uniqueness-on-a-collection-field-using-only-security-rules-b4293556b94
+    function usernameRefsProfile(username, profileId) { return getAfter(/databases/$(database)/documents/usernames/$(username)).data.profileId == profileId; }
+    function profileRefsUsername(profileId, username) { return getAfter(/databases/$(database)/documents/profiles/$(profileId)).data.username == username; }
+    function usernameWasDeleted(username) { return !existsAfter(/databases/$(database)/documents/usernames/$(username)); }
+    function present(content) { return content != null && content.trim() != '' }
+
+    match /posts/{post} {
+      allow read;
+      allow create: if auth() && present(request.resource.data.content);
+      allow update: if owns(resource) && present(request.resource.data.content);
+      allow delete: if owns(resource);
+    }
+    match /profiles/{profileId} {
+      allow read;
+      
+      // General and username regex
+      allow create: if
+        auth() && request.auth.uid == profileId &&
+        usernameValid(request.resource.data.username) &&
+        usernameRefsProfile(request.resource.data.username, profileId);
+      
+      allow update: if
+        auth() && request.auth.uid == profileId && 
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAll(['username']) || (
+          usernameValid(request.resource.data.username) &&
+          usernameRefsProfile(request.resource.data.username, profileId) &&
+          usernameWasDeleted(resource.data.username)));
+  
+      allow delete: if
+        auth() && request.auth.uid == profileId &&
+        usernameWasDeleted(resource.data.username);
+    }
+    match /usernames/{username} {
+      allow read;
+
+      allow create: if
+        auth() && owns(request.resource) &&
+        profileRefsUsername(request.resource.data.profileId, username);
+
+      allow delete: if
+        auth() && owns(resource) && (
+          getAfter(/databases/$(database)/documents/profiles/$(resource.data.profileId)).data.username != username) ||
+          !existsAfter(/databases/$(database)/documents/profiles/$(resource.data.profileId)
+        );
+    }
+  }
+}
+service firebase.storage {
+  match /b/cherries-ghguz.appspot.com/o {
+    match /profiles/{profileId} {
+      allow read;
+      allow write: if request.auth.uid == profileId;
+    }
+  }
+}

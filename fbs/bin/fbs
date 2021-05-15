@@ -1,0 +1,53 @@
+#!/bin/zsh
+
+dir=$HOME/.bin/fbs
+
+case $1 in
+  rm)
+    name=$2
+    if projectid=$( fbpid $name ); then $dir/exp/vercel-secrets-remove $projectid; fi
+    fbc rm $name
+    ;;
+  *)
+    name=$1
+    if fbc $name; then 
+      cd $name
+      projectid=$( fbpid )
+    
+      # server-side service account
+      gcloud config set project $projectid
+      iamaccount=$( gcloud iam service-accounts list | grep firebase-adminsdk | sed 's/  */ /g' | cut -d ' ' -f 2 )
+      gcloud iam service-accounts keys create /tmp/keys --iam-account=$iamaccount
+      keysbase64="$( cat /tmp/keys | base64 )"
+
+      ### SERVER-SIDE
+      ### add server-side rendering (firebase-admin)
+      npm install firebase-admin
+      cp $dir/src/app/utils/server.js app/utils/server.js	
+      sed -i '' "/databaseURL/s/projectid/$projectid/" app/utils/server.js
+
+      ### Add social media tags to profile page
+      cp $dir/src/pages/\[username\].js pages/\[username\].js
+      sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js
+      sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js
+      
+      echo 
+      url="https://vercel.com/$(vercel whoami)/$name/settings/environment-variables"
+      echo "To finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
+      echo "NAME: GOOGLE_APP_CREDENTIALS"
+      echo "VALUE: "
+      echo $keysbase64
+      echo "ENVIRONMENT: Production, Preview, Development"
+      open $url
+      echo
+      echo "(Once you are done, close the tab and hit enter to continue)"
+      read
+      echo "======================================" 
+      echo "🎉 Congratulations! That's everything." 
+      echo "======================================" 
+      echo
+    else
+      exit 1
+    fi
+    ;;
+esac

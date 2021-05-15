@@ -1,5 +1,0 @@
-{
-  "env": {
-    "GOOGLE_APP_CREDENTIALS": "@projectid-google-app-credentials"
-  }
-}

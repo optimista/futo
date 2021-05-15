@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+
+set projectid [lindex $argv 0]
+spawn firebase init firestore --project $projectid;
+expect -ex {? What file should be used for Firestore Rules? (firestore.rules)}
+send "\r";
+expect -ex {? What file should be used for Firestore indexes? (firestore.indexes.json)}
+send "\r";
+expect eof

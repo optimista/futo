@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+
+set name [lindex $argv 0]
+spawn vercel remove $name;
+expect -ex {> Are you sure? [y/N]}
+send "y\r"
+expect eof
