@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+dir=$HOME/.bin/tw
+
+case $1 in
+  rm)
+    name=$2
+    vc rm $name
+    ;;
+  *)
+    name=$1
+    ccname=${${(C)name}//-} # camel case name
+ 
+    vc $name 
+    cd $name
+
+    # App folder structure
+    mkdir app
+    npm install path
+    cp $dir/src/next.config.js next.config.js
+
+    # Tailwind
+    npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+    npx tailwindcss init -p
+    sed -i '' "s/purge: \[\],/purge: ['.\/pages\/**\/*.js', '.\/app\/**\/*.js'],/" tailwind.config.js
+    
+    # Nprogress 
+    mkdir styles
+    npm install nprogress
+    cp $dir/src/pages/_app.js pages/_app.js 
+    cp $dir/src/styles/nprogress.css styles/nprogress.css
+    sed -i '' "s/MyApp/"$ccname"App/" pages/_app.js
+esac
