@@ -152,7 +152,7 @@ If you do, then just run this and you are fine.
 
 ```
 git clone git@github.com:optimista/futo.git
-mv futo/vc futo/mui futo/fbc futo/fbs ~/.bin
+mv futo/vc futo/mui futo/fbc futo/fbs futo/tw ~/.bin
 rm -rf futo
 ```
 
