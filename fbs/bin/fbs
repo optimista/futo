@@ -27,6 +27,7 @@ case $1 in
       sed -i '' "/databaseURL/s/projectid/$projectid/" app/utils/server.js
 
       ### Add social media tags to profile page
+      cp $dir/src/app/models/post/PostFeed.js app/models/post/PostFeed.js
       cp $dir/src/pages/\[username\].js pages/\[username\].js
       sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js
       sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js

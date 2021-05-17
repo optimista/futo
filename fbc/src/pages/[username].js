@@ -10,8 +10,8 @@ const ProfilePage = () => {
 
   return (
     <FeedLayout>
-      <Profile key={username + "-Profile"} />
-      <PostFeed key={username + "-PostFeed"} />
+      <Profile key={"Profile-" + username} />
+      <PostFeed key={"PostFeed-" + username} />
     </FeedLayout>
   )
 }
