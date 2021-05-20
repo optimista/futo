@@ -1,6 +1,6 @@
 import { useMenu, useModal, useModel } from '@futo-ui/hooks'
 import { delay, empty } from '@futo-ui/utils'
-import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, ListItemIcon, ListItemText, MenuItem, TextField, Typography } from '@material-ui/core'
+import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, ListItemIcon, ListItemText, MenuItem, TextField, Typography } from '@material-ui/core'
 import { AddOutlined, DeleteOutlined, EditOutlined, MoreHoriz, Person, Send } from '@material-ui/icons' 
 
 import { IconButton, Menu } from 'core'
@@ -63,8 +63,10 @@ const MockupForm = ({ children }) => {
 const Theme = () => {
   const primary = useMenu(),
         secondary = useMenu(),
+        ternary = useMenu(),
         primaryRight = useMenu(),
         secondaryRight = useMenu(),
+        ternaryRight = useMenu(),
         dialog = useModal();
 
   return (
@@ -107,10 +109,12 @@ const Theme = () => {
             <Grid item xs={12} sm={4}><Button onClick={dialog.open} variant="text">Text</Button></Grid>
             <Grid item xs={12} sm={4}><Button component={Link} href="/" variant="text">Text Link</Button></Grid>
             <Grid item xs={12} sm={4}><Link href="/theme">Link</Link></Grid>
-            <Grid item xs={12} sm={6}><IconButton onClick={primary.open} hideTooltip={primary.isOpen} tooltip="Account"><Person /></IconButton></Grid>
-            <Grid item xs={12} sm={6}><IconButton onClick={secondary.open} color="secondary" hideTooltip={secondary.isOpen} tooltip="More"><MoreHoriz /></IconButton></Grid>
-            <Grid item xs={12} sm={6}><Box sx={{ textAlign: "right" }}><IconButton onClick={primaryRight.open} hideTooltip={primaryRight.isOpen} tooltip="Account"><Person /></IconButton></Box></Grid>
-            <Grid item xs={12} sm={6}><Box sx={{ textAlign: "right" }}><IconButton onClick={secondaryRight.open} color="secondary" hideTooltip={secondaryRight.isOpen} tooltip="More"><MoreHoriz /></IconButton></Box></Grid>
+            <Grid item xs={12} sm={4}><IconButton onClick={primary.open} hideTooltip={primary.isOpen} tooltip="Account"><Avatar /></IconButton></Grid>
+            <Grid item xs={12} sm={4}><IconButton onClick={secondary.open} hideTooltip={secondary.isOpen} tooltip="Account"><Person /></IconButton></Grid>
+            <Grid item xs={12} sm={4}><IconButton onClick={ternary.open} color="secondary" hideTooltip={ternary.isOpen} tooltip="More"><MoreHoriz /></IconButton></Grid>
+            <Grid item xs={12} sm={4}><Box sx={{ textAlign: "right" }}><IconButton onClick={primaryRight.open} hideTooltip={primaryRight.isOpen} tooltip="Account"><Avatar /></IconButton></Box></Grid>
+            <Grid item xs={12} sm={4}><Box sx={{ textAlign: "right" }}><IconButton onClick={secondaryRight.open} hideTooltip={secondaryRight.isOpen} tooltip="Account"><Person /></IconButton></Box></Grid>
+            <Grid item xs={12} sm={4}><Box sx={{ textAlign: "right" }}><IconButton onClick={ternaryRight.open} color="ternary" hideTooltip={ternaryRight.isOpen} tooltip="More"><MoreHoriz /></IconButton></Box></Grid>
             <Grid item xs={12} sm={6}></Grid>
           </Grid>
           <Grid container item xs={12} spacing={2} sx={{ alignItems: "center" }}>
@@ -178,7 +182,21 @@ const Theme = () => {
           <ListItemText primary="Item #3" />
         </MenuItem>
       </Menu>
-      <Menu id="menu-appbar" anchorEl={secondary.el} open={secondary.isOpen} onClose={secondary.close}>
+      <Menu id="menu-appbar" anchorEl={secondary.el} open={secondary.isOpen} onClose={secondary.close} arrow>
+        <MenuItem>
+          <ListItemIcon><AddOutlined /></ListItemIcon>
+          <ListItemText primary="Item #1" />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon><EditOutlined /></ListItemIcon>
+          <ListItemText primary="Item #2" />
+        </MenuItem>
+        <MenuItem>
+          <ListItemIcon><DeleteOutlined /></ListItemIcon>
+          <ListItemText primary="Item #3" />
+        </MenuItem>
+      </Menu>
+      <Menu id="menu-appbar" anchorEl={ternary.el} open={ternary.isOpen} onClose={ternary.close}>
         <MenuItem>Item #1</MenuItem>
         <MenuItem>Item #2</MenuItem>
         <MenuItem>Item #3</MenuItem>
@@ -188,7 +206,12 @@ const Theme = () => {
         <MenuItem>Item #2</MenuItem>
         <MenuItem>Item #3</MenuItem>
       </Menu>
-      <Menu id="menu-appbar" anchorEl={secondaryRight.el} open={secondaryRight.isOpen} onClose={secondaryRight.close} placement="end">
+      <Menu id="menu-appbar" anchorEl={secondaryRight.el} open={secondaryRight.isOpen} onClose={secondaryRight.close} arrow placement="end">
+        <MenuItem>Item #1</MenuItem>
+        <MenuItem>Item #2</MenuItem>
+        <MenuItem>Item #3</MenuItem>
+      </Menu>
+      <Menu id="menu-appbar" anchorEl={ternaryRight.el} open={ternaryRight.isOpen} onClose={ternaryRight.close} placement="end">
         <MenuItem>
           <ListItemIcon><AddOutlined /></ListItemIcon>
           <ListItemText primary="Item #1" />
