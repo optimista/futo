@@ -1,5 +1,4 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
-import { empty } from '@futo-ui/utils'
 import { Badge, Button, Dialog, Grid, Skeleton, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PhotoCamera } from '@material-ui/icons'
@@ -142,7 +141,7 @@ const Profile = () => {
   }, [username]);
 
   const loading = profile === null,
-        isMyProfile = auth && auth.profile && profile?.id === auth.profile.id;
+        isMyProfile = auth.isLoggedIn && auth.uid === profile?.id;
  
   return (
     <>

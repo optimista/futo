@@ -4,12 +4,22 @@ import { useAuth } from 'auth'
 
 const Avatar = ({ height = 40, href, skeleton, src, sx, width = 40, ...props }) => {
   const auth = useAuth();
-  
-  skeleton = skeleton === undefined && src === undefined ? (!auth || !auth.profile) : skeleton; // default prop | when skeleton is undefined it doesn't mean it's false
 
-  const AvatarComponent = skeleton ? <Skeleton variant="circular" sx={{ height, width, ...sx }} /> : <MuiAvatar aria-label="profile-picture" src={src ?? auth?.profile?.photoURL} sx={{ height, width, ...sx }} title={auth?.profile?.displayName} {...props} /> ;
+  if (skeleton || (src === undefined && !(auth.isReady && auth.profile))) return <Skeleton sx={{ height, width, ...sx }} variant="circular" />;
 
-  return !href || skeleton ? AvatarComponent : <Link href={href || "/" + auth?.profile?.username} underline="none">{AvatarComponent}</Link>;
+  const muiAvatarProps = sx => ({
+    "aria-label": "profile-picture", 
+    ...(src ? { src } : { src: auth.profile.photoURL, title: auth.profile.displayName }),
+    sx: { height, width, ...sx },
+    ...props
+  });
+
+  return href ?
+    <Link href={href || "/" + auth.profile.username} sx={sx} underline="none">
+      <MuiAvatar {...muiAvatarProps()} />
+    </Link>
+    :
+    <MuiAvatar {...muiAvatarProps(sx)} />
 }
 
 export default Avatar;

@@ -64,7 +64,7 @@ case $1 in
       cp -r $dir/src/app/locales app/locales
       cp -r $dir/src/app/models app/models # together with posts
       cp -r $dir/src/pages/account pages/ # account pages
-      sed -i '' "/^const Header/,/^})/s/name/$name/g" app/core/Header.js
+      sed -i '' "/^  <Avatar/s/name/$name/g" app/core/Logo.js
       sed -i '' "s/MyApp/$name/g" app/models/post/PostJoinDialog.js
       
       ### Add AuthProvider

@@ -1,11 +1,34 @@
-import { Container, Toolbar } from '@material-ui/core'
+import { AppBar, Button, Container, Link, Skeleton, Toolbar, Typography } from '@material-ui/core'
+import { Settings } from '@material-ui/icons'
 
-import { Header } from 'core'
+import { useAuth } from 'auth'
+import { AccountOrLoginButton, Avatar, Logo } from 'core'
+
+const ProfileButton = () => { 
+  const auth = useAuth();
+
+  if (!auth.profile) return <Skeleton height={34} sx={{ borderRadius: 34, mr: 2 }} variant="rectangular" width={150} />
+
+  return (
+    <Button component={Link} href={"/" + auth.profile.username} startIcon={<Avatar height={t => t.spacing(4)} width={t => t.spacing(4)} />} sx={{ borderRadius: 17, mr: 1, pl: 0.5, pr: 2, py: 0.125, textTransform: "none" }} variant="text">
+      {auth.profile.displayName || "Your profile"}
+    </Button>
+  )
+};
 
 const PageLayout = ({ children, maxWidth }) => {
+  const auth = useAuth();
+
   return (
     <>
-      <Header />
+      <AppBar position="fixed">
+        <Toolbar>
+          <Logo height={t => t.spacing(4)} width={t => t.spacing(4)} />
+          <Typography sx={{ flexGrow: 1, letterSpacing: 5, px: 2 }}><Link href="/" underline="none">fbs-demo</Link></Typography>
+          { auth.isLoggedIn && <ProfileButton /> }
+          <AccountOrLoginButton accountIcon={<Settings />} />
+        </Toolbar>
+      </AppBar>
       <Toolbar />
       <Container maxWidth={maxWidth} sx={{ py: 4 }}>
         {children || <></>}

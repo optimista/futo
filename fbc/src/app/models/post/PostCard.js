@@ -16,7 +16,7 @@ const PostCard = ({ post, onEdit }) => {
   return (
     <PostCardLayout
       action={
-        auth && post?.profileId === auth.uid && <>
+        auth.isLoggedIn && post?.profileId === auth.uid && <>
           <IconButton aria-controls="menu-postcard" aria-label="settings" color="secondary" onClick={menu.open} hideTooltip={menu.isOpen} tooltip="More">
             <MoreHoriz />
           </IconButton>

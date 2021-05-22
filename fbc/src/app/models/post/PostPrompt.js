@@ -10,11 +10,11 @@ const PostPrompt = () => {
         joinDialog = useModal(false),
         [postDialog, post] = usePostDialog();
   
-  const handleMouseDown = e => { e.preventDefault(); if (e.nativeEvent.which === 1) auth ? postDialog.open() : joinDialog.open(); }
+  const handleMouseDown = e => { e.preventDefault(); if (e.nativeEvent.which === 1) auth.isLoggedIn ? postDialog.open() : joinDialog.open(); }
 
   return (
     <>
-      <PostCardLayout avatar={ auth && <Avatar /> } sx={{ mb: 2 }} title={
+      <PostCardLayout avatar={ auth.isLoggedIn && <Avatar /> } sx={{ mb: 2 }} title={
         <TextField inputProps={{ disabled: true }} margin="normal" onMouseDown={handleMouseDown} placeholder="What are you up to?" sx={{ flex: "auto", my: 2, '& > .MuiInput-root > input': { cursor: "pointer" } }} />}
         />
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} />      

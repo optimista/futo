@@ -6,10 +6,11 @@ import { firebase } from 'utils'
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null),
-        [profile, setProfile] = useState(null);
+        [profile, setProfile] = useState(null),
+        [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(auth => setAuth(auth));
+    const unsubscribe = firebase.auth().onAuthStateChanged(auth => { setAuth(auth); setIsReady(true); });
     return () => unsubscribe();
   }, []);
   
@@ -23,7 +24,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [auth]);
 
-  return <AuthContext.Provider value={auth && { ...auth, profile }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ ...auth, isLoggedIn: Boolean(auth), isReady, profile }}>{children}</AuthContext.Provider>;
 }
 
 export default AuthProvider;

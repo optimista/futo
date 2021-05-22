@@ -67,11 +67,12 @@ MyDocument.getInitialProps = async (ctx) => {
     originalRenderPage({
       enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
       // Take precedence over the CacheProvider in our custom _app.js
-      enhanceComponent: (Component) => (props) => (
-        <CacheProvider value={cache}>
-          <Component {...props} />
-        </CacheProvider>
-      ),
+      enhanceComponent: (Component) => (props) =>
+        (
+          <CacheProvider value={cache}>
+            <Component {...props} />
+          </CacheProvider>
+        ),
     });
 
   const initialProps = await Document.getInitialProps(ctx);
