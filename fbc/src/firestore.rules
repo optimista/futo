@@ -10,12 +10,13 @@ service cloud.firestore {
     function usernameRefsProfile(username, profileId) { return getAfter(/databases/$(database)/documents/usernames/$(username)).data.profileId == profileId; }
     function profileRefsUsername(profileId, username) { return getAfter(/databases/$(database)/documents/profiles/$(profileId)).data.username == username; }
     function usernameWasDeleted(username) { return !existsAfter(/databases/$(database)/documents/usernames/$(username)); }
-    function present(content) { return content != null && content.trim() != '' }
+    function empty(value) { return value.trim() == '' }
+    function present(value) { return value != null }
 
     match /posts/{post} {
       allow read;
-      allow create: if auth() && present(request.resource.data.content);
-      allow update: if owns(resource) && present(request.resource.data.content);
+      allow create: if auth() && present(request.resource.data.content) && !empty(request.resource.data.content);
+      allow update: if owns(resource) && present(request.resource.data.content) && !empty(request.resource.data.content);
       allow delete: if owns(resource);
     }
     match /profiles/{profileId} {
@@ -37,6 +38,12 @@ service cloud.firestore {
       allow delete: if
         auth() && request.auth.uid == profileId &&
         usernameWasDeleted(resource.data.username);
+    }
+    match /stories/{story} {
+      allow read;
+      allow create: if auth() && present(request.resource.data.nodes);
+      allow update: if owns(resource) && present(request.resource.data.nodes);
+      allow delete: if owns(resource);
     }
     match /usernames/{username} {
       allow read;
