@@ -1,5 +1,5 @@
 import { Grid, Link, List, ListItem, ListItemIcon, ListItemText, useMediaQuery } from '@material-ui/core'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/styles'
 import { HistoryEdu, HomeOutlined, LockOutlined, PaletteOutlined, PersonOutlined, PersonAddOutlined } from '@material-ui/icons'
 
 import { useAuth } from 'auth'

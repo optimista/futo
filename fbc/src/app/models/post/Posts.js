@@ -7,7 +7,8 @@ const Posts = firebase.firestore().collection('posts').withConverter({
     const doc = docWithIdAndTimestamp(snapshot);
     return { ...doc, time: time(doc.timestamp) }
   },
-  toFirestore: () => ({
+  toFirestore: doc => ({
+    ...doc,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   })
 });

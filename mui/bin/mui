@@ -32,7 +32,7 @@ case $1 in
       
       # install @material-ui/core
       mkdir app/utils styles
-      npm install nprogress @material-ui/core@next @emotion/react @emotion/server @emotion/styled
+      npm install nprogress @material-ui/core@next @material-ui/styles@next @emotion/react @emotion/server @emotion/styled
       cp $dir/src/pages/_app.js pages/_app.js 
       cp $dir/src/pages/_document.js pages/_document.js 
       cp $dir/src/app/utils/index.js app/utils/index.js

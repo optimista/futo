@@ -1,5 +1,5 @@
 import { Tooltip as MuiTooltip } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(() => ({ popper: { opacity: 0, pointerEvents: "none" } }));

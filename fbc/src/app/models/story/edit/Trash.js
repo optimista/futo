@@ -1,6 +1,6 @@
 import { Box } from '@material-ui/core'
 import { DeleteOutline } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 
 import { useDispatch, useState } from 'models/story/context'

@@ -13,7 +13,8 @@ const Profiles = firebase.firestore().collection('profiles').withConverter({
     const doc = docWithIdAndTimestamp(snapshot);
     return { ...doc, time: datetime(doc.timestamp) }
   },
-  toFirestore: () => ({
+  toFirestore: doc => ({
+    ...doc,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   })
 });
