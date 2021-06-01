@@ -10,8 +10,8 @@ const PostCard = ({ post, onEdit }) => {
   const auth = useAuth(),
         menu = useMenu();
 
-  function handleEdit(e) { menu.close(); onEdit(e); }
-  function handleRemove() { menu.close(); Posts.doc(post.id).delete(); }
+  const handleEdit = e => { menu.close(); onEdit(e); }
+  const handleRemove = () => { menu.close(); Posts.doc(post.id).delete(); }
 
   return (
     <PostCardLayout

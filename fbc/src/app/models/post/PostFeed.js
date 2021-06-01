@@ -1,32 +1,14 @@
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-
 import { Feed } from 'core'
 import { PostCard, PostDialog, Posts, usePostDialog } from 'models/post'
-import { Usernames } from 'models/profile'
 
-const PostFeed = () => {
-  const router = useRouter(), 
-        { username } = router.query,
-        [postDialog, post] = usePostDialog(),
-        [profileId, setProfileId] = useState(null),
+const PostFeed = props => {
+  const [postDialog, post] = usePostDialog(),
         handleEdit = post => () => postDialog.open(post);
-
-  useEffect(() => {
-    if (router.isReady) {
-      if (username) {
-        Usernames.doc(username).get().then(docUsername => {
-          if (!docUsername.exists) return router.push("/");
-          const { profileId } = docUsername.data();
-          setProfileId(profileId);
-        })
-      } else { setProfileId(undefined); }
-    }
-  }, [username])
 
   return (
     <>
-      <Feed CardComponent={PostCard} CardProps={post => ({ post, onEdit: handleEdit(post) })} collection={Posts} profileId={profileId} />
+      <Feed collection={Posts} Item={({ item, ...props }) => <PostCard onEdit={handleEdit(item)} post={item} {...props} />}
+            sx={{ maxWidth: 600, minWidth: 400 }} {...props} />
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} /> 
     </>
   )

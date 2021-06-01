@@ -1,6 +1,6 @@
 import { useModal, useMenu } from '@futo-ui/hooks'
 import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@material-ui/core'
-import { ExitToAppSharp } from '@material-ui/icons'
+import { ExitToAppSharp, HistoryEdu } from '@material-ui/icons'
 
 import { LoginForm, useAuth, useLoginModel } from 'auth'
 import { Avatar, IconButton, Menu } from 'core'
@@ -25,6 +25,12 @@ const AccountMenuButton = ({ children }) => {
         </IconButton>
       </Badge>
       <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end">
+        <MenuItem component={Link} href="/stories">
+          <ListItemIcon>
+            <HistoryEdu />
+          </ListItemIcon>
+          <ListItemText primary="Stories" />
+        </MenuItem>
         <MenuItem component={Link} href={"/" + auth?.profile?.username}>
           <ListItemIcon>
             <Badge badgeContent={1} color="error" invisible={invisible} overlap="circular" variant="dot">

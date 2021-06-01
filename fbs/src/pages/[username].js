@@ -27,7 +27,7 @@ const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
         <title>{name}</title>
       </Head>
       <FeedLayout>
-        <Profile key={"Profile-" + username} />
+        <Profile key={"Profile-" + username} profileId={profileId} />
         <PostFeed key={"PostFeed-" + username} profileId={profileId} />
       </FeedLayout>
     </>

@@ -1,6 +1,6 @@
 import { Grid, Link, List, ListItem, ListItemIcon, ListItemText, useMediaQuery } from '@material-ui/core'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { HomeOutlined, LockOutlined, PaletteOutlined, PersonOutlined, PersonAddOutlined } from '@material-ui/icons'
+import { HistoryEdu, HomeOutlined, LockOutlined, PaletteOutlined, PersonOutlined, PersonAddOutlined } from '@material-ui/icons'
 
 import { useAuth } from 'auth'
 import { Tooltip } from 'core'
@@ -13,9 +13,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     [theme.breakpoints.up('md')]: { width: "calc(100% - 200px)" },
-    [theme.breakpoints.down('md')]: { width: "calc(100% - "+theme.spacing(7.5)+")" },
-    maxWidth: 600,
-    minWidth: 400
+    [theme.breakpoints.down('md')]: { width: "calc(100% - "+theme.spacing(7.5)+")" }
   }
 }));
 
@@ -33,17 +31,18 @@ const DrawerItem = ({ children, href, Icon, ...props }) => {
   )
 }
 
-const FeedLayout = ({ children }) => {
+const FeedLayout = ({ children, ...props }) => {
   const auth = useAuth();
 
   const classes = useStyles();
   return (
-    <PageLayout maxWidth="md">
+    <PageLayout maxWidth="md" {...props}>
       <Grid container spacing={0} sx={{ justifyContent: "center" }}>
         <Grid item className={classes.drawer}>
           <List>
             <DrawerItem href="/" Icon={HomeOutlined}>Home</DrawerItem>
             <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth}>Profile</DrawerItem>
+            <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth}>Stories</DrawerItem>
           </List>
           <List>
             <DrawerItem href="/join" Icon={PersonAddOutlined}>Join</DrawerItem>

@@ -119,26 +119,14 @@ const ProfileDialog = ({ profile, onClose, ...props }) => {
 }
 
 // Profile
-const Profile = () => {
+const Profile = ({ profileId }) => {
   const auth = useAuth(),
-        router = useRouter(), 
-        { username } = router.query,
         [postDialog, post] = usePostDialog(),
         [profile, setProfile] = useState(null),
         [profileDialog, profileModel] = useProfileDialog(() => profile);
   
-  useEffect(() => {
-    if (username) {
-      Usernames.doc(username).get().then(doc => {
-        if (doc.exists) {
-          const { profileId } = doc.data();
-          Profiles.doc(profileId).onSnapshot(doc => doc.data() && setProfile(doc.data()), () => router.replace("/"));
-        } else {
-          router.replace("/");
-        }
-      })
-    }
-  }, [username]);
+  useEffect(() => profileId &&
+    Profiles.doc(profileId).onSnapshot(doc => doc.data() && setProfile(doc.data()), () => router.replace("/")), [profileId]);
 
   const loading = profile === null,
         isMyProfile = auth.isLoggedIn && auth.uid === profile?.id;

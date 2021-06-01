@@ -55,14 +55,15 @@ case $1 in
 
       ## MAIN
       npm install uuid
+      cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/form/*.js app/core/form/
-      cp $dir/src/pages/*.js pages/ # theme.js because of error handling
+      cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & new.js
       cp $dir/src/public/name.png public/$name.png
       cp -r $dir/src/app/auth app/auth
       cp -r $dir/src/app/layouts app
       cp -r $dir/src/app/locales app/locales
-      cp -r $dir/src/app/models app/models # together with posts
+      cp -r $dir/src/app/models app/models # together with posts & stories
       cp -r $dir/src/pages/account pages/ # account pages
       sed -i '' "/^  <Avatar/s/name/$name/g" app/core/Logo.js
       sed -i '' "s/MyApp/$name/g" app/models/post/PostJoinDialog.js
@@ -73,13 +74,17 @@ case $1 in
       sed -i '' "s/      <\/ThemeProvider>/&\n      <\/AuthProvider>/" pages/_app.js
       sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' pages/_app.js
 
+      ### Stories
+      npm install resize-observer-polyfill
+      cp -r $dir/src/pages/s pages/ 
+
       echo 
-      echo "We are going to enable E-mail/Password authentication, create a compound query for the post feed and set an e-mail template for password reset."
+      echo "We are going to enable E-mail/Password authentication, create a compound query for the post feed, a compound query for the story feed and set an e-mail template for password reset."
       echo
       
       echo 
       url=https://console.firebase.google.com/project/$projectid/authentication
-      echo "(1/3) First, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
+      echo "(1/4) First, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
       open $url
       echo
       echo "(Once you are done, close the tab and hit enter to continue)"
@@ -87,19 +92,29 @@ case $1 in
      
       echo 
       url=https://console.firebase.google.com/project/$projectid/firestore/indexes
-      echo "(2/3) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
+      echo "(2/4) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
       echo "Collection ID: posts"
-      echo "Field #1: profileUsername | Ascending" 
+      echo "Field #1: profileId | Ascending" 
       echo "Field #2: timestamp | Descending"
       echo "Query Scopes: Collection"
       open $url
+      echo 
+      echo "(Once you are done, leave the tab open and hit enter to continue)"
+      read
+      
+      echo 
+      echo "(3/4) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
+      echo "Collection ID: stories"
+      echo "Field #1: profileId | Ascending" 
+      echo "Field #2: editedAt | Descending"
+      echo "Query Scopes: Collection"
       echo 
       echo "(Once you are done, close the tab and hit enter to continue)"
       read
       
       echo
       url=https://console.firebase.google.com/project/$projectid/authentication/emails
-      echo "(3/3) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
+      echo "(4/4) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
       echo "Sender name: Your name"
       echo "Subject: %APP_NAME% - Reset your password"
       echo "Message:"

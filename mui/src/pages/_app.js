@@ -15,7 +15,7 @@ import '../styles/nprogress.css'
 export const cache = createCache({ key: 'css', prepend: true });
 
 NProgress.configure({ showSpinner: false });
-Router.onRouteChangeStart = () => NProgress.start();
+Router.onRouteChangeStart = (_, { shallow }) => !shallow && NProgress.start();
 Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 

@@ -1,4 +1,4 @@
-import { docWithIdAndTimestamp, firebase, toFirestore } from 'utils'
+import { docWithIdAndTimestamp, firebase } from 'utils'
 
 const datetime = date => {
   const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date),
@@ -13,7 +13,9 @@ const Profiles = firebase.firestore().collection('profiles').withConverter({
     const doc = docWithIdAndTimestamp(snapshot);
     return { ...doc, time: datetime(doc.timestamp) }
   },
-  toFirestore
+  toFirestore: () => ({
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
 });
 
 export default Profiles;

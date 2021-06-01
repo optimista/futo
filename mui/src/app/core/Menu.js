@@ -34,7 +34,7 @@ const Menu = ({ arrow, anchorEl, children, onClose, open, placement = "start", .
 
   const classes = useStyles();
   return (
-    <Popper open={open} disablePortal anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} {...props}>
+    <Popper open={open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} {...props}>
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
           <Paper className={arrow && classes.arrow} elevation={2} sx={arrowMargin && {
