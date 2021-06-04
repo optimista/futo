@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Feed = ({ collection, Item, orderBy = "timestamp", profileId, ready = true }) => {
+const Feed = ({ collection, Item = () => null, orderBy = "timestamp", profileId, ready = true }) => {
   const [batches, setBatches] = useState([]),
         [fetching, setFetching, setHasMore] = useInfiniteScroll({ fetching: true, hasMore: true }),
         listeners = useRef([]),

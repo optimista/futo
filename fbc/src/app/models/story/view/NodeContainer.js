@@ -19,7 +19,7 @@ const NodeContainer = ({ children, grabbable = false, id: key, sx, ...props }) =
     ...(state.grab.dragged ? nonselectable : {}),
     ...(state.grab.dragged && state.grab.handle === "node" && state.grab.key === key ? { pointerEvents: "none" } : {}),
     ...(state.grab.dragged && state.grab.handle === "node" && state.grab.key === key && state.trash.over ? { opacity: 0.5 } : {}),
-    ...state.story.nodes[key].sx,
+    ...state.story.sx?.[key],
     ...sx
   }} {...props}>{children}</Box>
 }

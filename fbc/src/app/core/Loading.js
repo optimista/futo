@@ -7,7 +7,7 @@ const LoadingScreen = ({ children = null, ready = false }) =>
     children
     :
     <FocusLayout>
-      <CircularProgress size={40} />
+      <CircularProgress size={40} sx={{ display: "block", margin: "auto" }} />
     </FocusLayout>
 
 export default LoadingScreen;

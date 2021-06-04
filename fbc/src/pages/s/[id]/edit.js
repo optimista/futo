@@ -7,6 +7,7 @@ import { Stories } from 'models/story'
 import { AutosaveProvider, DispatchProvider, StoreProvider } from 'models/story/context'
 import { StoryEditor } from 'models/story/edit'
 import { caretReducer, grabReducer, renderReducer, storyReducer, trashReducer, viewReducer } from 'models/story/state'
+import { storyPath } from 'models/story/utils'
 import { useStoryLoad } from 'models/story/view'
 
 const StoryEditPage = () => {
@@ -18,7 +19,7 @@ const StoryEditPage = () => {
   
   return (
     <FixedLayout>
-      <Authorize ready={Boolean(state.story.profileId)} redirect={"/s/" + id} uid={state.story.profileId}>
+      <Authorize ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)} uid={state.story.profileId}>
         <AutosaveProvider value={{ dispatch: autosave.dispatch }}>
           <DispatchProvider value={dispatch}>
             <StoreProvider value={state}>

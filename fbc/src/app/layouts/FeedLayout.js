@@ -1,6 +1,7 @@
 import { Grid, Link, List, ListItem, ListItemIcon, ListItemText, useMediaQuery } from '@material-ui/core'
-import { makeStyles, useTheme } from '@material-ui/styles'
+import { useTheme } from '@material-ui/core/styles'
 import { HistoryEdu, HomeOutlined, LockOutlined, PaletteOutlined, PersonOutlined, PersonAddOutlined } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/styles'
 
 import { useAuth } from 'auth'
 import { Tooltip } from 'core'
@@ -41,8 +42,8 @@ const FeedLayout = ({ children, ...props }) => {
         <Grid item className={classes.drawer}>
           <List>
             <DrawerItem href="/" Icon={HomeOutlined}>Home</DrawerItem>
-            <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth}>Profile</DrawerItem>
-            <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth}>Stories</DrawerItem>
+            <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn}>Profile</DrawerItem>
+            <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn}>Stories</DrawerItem>
           </List>
           <List>
             <DrawerItem href="/join" Icon={PersonAddOutlined}>Join</DrawerItem>

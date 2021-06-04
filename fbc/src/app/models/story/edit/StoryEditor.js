@@ -1,5 +1,5 @@
-import { empty, nondraggable } from '@futo-ui/utils'
-import { useEffect } from 'react'
+import { last, nondraggable } from '@futo-ui/utils'
+import { useEffect, useRef } from 'react'
 
 import { useAutosave, useDispatch, useState } from 'models/story/context'
 import { Caret, TextFocusable } from 'models/story/edit'
@@ -12,7 +12,11 @@ const StoryEditor = props => {
   const handleMouseUp = e => e.currentTarget === e.target &&
     dispatch(state => state.grab.dragged ? [] : newNodeActions(state, clientToCoors(state, { x: e.clientX, y: e.clientY }))) 
  
-  useEffect(() => !empty(state.render.container) && dispatch(state => newNodeEnterActions(state)), [empty(state.render.container)]);
+  const lastNodeHeight = state.render.nodes[last(state.story.order)]?.height,
+        wasCalled = useRef(false);
+  useEffect(() => {
+    if (lastNodeHeight && !wasCalled.current) { wasCalled.current = true; dispatch(state => newNodeEnterActions(state)); }
+  }, [lastNodeHeight])
   
   useGrabbing({ onMouseMoveDispatch: ({ handle, key, deltas }) => {
     switch(handle) {

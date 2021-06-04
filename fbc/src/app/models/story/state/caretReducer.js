@@ -3,10 +3,10 @@ const caretReducer = (caret = { fold: true, key: null, offset: 0, pending: false
     case "CARET_BLUR":
       return { ...caret, key: null };
     case "CARET_FOCUS":
-      return { ...caret, key: action.key, offset: action.offset || 0, pending: true };
+      return { ...caret, fold: true, key: action.key, offset: action.offset || 0, pending: true };
     case "CARET_FOCUSED":
       return { ...caret, pending: false };
-    case "CARET_FOLD":
+    case "CARET_TOGGLE":
       return { ...caret, fold: !caret.fold };
     default:
       return caret;

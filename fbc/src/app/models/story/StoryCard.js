@@ -1,10 +1,10 @@
 import { useMenu } from '@futo-ui/hooks'
-import { time } from '@futo-ui/utils'
 import { Card, CardActions, CardContent, Link, ListItemIcon, ListItemText, MenuItem, Skeleton, Typography } from '@material-ui/core'
 import { DeleteOutlined, EditOutlined, ExpandMore } from '@material-ui/icons'
 
 import { IconButton, Menu } from 'core'
 import { Stories } from 'models/story'
+import { description, lastEdited, storyPath, storyEditPath, title } from 'models/story/utils'
 
 const StoryCard = ({ story }) => {
   const menu = useMenu();
@@ -17,9 +17,9 @@ const StoryCard = ({ story }) => {
         {
           story ?
             <>
-              <Link href={"/s/" + story.id} sx={{ display: "block" }} underline="none" variant="h6">{ story.nodes[story.order[0]]?.content || "Untitled Story" }</Link>
-              { story.order[1] && <Typography variant="subtitle1">{story.nodes[story.order[1]].content}</Typography> }
-              <Typography variant="overline">{ "Last edited: " + time(story.editedAt) + " · " + story.order.length + " nodes" }</Typography>
+              <Link href={storyPath(story)} sx={{ display: "block" }} underline="none" variant="h6">{title(story)}</Link>
+              { description(story) && <Typography variant="subtitle1">{description(story)}</Typography> }
+              <Typography variant="overline">{lastEdited(story)}</Typography>
             </>
             :
             <>
@@ -37,7 +37,7 @@ const StoryCard = ({ story }) => {
                 <ExpandMore />
               </IconButton>
               <Menu anchorEl={menu.el} arrow open={menu.isOpen} onClose={menu.close} placement="end">
-                <MenuItem component={Link} href={"/s/" + story.id + "/edit"}>
+                <MenuItem component={Link} href={storyEditPath(story)}>
                   <ListItemIcon>
                     <EditOutlined />
                   </ListItemIcon>

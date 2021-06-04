@@ -1,10 +1,11 @@
 import { Box, Button, Link, Typography } from '@material-ui/core'
 
-import { Authorize } from 'auth'
+import { Authorize, useAuth } from 'auth'
 import { FeedLayout } from 'layouts'
 import { StoryFeed } from 'models/story'
 
 const StoriesPage = () => {
+  const auth = useAuth();
   return (
     <Authorize>
       <FeedLayout maxWidth="lg">
@@ -12,7 +13,7 @@ const StoriesPage = () => {
           <Typography variant="h4">Your Stories</Typography>
           <Button component={Link} href="/new">Write a story</Button>
         </Box>
-        <StoryFeed />
+        <StoryFeed profileId={auth.uid} />
       </FeedLayout>
     </Authorize>
   )

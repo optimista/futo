@@ -1,7 +1,7 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
 import { Badge, Button, Dialog, Grid, Skeleton, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
 import { PhotoCamera } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/styles'
 import { useRouter } from 'next/router' 
 import { useEffect, useState } from 'react'
 

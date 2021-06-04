@@ -5,14 +5,14 @@ import { v4 } from 'uuid'
 import { IconButton } from 'core'
 import { firebase } from 'utils'
 
-import { useDispatch, useState } from 'models/story/context'
+import { useAutosave, useDispatch, useState } from 'models/story/context'
 
-const MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MIME_TYPES = ["image/gif", "image/jpeg", "image/png", "image/webp"];
 
 const ImageButton = () => {
-  const dispatch = useDispatch(), state = useState();
+  const autosave = useAutosave(), dispatch = useDispatch(), state = useState();
 
-  const handleFileChange = e => {
+  const handleChange = e => {
     const file = e.target.files[0];
     if (file && 0 < MIME_TYPES.filter(s => file.type.match(s)).length) {
       const reader = new FileReader();
@@ -25,7 +25,10 @@ const ImageButton = () => {
           upload.on("state_changed",
             () => {}, // TODO: snapshot => console.log(snapshot.bytesTransferred / snapshot.totalBytes),
             () => {}, // TODO: handle err => {}
-            () => upload.snapshot.ref.getDownloadURL().then(downloadURL => dispatch({ type: "NODE_EDIT", key, value: downloadURL }))
+            () => upload.snapshot.ref.getDownloadURL().then(downloadURL => {
+              dispatch({ type: "NODE_EDIT", key, value: downloadURL });
+              autosave.dispatch({ type: "TRIGGER" });
+            })
           );
         }
       } 
@@ -35,7 +38,7 @@ const ImageButton = () => {
 
   return (
     <IconButton htmlFor="image-file" component="label">
-      <input accept={MIME_TYPES.join(",")} hidden id="image-file" onChange={handleFileChange} type="file" />
+      <input accept={MIME_TYPES.join(",")} hidden id="image-file" onChange={handleChange} type="file" />
       <ImageOutlined />
     </IconButton>
   )

@@ -60,7 +60,6 @@ const positionsReducer = (positions, action) => {
 }
 
 const storyReducer = (story = { nodes: {}, order: [], positions: {} }, action) => {
-  //if (action.type) console.log(action.type, story, action);
   switch(action.type) {
     case "STORY_LOAD":
       return action.value;
