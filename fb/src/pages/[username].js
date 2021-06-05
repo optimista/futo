@@ -6,7 +6,7 @@ import { PostFeed } from 'models/post'
 import { Profile } from 'models/profile'
 
 const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
-  const router = useRouter(), 
+  const router = useRouter(),
         { username } = router.query;
 
   const name = displayName || username,
@@ -41,7 +41,7 @@ export const getStaticProps = async ({ params }) => {
   if (!docUsername.exists) return { redirect: { destination: '/', permanent: false } };
 
   const { profileId } = docUsername.data(),
-        docProfile = await firebase.firestore().collection('profiles').doc(profileId).get(), 
+        docProfile = await firebase.firestore().collection('profiles').doc(profileId).get(),
         { displayName = null, bio = null, photoURL = null } = docProfile.data();
 
   return {
@@ -53,8 +53,35 @@ export const getStaticProps = async ({ params }) => {
 export const getStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking' 
+    fallback: 'blocking'
   }
 }
 
 export default ProfilePage;
+
+/*
+ * PURELY CLIENT-SIDE PAGE
+ *
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+
+import { FeedLayout } from 'layouts'
+import { PostFeed } from 'models/post'
+import { Profile, Usernames } from 'models/profile'
+
+const ProfilePage = () => {
+  const router = useRouter(), { username } = router.query, [profileId, setProfileId] = useState(null);
+
+  useEffect(() => username && Usernames.doc(username).get()
+    .then(doc => doc.exists ? setProfileId(doc.data().profileId) : router.replace("/"), () => router.replace("/")), [username]);
+
+  return (
+    <FeedLayout>
+      <Profile key={"Profile-" + username} profileId={profileId} />
+      <PostFeed key={"PostFeed-" + username} profileId={profileId} ready={profileId} />
+    </FeedLayout>
+  )
+}
+
+export default ProfilePage;
+*/

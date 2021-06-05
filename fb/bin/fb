@@ -1,12 +1,13 @@
 #!/bin/zsh
 
-dir=$HOME/.bin/fbc
+dir=$HOME/.bin/fb
 
 case $1 in
   rm)
     name=$2
 
-    if projectid=$( fbpid $name ); then
+    if projectid=$( cat ${1:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
+      $dir/exp/vercel-secrets-remove $projectid;
       url="https://console.firebase.google.com/project/$projectid/settings/general"
       echo "To delete project on firebase go to your browser and newly opened link $url"
       open $url
@@ -44,14 +45,21 @@ case $1 in
       # createapp == e.g. "firebase apps:sdkconfig WEB 1:233313016915:web:e6430e12bd463eb6027aa6"
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
-      npm install firebase
+      npm install firebase firebase-admin # SERVER SIDE HERE TOO
       cp $dir/src/app/utils/*.js app/utils/
+      sed -i '' "/databaseURL/s/projectid/$projectid/" app/utils/server.js # SERVER SIDE
       $( echo $createapp ) | sed -n '/^firebase/,/^})/p' | sed 's/^/  /' | sed -i '' '/^if (!firebase\.apps\.length)/r /dev/stdin' app/utils/firebase.js
       
       # firestore.rules setup
       cp $dir/src/firestore.rules firestore.rules
       sed -i '' "s/projectid/$projectid/" firestore.rules
       firebase deploy --only firestore:rules
+      
+      # SERVER SIDE SERVICE ACCOUNT 
+      gcloud config set project $projectid
+      iamaccount=$( gcloud iam service-accounts list | grep firebase-adminsdk | sed 's/  */ /g' | cut -d ' ' -f 2 )
+      gcloud iam service-accounts keys create /tmp/keys --iam-account=$iamaccount
+      keysbase64="$( cat /tmp/keys | base64 )" # Is used at the ending prompts
 
       ## MAIN
       npm install uuid
@@ -67,6 +75,8 @@ case $1 in
       cp -r $dir/src/pages/account pages/ # account pages
       sed -i '' "/^  <Avatar/s/name/$name/g" app/core/Logo.js
       sed -i '' "s/MyApp/$name/g" app/models/post/PostJoinDialog.js
+      sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
+      sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       
       ### Add AuthProvider
       sed -i '' "s/import { theme } from 'utils'/import { AuthProvider } from 'auth'\n&/" pages/_app.js
@@ -79,12 +89,24 @@ case $1 in
       cp -r $dir/src/pages/s pages/ 
 
       echo 
-      echo "We are going to enable E-mail/Password authentication, create a compound query for the post feed, a compound query for the story feed and set an e-mail template for password reset."
+      echo "We are going to configure firebase-admin, enable E-mail/Password authentication, create a compound query for the post feed, a compound query for the story feed and set an e-mail template for password reset."
       echo
       
       echo 
+      url="https://vercel.com/$(vercel whoami)/$name/settings/environment-variables"
+      echo "(1/5) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
+      echo "NAME: GOOGLE_APP_CREDENTIALS"
+      echo "VALUE: "
+      echo $keysbase64
+      echo "ENVIRONMENT: Production, Preview, Development"
+      open $url
+      echo
+      echo "(Once you are done, close the tab and hit enter to continue)"
+      read
+      
+      echo 
       url=https://console.firebase.google.com/project/$projectid/authentication
-      echo "(1/4) First, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
+      echo "(2/5) Second, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
       open $url
       echo
       echo "(Once you are done, close the tab and hit enter to continue)"
@@ -92,7 +114,7 @@ case $1 in
      
       echo 
       url=https://console.firebase.google.com/project/$projectid/firestore/indexes
-      echo "(2/4) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
+      echo "(3/5) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
       echo "Collection ID: posts"
       echo "Field #1: profileId | Ascending" 
       echo "Field #2: timestamp | Descending"
@@ -103,7 +125,7 @@ case $1 in
       read
       
       echo 
-      echo "(3/4) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
+      echo "(4/5) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
       echo "Collection ID: stories"
       echo "Field #1: profileId | Ascending" 
       echo "Field #2: editedAt | Descending"
@@ -114,7 +136,7 @@ case $1 in
       
       echo
       url=https://console.firebase.google.com/project/$projectid/authentication/emails
-      echo "(4/4) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
+      echo "(5/5) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
       echo "Sender name: Your name"
       echo "Subject: %APP_NAME% - Reset your password"
       echo "Message:"
@@ -127,8 +149,9 @@ case $1 in
       read
 
       echo
-      echo "=== FBC is finished. ==="
-      echo
+      echo "======================================" 
+      echo "🎉 Congratulations! That's everything." 
+      echo "======================================" 
       echo
     else
       exit 1
