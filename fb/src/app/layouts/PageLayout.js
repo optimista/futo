@@ -2,7 +2,8 @@ import { AppBar, Button, Container, Link, Skeleton, Toolbar, Typography } from '
 import { Settings } from '@material-ui/icons'
 
 import { useAuth } from 'auth'
-import { AccountOrLoginButton, Avatar, Logo } from 'core'
+import { AccountOrLoginButton, Logo } from 'core'
+import { Avatar } from 'models/profile'
 
 const ProfileButton = () => { 
   const auth = useAuth();
@@ -10,7 +11,7 @@ const ProfileButton = () => {
   if (!auth.profile) return <Skeleton height={34} sx={{ borderRadius: 34, mr: 2 }} variant="rectangular" width={150} />
 
   return (
-    <Button component={Link} href={"/" + auth.profile.username} startIcon={<Avatar height={t => t.spacing(4)} width={t => t.spacing(4)} />} sx={{ borderRadius: 17, mr: 1, pl: 0.5, pr: 2, py: 0.125, textTransform: "none" }} variant="text">
+    <Button component={Link} href={"/" + auth.profile.username} startIcon={<Avatar sx={{ height: t => t.spacing(4), width: t => t.spacing(4) }} />} sx={{ borderRadius: 17, mr: 1, pl: 0.5, pr: 2, py: 0.125, textTransform: "none" }} variant="text">
       {auth.profile.displayName || "Your profile"}
     </Button>
   )
@@ -23,8 +24,8 @@ const PageLayout = ({ children, maxWidth }) => {
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <Logo height={t => t.spacing(4)} width={t => t.spacing(4)} />
-          <Typography sx={{ flexGrow: 1, letterSpacing: 5, px: 2 }}><Link href="/" underline="none">fbs-demo</Link></Typography>
+          <Logo sx={{ height: t => t.spacing(4), width: t => t.spacing(4) }} />
+          <Typography sx={{ flexGrow: 1, letterSpacing: 5, px: 2 }}><Link href="/" underline="none">myapp</Link></Typography>
           { auth.isLoggedIn && <ProfileButton /> }
           <AccountOrLoginButton accountIcon={<Settings />} />
         </Toolbar>

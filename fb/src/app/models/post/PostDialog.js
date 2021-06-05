@@ -1,9 +1,9 @@
 import { useModal } from '@futo-ui/hooks'
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from '@material-ui/core'
 
-import { Avatar } from 'core'
 import { Field, Form, Submit } from 'core/form'
 import { PostCardLayout } from 'models/post'
+import { Avatar } from 'models/profile'
 
 const DiscardDialog = ({ onClose, onDiscard, title, ...props }) => 
   <Dialog fullWidth={false} maxWidth="xs" onClose={onClose} {...props}>

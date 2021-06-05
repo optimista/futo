@@ -3,8 +3,9 @@ import { Link, ListItemIcon, ListItemText, MenuItem, Skeleton, Typography } from
 import { DeleteOutlined, EditOutlined, MoreHoriz } from '@material-ui/icons'
 
 import { useAuth } from 'auth'
-import { Avatar, IconButton, Menu } from 'core'
+import { IconButton, Menu } from 'core'
 import { PostCardLayout, Posts } from 'models/post'
+import { Avatar } from 'models/profile'
 
 const PostCard = ({ post, onEdit }) => {
   const auth = useAuth(),
@@ -36,18 +37,19 @@ const PostCard = ({ post, onEdit }) => {
           </Menu>
         </>
       }
-      avatar={<Avatar href={"/" + post?.profileUsername} skeleton={!post} src={post?.profilePhotoURL} />}
+      avatar={
+        post ?
+          <Link href={"/" + post?.profileUsername} underline="none"><Avatar src={post?.profilePhotoURL} /></Link>
+          :
+          <Avatar ready={false} />
+      }
       title={
         post ?
           <><Link href={"/" + post.profileUsername}>{post.profileDisplayName || "@" + post.profileUsername}</Link>{" · "+post.time}</>
           :
-          <Skeleton width={80} />
+          <Skeleton width={160} />
       }>
-      { post ? 
-        <Typography variant="body1" color="textPrimary" component="p" style={{ whiteSpace: 'pre-wrap' }}>{post.content}</Typography>
-        :
-        <Skeleton height={60} variant="rectangular" />
-      }
+      <Typography variant="body1" color="textPrimary" component="p" style={{ whiteSpace: 'pre-wrap' }}>{post ? post.content : <Skeleton />}</Typography>
     </PostCardLayout>
   )
 }

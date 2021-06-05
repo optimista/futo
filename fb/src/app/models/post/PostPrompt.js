@@ -2,8 +2,8 @@ import { useModal } from '@futo-ui/hooks'
 import { TextField } from '@material-ui/core'
 
 import { useAuth } from 'auth'
-import { Avatar } from 'core'
 import { PostCardLayout, PostDialog, PostJoinDialog, usePostDialog } from 'models/post'
+import { Avatar } from 'models/profile'
 
 const PostPrompt = () => {
   const auth = useAuth(),

@@ -6,10 +6,10 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 import { useAuth } from 'auth'
-import { AspectRatioBox, Avatar, IconButton } from 'core'
+import { AspectRatioBox, IconButton } from 'core'
 import { Field, Form, ImageField, Submit } from 'core/form'
 import { Posts, PostDialog, usePostDialog } from 'models/post'
-import { Profiles, Usernames, useProfileDialog } from 'models/profile'
+import { Avatar, Profiles, Usernames, useProfileDialog } from 'models/profile'
 import { firebase, firebaseError } from 'utils'
 
 // ProfileDeleteDialog
@@ -128,16 +128,15 @@ const Profile = ({ profileId }) => {
   useEffect(() => profileId &&
     Profiles.doc(profileId).onSnapshot(doc => doc.data() && setProfile(doc.data()), () => router.replace("/")), [profileId]);
 
-  const loading = profile === null,
-        isMyProfile = auth.isLoggedIn && auth.uid === profile?.id;
- 
+  const isMyProfile = auth.isLoggedIn && auth.uid === profile?.id;
+
   return (
     <>
       <Grid container spacing={2} sx={{ p: 2 }}>
         <Grid container item sx={{ alignItems: "flex-end", justifyContent: "space-between" }}>
           <Grid item xs={3}>
             <AspectRatioBox>
-              <Avatar skeleton={loading} src={profile?.photoURL} />
+              <Avatar ready={Boolean(profile)} src={profile?.photoURL} />
             </AspectRatioBox>
           </Grid>
           { isMyProfile && <Grid item sx={{ pb: 1 }}>
@@ -150,15 +149,15 @@ const Profile = ({ profileId }) => {
           </Grid> }
         </Grid>
         <Grid item container xs={12}>
-          { (loading || profile.displayName) && <Grid item xs={12}>
-            { !loading ? <Typography variant="h5">{profile.displayName}</Typography> : <Skeleton height={36} /> }
+          { (!profile || profile.displayName) && <Grid item xs={12}>
+            <Typography variant="h5">{ profile ? profile.displayName : <Skeleton width={160} />}</Typography>
           </Grid> }
           <Grid item xs={12}>
-            { !loading ? <Typography gutterBottom>{"@" + profile.username + " · " + profile.time}</Typography> : <Skeleton height={30} /> }
+            <Typography gutterBottom>{ profile ? "@" + profile.username + " · " + profile.time : <Skeleton width={320} />}</Typography>
           </Grid>
         </Grid>
-        { (loading || profile.bio) && <Grid item xs={12}>
-          { !loading ? <Typography gutterBottom>{profile.bio}</Typography> : <Skeleton height={24} /> }
+        { (!profile || profile.bio) && <Grid item xs={12}>
+          <Typography gutterBottom>{ profile ? profile.bio : <Skeleton />}</Typography>
         </Grid> }
       </Grid>
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} />

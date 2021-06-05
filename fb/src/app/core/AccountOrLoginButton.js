@@ -3,7 +3,8 @@ import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } fro
 import { ExitToAppSharp, HistoryEdu } from '@material-ui/icons'
 
 import { LoginForm, useAuth, useLoginModel } from 'auth'
-import { Avatar, IconButton, Menu } from 'core'
+import { IconButton, Menu } from 'core'
+import { Avatar } from 'models/profile'
 import { firebase } from 'utils'
 
 const AccountMenuButton = ({ children }) => {
@@ -31,10 +32,10 @@ const AccountMenuButton = ({ children }) => {
           </ListItemIcon>
           <ListItemText primary="Stories" />
         </MenuItem>
-        <MenuItem component={Link} href={"/" + auth?.profile?.username}>
+        <MenuItem component={Link} href={"/" + auth.profile?.username}>
           <ListItemIcon>
             <Badge badgeContent={1} color="error" invisible={invisible} overlap="circular" variant="dot">
-              <Avatar height={24} width={24} />
+              <Avatar sx={{ height: t => t.spacing(3), width: t => t.spacing(3) }} />
             </Badge>
           </ListItemIcon>
           <ListItemText primary="Profile" />
@@ -63,8 +64,8 @@ const LoginDialogButton = ({ children, ...props }) => {
 } 
 
 const AccountOrLoginButton = ({ accountIcon }) => {
-  const auth = useAuth();
-  return auth.isReady && (auth.isLoggedIn ? <AccountMenuButton>{accountIcon || <Avatar />}</AccountMenuButton> : <LoginDialogButton />);
+  const auth = useAuth(); if (auth.isReady && !auth.isLoggedIn) return <LoginDialogButton />;
+  return <AccountMenuButton>{accountIcon || <Avatar />}</AccountMenuButton>;
 }
 
 export default AccountOrLoginButton;

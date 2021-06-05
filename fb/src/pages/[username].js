@@ -18,11 +18,11 @@ const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
         <meta property="og:title" content={name} />
         <meta property="og:description" content={bio} />
         <meta property="og:type" content="website"/>
-        <meta property="og:url" content={"https://fbs-demo.vercel.app/"+username} />
+        <meta property="og:url" content={"https://myapp.vercel.app/"+username} />
         <meta property="og:image" content={photoURL} />
         <meta property="og:image:alt" content={imageAlt} />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@fbs-demo" />
+        <meta name="twitter:site" content="@myapp" />
         <meta name="twitter:image:alt" content={imageAlt} />
         <title>{name}</title>
       </Head>

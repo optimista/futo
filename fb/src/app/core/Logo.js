@@ -1,6 +1,10 @@
+import { Link } from '@material-ui/core'
+
 import { Avatar } from 'core'
 
 const Logo = props => 
-  <Avatar alt="name" href="/" src="/name.png" {...props} />
+  <Link href="/" underline="none">
+    <Avatar alt="name" src="/name.png" {...props} />
+  </Link>
 
 export default Logo;

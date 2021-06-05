@@ -7,7 +7,6 @@ case $1 in
     name=$2
 
     if projectid=$( cat ${1:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
-      $dir/exp/vercel-secrets-remove $projectid;
       url="https://console.firebase.google.com/project/$projectid/settings/general"
       echo "To delete project on firebase go to your browser and newly opened link $url"
       open $url
@@ -74,7 +73,8 @@ case $1 in
       cp -r $dir/src/app/models app/models # together with posts & stories
       cp -r $dir/src/pages/account pages/ # account pages
       sed -i '' "/^  <Avatar/s/name/$name/g" app/core/Logo.js
-      sed -i '' "s/MyApp/$name/g" app/models/post/PostJoinDialog.js
+      sed -i '' "s/MyApp/$ccname/g" app/models/post/PostJoinDialog.js
+      sed -i '' "s/myapp/$name/g" app/layouts/PageLayout.js
       sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       
