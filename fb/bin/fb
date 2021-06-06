@@ -60,6 +60,12 @@ case $1 in
       gcloud iam service-accounts keys create /tmp/keys --iam-account=$iamaccount
       keysbase64="$( cat /tmp/keys | base64 )" # Is used at the ending prompts
 
+      # CYPRESS INSTALL & CONFIGURATION
+      npm install cypress --save-dev
+      cp $dir/src/cypress.json .
+      cp -r $dir/src/cypress .
+      sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
+
       ## MAIN
       npm install uuid
       cp $dir/src/next.config.js .

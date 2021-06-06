@@ -15,9 +15,9 @@ const StoryNewPage = () => {
         auth = useAuth(), router = useRouter(), { id } = router.query,
         autosave = useAutosave({ query: () => Stories.doc(id).set(state.story) });
 
-  useEffect(() => auth.isReady &&
+  useEffect(() => auth.isReady && (auth.isLoggedIn ?
     Stories.add({ ...state.story, profileId: auth.uid }).then(doc => router.replace(storyEditPath(doc), null, { shallow: true })) &&
-    dispatch(state => ({ type: "STORY_LOAD", value: { ...state.story, profileId: auth.uid } }))
+    dispatch(state => ({ type: "STORY_LOAD", value: { ...state.story, profileId: auth.uid } })) : router.replace("/"))
   , [auth.isReady]);
   
   return (
