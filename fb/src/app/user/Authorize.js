@@ -6,7 +6,7 @@ import { useAuth } from 'user'
 
 const Authorize = ({ children, ready = true, redirect = "/", uid }) => {
   const auth = useAuth(), router = useRouter(), isAuthorized = uid ? auth.uid === uid : auth.isLoggedIn;
-  useEffect(() => auth.isReady && ready && !isAuthorized && router.replace(redirect || "/"), [auth.isReady, ready]);
+  useEffect(() => auth.isReady && ready && !isAuthorized && router.replace(redirect || "/"), [auth.isLoggedIn, auth.isReady, ready]);
   return <Loading ready={auth.isReady && ready && isAuthorized}>{children}</Loading>
 }
 

@@ -3,7 +3,7 @@ import { filter, insert } from '@futo-ui/utils'
 const nodeReducer = (node, action) => {
   switch(action.type) {
     case "NODE_ADD":
-      return { content: action.content || "", ...(action.sx ? { sx: action.sx } : {}) };
+      return { content: action.content || "" };
     case "NODE_EDIT":
       return { ...node, content: action.value };
     case "NODE_IMAGE":
@@ -59,7 +59,28 @@ const positionsReducer = (positions, action) => {
   }
 }
 
-const storyReducer = (story = { nodes: {}, order: [], positions: {} }, action) => {
+const sxReducer = (sx = {}, action) => {
+  switch(action.type) {
+    case "NODE_ADD":
+      return action.sx; 
+    default:
+      return sx;
+  }
+}
+
+const sxsReducer = (sxs = {}, action) => {
+  switch(action.type) {
+    case "NODES_REMOVE":
+      return filter(sxs, k => !action.keymap[k]);
+    default:
+      return action.key ? {
+        ...sxs,
+        [action.key]: sxReducer(sxs[action.key], action)
+      } : sxs;
+  }
+}
+
+const storyReducer = (story = { nodes: {}, order: [], positions: {}, sx: {} }, action) => {
   switch(action.type) {
     case "STORY_LOAD":
       return action.value;
@@ -68,7 +89,8 @@ const storyReducer = (story = { nodes: {}, order: [], positions: {} }, action) =
         ...story,
         nodes: nodesReducer(story.nodes, action),
         order: orderReducer(story.order, action),
-        positions: positionsReducer(story.positions, action)
+        positions: positionsReducer(story.positions, action),
+        sx: sxsReducer(story.sx, action)
       };
   }
 }

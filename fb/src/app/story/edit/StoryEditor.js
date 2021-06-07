@@ -11,12 +11,19 @@ const StoryEditor = props => {
 
   const handleMouseUp = e => e.currentTarget === e.target &&
     dispatch(state => state.grab.dragged ? [] : newNodeActions(state, clientToCoors(state, { x: e.clientX, y: e.clientY }))) 
- 
-  const lastNodeHeight = state.render.nodes[last(state.story.order)]?.height,
+
+  // CASES:
+  // 1. no nodes
+  // 2. last node is an image
+  const { order } = state.story,
+        containerHeight = state.render.container.height, 
+        lastNodeHeight = state.render.nodes[last(state.story.order)]?.height,
         wasCalled = useRef(false);
+
   useEffect(() => {
-    if (lastNodeHeight && !wasCalled.current) { wasCalled.current = true; dispatch(state => newNodeEnterActions(state)); }
-  }, [lastNodeHeight])
+    if (((order.length === 0 && containerHeight) || lastNodeHeight) && !wasCalled.current) {
+      wasCalled.current = true; dispatch(state => newNodeEnterActions(state)); }
+  }, [containerHeight, lastNodeHeight])
   
   useGrabbing({ onMouseMoveDispatch: ({ handle, key, deltas }) => {
     switch(handle) {
