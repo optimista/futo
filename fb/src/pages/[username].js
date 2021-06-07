@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
-import { FeedLayout } from 'layouts'
-import { PostFeed } from 'models/post'
-import { Profile } from 'models/profile'
+import { FeedLayout } from 'core/layouts'
+import { PostFeed } from 'post'
+import { Profile } from 'profile'
 
 const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
   const router = useRouter(),
@@ -35,7 +35,7 @@ const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
 }
 
 export const getStaticProps = async ({ params }) => {
-  const { firebase } = await import('utils/server'),
+  const { firebase } = await import('core/utils/server'),
         docUsername = await firebase.firestore().collection('usernames').doc(params.username).get();
 
   if (!docUsername.exists) return { redirect: { destination: '/', permanent: false } };
@@ -65,9 +65,9 @@ export default ProfilePage;
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-import { FeedLayout } from 'layouts'
-import { PostFeed } from 'models/post'
-import { Profile, Usernames } from 'models/profile'
+import { FeedLayout } from 'core/layouts'
+import { PostFeed } from 'post'
+import { Profile, Usernames } from 'profile'
 
 const ProfilePage = () => {
   const router = useRouter(), { username } = router.query, [profileId, setProfileId] = useState(null);

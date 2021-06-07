@@ -1,4 +1,3 @@
-export { default as AccountOrLoginButton } from './AccountOrLoginButton'
 export { default as AspectRatioBox } from './AspectRatioBox'
 export { default as Avatar } from './Avatar'
 export { default as ContentEditable } from './ContentEditable'

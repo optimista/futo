@@ -4,25 +4,27 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import { Field, Form, Submit } from 'core/form'
-import { FocusLayout } from 'layouts'
-import { ERRORS } from 'locales'
-import { firebase, firebaseError } from 'utils'
-import { emailFormatAt, emailFormatDomain, presence } from 'utils/validators'
+import { FocusLayout } from 'core/layouts'
+import { errorMessage, firebase } from 'core/utils'
+import { presence } from 'core/validators'
+import { userErrorMessage } from 'user'
+import { USER_ERRORS } from 'user/locales'
+import { emailFormatAt, emailFormatDomain } from 'user/validators'
 
 const AccountReset = () => {
   const router = useRouter(), { err } = router.query,
         user = useModel({ email: "" }, {
           validation: { disableInline: true, 
-            generalError: err => firebaseError(err),
+            generalError: err => errorMessage(err),
             syncValidators: {
               email: [
-                { f: presence, message: ERRORS["futo/email-empty"] },
-                { f: emailFormatAt, message: ERRORS["futo/email-without-at"] },
-                { f: emailFormatDomain, message: ERRORS["futo/email-invalid-domain"] },
+                { f: presence, message: USER_ERRORS["user/email-empty"] },
+                { f: emailFormatAt, message: USER_ERRORS["user/email-without-at"] },
+                { f: emailFormatDomain, message: USER_ERRORS["user/email-invalid-domain"] },
               ],
             }
           },
-          onSubmit: () => { firebase.auth().sendPasswordResetEmail(user.email).then(user.success).catch(err => user.fail(firebaseError(err))); }
+          onSubmit: () => { firebase.auth().sendPasswordResetEmail(user.email).then(user.success).catch(err => user.fail(userErrorMessage(err))); }
         });
 
   useEffect(() => router.isReady && err && user.fail(JSON.parse(atob(err))), [router.isReady]);

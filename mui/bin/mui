@@ -8,9 +8,9 @@ case $1 in
     wget -q -O /tmp/_document.js https://raw.githubusercontent.com/mui-org/material-ui/next/examples/nextjs/pages/_document.js
     wget -q -O /tmp/theme.js https://raw.githubusercontent.com/mui-org/material-ui/next/examples/nextjs/src/theme.js
 
-    diff -u /tmp/_app.js $dir/latest/pages/_app.js &&
-    diff -u /tmp/_document.js $dir/latest/pages/_document.js &&
-    diff -u /tmp/theme.js $dir/latest/src/theme.js
+    diff -u $dir/latest/pages/_app.js /tmp/_app.js &&
+    diff -u $dir/latest/pages/_document.js /tmp/_document.js &&
+    diff -u $dir/latest/src/theme.js /tmp/theme.js 
     ;;
   rm)
     name=$2
@@ -28,35 +28,18 @@ case $1 in
       # prepare app folder 
       mkdir app
       npm install path
-      cp $dir/src/next.config.js next.config.js
+      cp $dir/src/next.config.js .
       
       # install @material-ui/core
-      mkdir app/utils styles
-      npm install nprogress @material-ui/core@next @material-ui/styles@next @emotion/react @emotion/server @emotion/styled
-      cp $dir/src/pages/_app.js pages/_app.js 
-      cp $dir/src/pages/_document.js pages/_document.js 
-      cp $dir/src/app/utils/index.js app/utils/index.js
-      cp $dir/src/app/utils/theme.js app/utils/theme.js
-      cp $dir/src/styles/nprogress.css styles/nprogress.css
-      
-      # _app.js preparation
+      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @material-ui/core@next @material-ui/icons@next @material-ui/styles@next babel-plugin-import nprogress  
+      cp $dir/src/.babelrc .
+      cp -r $dir/src/app/core app
+      cp -r $dir/src/styles . 
+      cp -r $dir/src/pages . 
       sed -i '' "s/MyApp/"$ccname"App/" pages/_app.js
       sed -i '' "s/My page/"$ccname"/g" pages/_app.js # change title
-
-      # _document.js preparation
       sed -i '' "s/MyDocument/"$ccname"Document/g" pages/_document.js # change name of Document class
-      
-      ### ADDONS
-      # index.js
-      cp $dir/src/pages/index.js pages/index.js
-      cp -r $dir/src/app/layouts app/layouts
       sed -i '' "s/MyApp/$ccname/" pages/index.js
-
-      # theme.js
-      npm install @futo-ui/hooks @futo-ui/utils @material-ui/icons@next babel-plugin-import
-      cp $dir/src/.babelrc .
-      cp $dir/src/pages/theme.js pages/theme.js
-      cp -r $dir/src/app/core app/core
     else
       echo
       mv /tmp/_app.js $dir/latest/pages/_app.js

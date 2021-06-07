@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 
-import { LoginForm, useLoginModel } from 'auth'
-import { FocusLayout } from 'layouts'
+import { FocusLayout } from 'core/layouts'
+import { LoginForm, useLoginModel } from 'user'
 
 const Login = () => {
   const router = useRouter(), 

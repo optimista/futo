@@ -3,34 +3,36 @@ import { Link, Typography } from '@material-ui/core'
 import { useRouter } from 'next/router'
 
 import { Field, Form, Submit } from 'core/form'
-import { FocusLayout } from 'layouts'
-import { ERRORS } from 'locales'
-import { Profiles, Usernames } from 'models/profile'
-import { firebase, firebaseError } from 'utils'
-import { emailFormatAt, emailFormatDomain, emailUniqueness, maxLength, minLength, presence, usernameFormatCharacters, usernameFormatNoConsecutive, usernameFormatNoBeginEnd, usernameUniqueness } from 'utils/validators'
+import { FocusLayout } from 'core/layouts'
+import { errorMessage, firebase } from 'core/utils'
+import { maxLength, minLength, presence } from 'core/validators'
+import { Profiles, Usernames } from 'profile'
+import { userErrorMessage } from 'user'
+import { USER_ERRORS } from 'user/locales'
+import { emailFormatAt, emailFormatDomain, emailUniqueness, usernameFormatCharacters, usernameFormatNoConsecutive, usernameFormatNoBeginEnd, usernameUniqueness } from 'user/validators'
 
 const JoinForm = () => {
   const router = useRouter(), 
         user = useModel({ email: "", password: "", username: "" }, {
           validation: {
-            generalError: err => firebaseError(err, ERRORS["title/registration-not-successful"]),
+            generalError: err => errorMessage(err, USER_ERRORS["user/registration-not-successful/title"]),
             asyncValidators: {
-              email: { f: emailUniqueness, message: ERRORS["auth/email-already-in-use"] },
-              username: { f: usernameUniqueness, message: ERRORS["futo/username-exists"] }
+              email: { f: emailUniqueness, message: USER_ERRORS["auth/email-already-in-use"] },
+              username: { f: usernameUniqueness, message: USER_ERRORS["user/username-exists"] }
             },
             syncValidators: {
               email: [
-                { f: presence, message: ERRORS["futo/email-empty"] },
-                { f: emailFormatAt, message: ERRORS["futo/email-without-at"] },
-                { f: emailFormatDomain, message: ERRORS["futo/email-invalid-domain"] },
+                { f: presence, message: USER_ERRORS["user/email-empty"] },
+                { f: emailFormatAt, message: USER_ERRORS["user/email-without-at"] },
+                { f: emailFormatDomain, message: USER_ERRORS["user/email-invalid-domain"] },
               ],
-              password: { f: minLength(6), message: ERRORS["futo/password-short"] },
+              password: { f: minLength(6), message: USER_ERRORS["user/password-short"] },
               username: [
-                { f: presence, message: ERRORS["futo/username-empty"] },
-                { f: maxLength(16), message: ERRORS["futo/username-long"] },
-                { f: usernameFormatCharacters, message: ERRORS["futo/username-characters"] },
-                { f: usernameFormatNoConsecutive, message: ERRORS["futo/username-consecutive"] },
-                { f: usernameFormatNoBeginEnd, message: ERRORS["futo/username-begin-end"] },
+                { f: presence, message: USER_ERRORS["user/username-empty"] },
+                { f: maxLength(16), message: USER_ERRORS["user/username-long"] },
+                { f: usernameFormatCharacters, message: USER_ERRORS["user/username-characters"] },
+                { f: usernameFormatNoConsecutive, message: USER_ERRORS["user/username-consecutive"] },
+                { f: usernameFormatNoBeginEnd, message: USER_ERRORS["user/username-begin-end"] },
               ]
             },
           },
@@ -46,10 +48,10 @@ const JoinForm = () => {
               batch.commit().then(() => {
                 router.push("/")
               }).catch(() => { // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
-                user.fail(firebaseError({}, ERRORS["title/registration-not-successful"]));
+                user.fail(errorMessage({}, USER_ERRORS["user/registration-not-successful/title"]));
                 firebase.auth().currentUser.delete();
               });
-            }, err => user.fail(firebaseError(err)));
+            }, err => user.fail(userErrorMessage(err)));
           }
         });
 

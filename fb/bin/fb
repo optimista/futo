@@ -6,7 +6,7 @@ case $1 in
   rm)
     name=$2
 
-    if projectid=$( cat ${1:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
+    if projectid=$( cat ${2:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
       url="https://console.firebase.google.com/project/$projectid/settings/general"
       echo "To delete project on firebase go to your browser and newly opened link $url"
       open $url
@@ -45,9 +45,9 @@ case $1 in
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
       npm install firebase firebase-admin # SERVER SIDE HERE TOO
-      cp $dir/src/app/utils/*.js app/utils/
-      sed -i '' "/databaseURL/s/projectid/$projectid/" app/utils/server.js # SERVER SIDE
-      $( echo $createapp ) | sed -n '/^firebase/,/^})/p' | sed 's/^/  /' | sed -i '' '/^if (!firebase\.apps\.length)/r /dev/stdin' app/utils/firebase.js
+      cp $dir/src/app/core/utils/*.js app/core/utils/
+      sed -i '' "/databaseURL/s/projectid/$projectid/" app/core/utils/server.js # SERVER SIDE
+      $( echo $createapp ) | sed -n '/^firebase/,/^})/p' | sed 's/^/  /' | sed -i '' '/^if (!firebase\.apps\.length)/r /dev/stdin' app/core/utils/firebase.js
       
       # firestore.rules setup
       cp $dir/src/firestore.rules firestore.rules
@@ -71,27 +71,30 @@ case $1 in
       cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/form/*.js app/core/form/
-      cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & new.js
+      cp $dir/src/app/core/layouts/*.js app/core/layouts/
+      cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
       cp $dir/src/public/name.png public/$name.png
-      cp -r $dir/src/app/auth app/auth
-      cp -r $dir/src/app/layouts app
-      cp -r $dir/src/app/locales app/locales
-      cp -r $dir/src/app/models app/models # together with posts & stories
+      cp -r $dir/src/app/core/locales app/core/locales
+      cp -r $dir/src/app/post app/post
+      cp -r $dir/src/app/profile app/profile 
+      cp -r $dir/src/app/story app/story 
+      cp -r $dir/src/app/user app/user
       cp -r $dir/src/pages/account pages/ # account pages
-      sed -i '' "/^  <Avatar/s/name/$name/g" app/core/Logo.js
-      sed -i '' "s/MyApp/$ccname/g" app/models/post/PostJoinDialog.js
-      sed -i '' "s/myapp/$name/g" app/layouts/PageLayout.js
+
+      ## MODIFICATIONS
+      sed -i '' "/^    <Avatar/s/name/$name/g" app/core/Logo.js
+      sed -i '' "s/myapp/$name/g" app/core/layouts/PageLayout.js
+      sed -i '' "s/MyApp/$ccname/g" app/post/PostJoinDialog.js
       sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       
       ### Add AuthProvider
-      sed -i '' "s/import { theme } from 'utils'/import { AuthProvider } from 'auth'\n&/" pages/_app.js
+      sed -i '' "s/import { theme } from 'core\/utils'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
       sed -i '' "s/      <ThemeProvider theme={theme}>/      <AuthProvider>\n&/" pages/_app.js
       sed -i '' "s/      <\/ThemeProvider>/&\n      <\/AuthProvider>/" pages/_app.js
       sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' pages/_app.js
 
       ### Stories
-      npm install resize-observer-polyfill
       cp -r $dir/src/pages/s pages/ 
 
       echo 

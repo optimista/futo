@@ -1,14 +1,14 @@
 import { useAutosave, useReducer } from '@futo-ui/hooks'
 import { useRouter } from 'next/router'
 
-import { Authorize } from 'auth'
-import { FixedLayout } from 'layouts'
-import { Stories } from 'models/story'
-import { AutosaveProvider, DispatchProvider, StoreProvider } from 'models/story/context'
-import { StoryEditor } from 'models/story/edit'
-import { caretReducer, grabReducer, renderReducer, storyReducer, trashReducer, viewReducer } from 'models/story/state'
-import { storyPath } from 'models/story/utils'
-import { useStoryLoad } from 'models/story/view'
+import { FixedLayout } from 'core/layouts'
+import { Stories } from 'story'
+import { AutosaveProvider, DispatchProvider, StoreProvider } from 'story/context'
+import { StoryEditor } from 'story/edit'
+import { caretReducer, grabReducer, renderReducer, storyReducer, trashReducer, viewReducer } from 'story/state'
+import { storyPath } from 'story/utils'
+import { useStoryLoad } from 'story/view'
+import { Authorize } from 'user'
 
 const StoryEditPage = () => {
   const [state, dispatch] = useReducer({ caretReducer, grabReducer, renderReducer, storyReducer, trashReducer, viewReducer }, { root: true }),

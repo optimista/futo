@@ -2,10 +2,10 @@ import { useReducer } from '@futo-ui/hooks'
 import { useRouter } from 'next/router'
 
 import { Loading } from 'core'
-import { FixedLayout } from 'layouts'
-import { DispatchProvider, StoreProvider } from 'models/story/context'
-import { grabReducer, renderReducer, storyReducer, viewReducer } from 'models/story/state'
-import { StoryViewer, useStoryLoad } from 'models/story/view'
+import { FixedLayout } from 'core/layouts'
+import { DispatchProvider, StoreProvider } from 'story/context'
+import { grabReducer, renderReducer, storyReducer, viewReducer } from 'story/state'
+import { StoryViewer, useStoryLoad } from 'story/view'
 
 const StoryPage = () => {
   const [state, dispatch] = useReducer({ grabReducer, renderReducer, storyReducer, viewReducer }, { root: true }),

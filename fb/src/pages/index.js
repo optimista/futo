@@ -1,5 +1,5 @@
-import { FeedLayout } from 'layouts'
-import { PostFeed, PostPrompt } from 'models/post'
+import { FeedLayout } from 'core/layouts'
+import { PostFeed, PostPrompt } from 'post'
 
 const Home = () => 
   <FeedLayout>

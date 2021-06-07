@@ -1,6 +1,6 @@
 import { CircularProgress } from '@material-ui/core'
 
-import { FocusLayout } from 'layouts'
+import { FocusLayout } from 'core/layouts'
 
 const LoadingScreen = ({ children = null, ready = false }) => 
   ready ?

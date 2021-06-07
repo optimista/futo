@@ -8,11 +8,12 @@ import NProgress from "nprogress";
 import PropTypes from 'prop-types';
 import * as React from 'react';
 
-import { theme } from 'utils'
+import { theme } from 'core/utils'
 
 import '../styles/nprogress.css'
 
-export const cache = createCache({ key: 'css', prepend: true });
+const cache = createCache({ key: 'css' });
+cache.compat = true;
 
 NProgress.configure({ showSpinner: false });
 Router.onRouteChangeStart = (_, { shallow }) => !shallow && NProgress.start();
@@ -23,9 +24,8 @@ const MyApp = props => {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
-    // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles) { jssStyles.parentElement.removeChild(jssStyles); }
+    if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
   }, []);
 
   return (

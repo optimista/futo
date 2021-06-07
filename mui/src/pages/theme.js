@@ -5,7 +5,7 @@ import { AddOutlined, DeleteOutlined, EditOutlined, MoreHoriz, Person, Send } fr
 
 import { IconButton, Menu } from 'core'
 import { Field, Form, Submit } from 'core/form'
-import { PageLayout } from 'layouts'
+import { PageLayout } from 'core/layouts'
 
 // ERRORS (can be moved to app/locales/ERRORS.js)
 const ERRORS = {

@@ -1,31 +1,32 @@
 import { useMenu, useModal, useModel } from '@futo-ui/hooks'
-import { Avatar, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, ListItemIcon, ListItemText, MenuItem, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Link, ListItemIcon, ListItemText, MenuItem, TextField, Typography } from '@material-ui/core'
 import { AddOutlined, DeleteOutlined, EditOutlined, MoreHoriz, Person, Send } from '@material-ui/icons' 
 
-import { IconButton, Menu } from 'core'
+import { Avatar, IconButton, Menu } from 'core'
 import { Field, Form, Submit } from 'core/form'
-import { PageLayout } from 'layouts'
-import { ERRORS } from 'locales'
-import { firebaseError } from 'utils'
-import { emailFormatAt, emailFormatDomain, emailUniqueness, presence }  from 'utils/validators'
+import { PageLayout } from 'core/layouts'
+import { errorMessage } from 'core/utils'
+import { presence } from 'core/validators'
+import { USER_ERRORS } from 'user/locales'
+import { emailFormatAt, emailFormatDomain, emailUniqueness }  from 'user/validators'
 
 const MockupForm = ({ children }) => {
   const form = useModel({ email: "" }, {
           validation: {
             generalError: err => {
-              const { title, message } = firebaseError(err).main; 
-              return { main: { title: title || ERRORS["title/registration-not-successful"], message } };
+              const { title, message } = errorMessage(err).main; 
+              return { main: { title: title || USER_ERRORS["user/registration-not-successful/title"], message } };
             },
             asyncValidators: {
-              email: { f: emailUniqueness, message: ERRORS["auth/email-already-in-use"] },
+              email: { f: emailUniqueness, message: USER_ERRORS["auth/email-already-in-use"] },
             },
             syncValidators: { email: [
-              { f: presence, message: ERRORS["futo/email-empty"] },
-              { f: emailFormatAt, message: ERRORS["futo/email-without-at"] },
-              { f: emailFormatDomain, message: ERRORS["futo/email-invalid-domain"] },
+              { f: presence, message: USER_ERRORS["user/email-empty"] },
+              { f: emailFormatAt, message: USER_ERRORS["user/email-without-at"] },
+              { f: emailFormatDomain, message: USER_ERRORS["user/email-invalid-domain"] },
             ]},
           },
-          onSubmit: () => setTimeout(() => form.fail(firebaseError()), 1000)
+          onSubmit: () => setTimeout(() => form.fail(errorMessage()), 1000)
         });
 
   return (

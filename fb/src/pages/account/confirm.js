@@ -4,23 +4,24 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import { Field, Form, Submit } from 'core/form'
-import { FocusLayout } from 'layouts'
-import { ERRORS } from 'locales'
-import { firebase, firebaseError } from 'utils'
-import { minLength } from 'utils/validators'
+import { FocusLayout } from 'core/layouts'
+import { errorMessage, firebase } from 'core/utils'
+import { minLength } from 'core/validators'
+import { userErrorMessage } from 'user'
+import { USER_ERRORS } from 'user/locales'
 
 const AccountResetConfirm = () => {
   const router = useRouter(), { oobCode = "" } = router.query,
     user = useModel({ email: "", password: "" }, { validation: {
-              generalError: err => firebaseError(err),
-              syncValidators: { password: { f: minLength(6), message: ERRORS["futo/password-short"] }}
+              generalError: err => errorMessage(err),
+              syncValidators: { password: { f: minLength(6), message: USER_ERRORS["user/password-short"] }}
             }, onSubmit: () => {
             firebase.auth().confirmPasswordReset(oobCode, user.password).then(() => {
               firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(() => router.push("/"))
-            }).catch(err => user.fail(firebaseError(err)));
+            }).catch(err => user.fail(userErrorMessage(err)));
           }}); 
 
-  useEffect(() => router.isReady && firebase.auth().verifyPasswordResetCode(oobCode).then(email => user.set('email', email), err => router.push({ pathname: "/account/reset", query: { err: btoa(JSON.stringify(firebaseError(err))) }  })), [router.isReady]); 
+  useEffect(() => router.isReady && firebase.auth().verifyPasswordResetCode(oobCode).then(email => user.set('email', email), err => router.push({ pathname: "/account/reset", query: { err: btoa(JSON.stringify(userErrorMessage(err))) }  })), [router.isReady]); 
  
   return (
     <FocusLayout maxWidth="xs">

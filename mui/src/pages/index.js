@@ -1,7 +1,7 @@
 import { Link, List, ListItem, Typography } from '@material-ui/core'
 import Head from 'next/head'
 
-import { PageLayout } from 'layouts'
+import { PageLayout } from 'core/layouts'
 
 const Home = () => 
   <>
