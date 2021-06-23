@@ -18,7 +18,6 @@ const presentCoors = ({ render, story, view }, key) => {
               rect({ x: node.x, y: node.y }, { height: rnode.height, width: rnode.width }), // Before rect -> rectRel (with align)
               sum(rect(clientToCoors({ render, story, view }, { x: 0, y: 0 }), { height: container.height, width: container.width }),
                 { left: 24, top: 64, right: -24, bottom: -24 })); // PADDING
-  console.log('presentCoors', key, container, rnode)
 
   return delta(view.present, {
     x: left < 0 && 0 < right ? avg(left, right) : Math.min(left, Math.max(0, right)),
