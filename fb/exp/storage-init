@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+
+set projectid [lindex $argv 0]
+spawn firebase init storage --project $projectid;
+expect -ex {? What file should be used for Storage Rules? (storage.rules)}
+send "\r";
+expect eof

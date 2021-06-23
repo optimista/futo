@@ -1,4 +1,5 @@
 import { useInfiniteScroll, useMounted } from '@futo-ui/hooks'
+import { last } from '@futo-ui/utils'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { useEffect, useRef, useState } from 'react'
@@ -25,14 +26,15 @@ const Feed = ({ collection, Item = () => null, orderBy = "timestamp", profileId,
   useEffect(() => {
     if (ready) {
       if (!fetching) return;
-      const l = batches.length, batch = batches[l - 1] || [], itemLast = batch[batch.length - 1],
-            query = (profileId !== undefined ? collection.where("profileId", "==", profileId) : collection).orderBy(orderBy, "desc").startAfter(itemLast?.[orderBy] || new Date(253402300799999));
+      const l = batches.length, batch = last(batches) || [];
+      let query = (profileId !== undefined ? collection.where("profileId", "==", profileId) : collection).orderBy(orderBy, "desc");
+      if (0 < l) query = query.startAfter(last(batch)[orderBy]);
            
       query.limit(BATCH_LIMIT).get().then(snapshot => {
         if (mounted.current) { // prevent setting the state when component has been unmounted
           const items = snapshot.docs.map(doc => doc.data());
           setBatches(bs => bs.concat([items]));
-          const unsubscribe = query.endAt(items[items.length-1]?.[orderBy] || new Date()).onSnapshot(snapshot => {
+          const unsubscribe = query.endAt(last(items)?.[orderBy] || new Date()).onSnapshot(snapshot => {
             const itemsUpdated = snapshot.docs.map(doc => doc.data());
             setBatches(bs => bs.map((b, i) => i === l ? itemsUpdated : b)); 
           });

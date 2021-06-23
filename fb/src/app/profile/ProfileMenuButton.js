@@ -1,4 +1,4 @@
-import { useModal, useMenu } from '@futo-ui/hooks'
+import { useDialog, useMenu } from '@futo-ui/hooks'
 import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@material-ui/core'
 import { ExitToAppSharp, HistoryEdu } from '@material-ui/icons'
 
@@ -8,8 +8,8 @@ import { ProfileAvatar } from 'profile'
 import { LoginForm, useAuth, useLoginModel } from 'user'
 
 const LoginDialogButton = ({ children, ...props }) => {
-  const dialog = useModal(false), 
-        user = useLoginModel({ success: dialog.close });
+  const user = useLoginModel({ success: () => dialog.close() }),
+        dialog = useDialog(user);
 
   return (
     <>

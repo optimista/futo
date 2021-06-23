@@ -1,11 +1,10 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
 import { base64 } from '@futo-ui/utils'
-import { v4 } from 'uuid'
 
-import { ImageField } from 'core/form'
-import { errorMessage, firebase } from 'core/utils'
+import { errorMessage, upload } from 'core/utils'
 import { presence } from 'core/validators'
 import { Profiles } from 'profile'
+import { AVATAR_IMAGE_TYPES } from 'profile/constants'
 import { PROFILE_ERRORS } from 'profile/locales'
 
 const useProfileDialog = initProfile => {
@@ -23,17 +22,10 @@ const useProfileDialog = initProfile => {
         batch.commit(); */
         const update = data => Profiles.doc(profile.id).update({ bio: profile.bio || "", displayName: profile.displayName || "", ...data }).then(dialog.close);
 
-        if (base64(profile.photoURL, ImageField.MIME_TYPES)) {
-          const ref = firebase.storage().ref("profiles/"+profile.id).child(v4()),
-                upload = ref.putString(profile.photoURL, "data_url");
-
-          upload.on("state_changed",
-            () => {}, // TODO: snapshot => console.log(snapshot.bytesTransferred / snapshot.totalBytes),
-            err => profile.fail(errorMessage(err)),
-            () => upload.snapshot.ref.getDownloadURL().then(downloadURL => update({ photoURL: downloadURL }).catch(err => {
-              ref.delete(); profile.fail(errorMessage(err)); 
-            }))
-          );
+        if (base64(profile.photoURL, AVATAR_IMAGE_TYPES)) {
+          upload("profiles/"+profile.id+"/original", profile.photoURL)
+            .then(downloadURL => update({ photoURL: downloadURL }))
+            .catch(err => profile.fail(errorMessage(err)));
         } else { update().catch(err => profile.fail(errorMessage(err))); }
       }}),
       dialog = useDialog(profile, initProfile);

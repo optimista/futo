@@ -1,8 +1,8 @@
 const trashReducer = (trash = { over: false }, action) => {
   switch(action.type) {
-    case "TRASH_ENTER":
+    case "trash-enter":
       return { ...trash, over: true };
-    case "TRASH_LEAVE":
+    case "trash-leave":
       return { ...trash, over: false };
     default:
       return trash;

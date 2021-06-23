@@ -1,3 +1,5 @@
 export { default as firebase } from './firebase'
 export { default as errorMessage } from './errorMessage'
+export { default as storage } from './storage'
 export { default as theme } from './theme'
+export { default as upload } from './upload'

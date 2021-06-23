@@ -40,7 +40,7 @@ case $1 in
       echo "(Once you are done, close the tab and hit enter to continue)"
       read
 
-      $dir/exp/firestore-init $projectid && firebase use $projectid
+      $dir/exp/firestore-init $projectid && $dir/exp/storage-init $projectid && firebase use $projectid
       # createapp == e.g. "firebase apps:sdkconfig WEB 1:233313016915:web:e6430e12bd463eb6027aa6"
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
@@ -51,8 +51,9 @@ case $1 in
       
       # firestore.rules setup
       cp $dir/src/firestore.rules firestore.rules
-      sed -i '' "s/projectid/$projectid/" firestore.rules
-      firebase deploy --only firestore:rules
+      cp $dir/src/storage.rules storage.rules
+      sed -i '' "s/projectid/$projectid/" storage.rules
+      firebase deploy
       
       # SERVER SIDE SERVICE ACCOUNT 
       gcloud config set project $projectid
@@ -67,7 +68,7 @@ case $1 in
       sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
 
       ## MAIN
-      npm install uuid
+      npm install @futo-ui/hooks@0.11.26 @futo-ui/utils@0.8.54
       cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/form/*.js app/core/form/

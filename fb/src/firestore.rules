@@ -60,11 +60,3 @@ service cloud.firestore {
     }
   }
 }
-service firebase.storage {
-  match /b/projectid/o {
-    match /profiles/{profileId} {
-      allow read;
-      allow write: if request.auth.uid == profileId;
-    }
-  }
-}

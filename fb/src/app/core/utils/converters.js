@@ -31,8 +31,8 @@ const time = date => {
 const timestampToDate = (doc, key = "timestamp") =>
   ({ ...doc, [key]: doc[key] ? doc[key].toDate() : new Date() });
 
-const woId = ({ id, ...doc }) => doc;
+const wo = (doc, keys) => keys.reduce((doc, key) => { delete doc[key]; return doc; }, doc);
 
 const wServerTimestamp = (doc, key = "timestamp") => ({ ...doc, [key]: firebase.firestore.FieldValue.serverTimestamp() });
 
-export { datetime, docWId, time, timestampToDate, wServerTimestamp, woId };
+export { datetime, docWId, time, timestampToDate, wServerTimestamp, wo };

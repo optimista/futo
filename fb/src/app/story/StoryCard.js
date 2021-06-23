@@ -3,13 +3,18 @@ import { Card, CardActions, CardContent, Link, ListItemIcon, ListItemText, MenuI
 import { DeleteOutlined, EditOutlined, ExpandMore } from '@material-ui/icons'
 
 import { IconButton, Menu } from 'core'
+import { storage } from 'core/utils'
 import { Stories } from 'story'
 import { description, lastEdited, storyPath, storyEditPath, title } from 'story/utils'
 
 const StoryCard = ({ story }) => {
   const menu = useMenu();
 
-  const handleRemove = () => { menu.close(); Stories.doc(story.id).delete(); }
+  const handleRemove = () => {
+    menu.close();
+    story.order.filter(k => story.nodes[k].type === "image").map(k => storage("stories/"+story.id+"/"+k).delete());
+    Stories.doc(story.id).delete();
+  }
 
   return (
     <Card sx={{ border: 0, display: "flex", justifyContent: "space-between" }}>

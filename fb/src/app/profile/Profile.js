@@ -10,6 +10,7 @@ import { Field, Form, ImageField, Submit } from 'core/form'
 import { firebase } from 'core/utils'
 import { Posts, PostDialog, usePostDialog } from 'post'
 import { ProfileAvatar, Profiles, Usernames, useProfileDialog } from 'profile'
+import { AVATAR_IMAGE_TYPES } from 'profile/constants'
 import { useAuth, userErrorMessage } from 'user'
 
 // ProfileDeleteDialog
@@ -99,7 +100,7 @@ const ProfileDialog = ({ profile, onClose, ...props }) => {
             <Grid item xs={3}>
               <AspectRatioBox>
                 <ProfileAvatar src={profile.photoURL} />
-                <ImageField className={classes.cameraButton} color="secondary" component={IconButton} name="photoURL" tooltip="Change photo">
+                <ImageField accept={AVATAR_IMAGE_TYPES.join(",")} className={classes.cameraButton} color="secondary" component={IconButton} name="photoURL" tooltip="Change photo">
                   <div className={classes.cameraButtonBorder} />
                   <PhotoCamera />
                 </ImageField>

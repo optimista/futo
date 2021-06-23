@@ -2,35 +2,39 @@ import { filter, insert } from '@futo-ui/utils'
 
 const nodeReducer = (node, action) => {
   switch(action.type) {
-    case "NODE_ADD":
+    case "story-node-add":
       return { content: action.content || "" };
-    case "NODE_EDIT":
-      return { ...node, content: action.value };
-    case "NODE_IMAGE":
-      return { ...node, content: action.value, type: "image", width: 250 };
+    case "story-node-change":
+      return { ...node, 
+        ...(action.content !== undefined ? { content: action.content } : {}),
+        ...(action.height ? { height: action.height } : {}),
+        ...(action.placeholder ? { placeholder: action.placeholder } : {}),
+        ...(action.t ? { type: action.t } : {}),
+        ...(action.width ? { width: action.width } : {})
+      };
     default:
       return node;
   }
 } 
 
-const nodesReducer = (nodes, action) => {
+const nodesReducer = (nodes = {}, action) => {
   switch(action.type) {
-    case "NODES_REMOVE":
-      return filter(nodes, k => !action.keymap[k]);
+    case "story-node-add":
+    case "story-node-change":
+      return { ...nodes, [action.key]: nodeReducer(nodes[action.key], action) };
+    case "story-node-remove":
+      return filter(nodes, k => k !== action.key);
     default:
-      return action.key ? {
-        ...nodes,
-        [action.key]: nodeReducer(nodes[action.key], action)
-      } : nodes;
+      return nodes;
   }
 }
 
-const orderReducer = (order, action) => {
+const orderReducer = (order = [], action) => {
   switch(action.type) {
-    case "NODE_ADD":
-      return insert(order, action.orderIndex, [action.key]);
-    case "NODES_REMOVE":
-      return order.filter(k => !action.keymap[k]);
+    case "story-node-add":
+      return insert(order, action.order, [action.key]);
+    case "story-node-remove":
+      return order.filter(k => k !== action.key);
     default:
       return order;
   }
@@ -38,31 +42,32 @@ const orderReducer = (order, action) => {
 
 const positionReducer = (position, action) => {
   switch(action.type) {
-    case "NODE_ADD":
+    case "story-node-add":
       return { x: action.x, y: action.y }
-    case "NODE_MOVE":
+    case "story-node-move":
       return { x: position.x + action.dx, y: position.y + action.dy }
     default:
       return position;
   }
 }
 
-const positionsReducer = (positions, action) => {
+const positionsReducer = (positions = {}, action) => {
   switch(action.type) {
-    case "NODES_REMOVE":
-      return filter(positions, k => !action.keymap[k]);
+    case "story-node-add":
+    case "story-node-move":
+      return { ...positions, [action.key]: positionReducer(positions[action.key], action) };
+    case "story-node-remove":
+      return filter(positions, k => k !== action.key);
     default:
-      return action.key ? {
-        ...positions,
-        [action.key]: positionReducer(positions[action.key], action)
-      } : positions;
+      return positions;
   }
 }
 
 const sxReducer = (sx = {}, action) => {
   switch(action.type) {
-    case "NODE_ADD":
-      return action.sx; 
+    case "story-node-add":
+    case "story-node-change":
+      return action.sx || sx; 
     default:
       return sx;
   }
@@ -70,20 +75,20 @@ const sxReducer = (sx = {}, action) => {
 
 const sxsReducer = (sxs = {}, action) => {
   switch(action.type) {
-    case "NODES_REMOVE":
-      return filter(sxs, k => !action.keymap[k]);
+    case "story-node-add":
+    case "story-node-change":
+      return { ...sxs, [action.key]: sxReducer(sxs[action.key], action) };
+    case "story-node-remove":
+      return filter(sxs, k => k !== action.key);
     default:
-      return action.key ? {
-        ...sxs,
-        [action.key]: sxReducer(sxs[action.key], action)
-      } : sxs;
+      return sxs;
   }
 }
 
-const storyReducer = (story = { nodes: {}, order: [], positions: {}, sx: {} }, action) => {
+const storyReducer = (story = {}, action) => {
   switch(action.type) {
-    case "STORY_LOAD":
-      return action.value;
+    case "story-load":
+      return action.story;
     default:
       return {
         ...story,

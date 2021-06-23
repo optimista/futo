@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/projectid.appspot.com/o {
+    function auth() { return request.auth != null; }
+
+    match /profiles/{profileId}/{type} {
+      allow read;
+      allow write: if request.auth.uid == profileId && type == "original";
+    }
+    match /stories/{storyId}/{nodeKey} {
+      allow read;
+      allow write: if auth();
+    }
+  }
+}

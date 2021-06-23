@@ -5,42 +5,37 @@ import clsx from 'clsx'
 
 import { useDispatch, useState } from 'story/context'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    bottom: 20,
-    height: "50px",
-    left: 20,
+    backgroundColor: theme.palette.action.selected,
+    borderRadius: "100%",
+    bottom: 0,
+    color: "white",
+    height: 300,
+    left: 0,
     position: "fixed",
-    width: "50px",
-    border: "3px dashed black"
+    width: 300,
+    transform: "translate(-50%, 50%)",
+    zIndex: -1
   },
-  hover: { borderColor: "red" },
+  hover: { backgroundColor: theme.palette.primary.main },
   icon: {
-    color: "black",
-    fontSize: "2rem",
-    left: "50%",
+    color: theme.palette.background.default,
+    fontSize: "3.2rem",
+    right: "31%",
     position: "absolute",
-    top: "50%",
-    transform: "translate(-50%, -50%)"
+    top: "31%",
+    transform: "translate(50%, -50%)"
   },
-  iconHover: {
-    color: "red"
-  }
+  iconHover: { color: theme.palette.text.main }
 }));
 
 const Trash = () => {
   const dispatch = useDispatch(), state = useState();
 
-  const handleMouseEnter = () => {
-    console.log('mouseneter')
-    dispatch({ type: "TRASH_ENTER" });
-  }
-  const handleMouseLeave = () => dispatch({ type: "TRASH_LEAVE" });
-
-  const handleMouseUp = e => e.button === 0 && dispatch(state => {
-    const keymap = { [state.grab.key]: true };
-    return [{ type: "TRASH_LEAVE" }, { type: "NODES_REMOVE", keymap }, { type: "VIEW_REMOVE", keymap }];
-  });
+  const handleMouseEnter = () => dispatch({ type: "trash-enter" });
+  const handleMouseLeave = () => dispatch({ type: "trash-leave" });
+  const handleMouseUp = e => e.button === 0 && dispatch({ type: "TRASH_LEFT_MOUSE_UP" })
 
   const classes = useStyles();
   return (

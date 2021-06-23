@@ -39,8 +39,8 @@ const userErrorMessage = (err = {}, title) => {
       message = USER_ERRORS[err.code];
       break;
   }
-  
-  return message ? errorMessage(err, title) : { [key]: { message, title } };
+ 
+  return message ? { [key]: { message, title } } : errorMessage(err, title);
 }
 
 export default userErrorMessage;
