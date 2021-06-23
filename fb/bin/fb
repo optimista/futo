@@ -5,14 +5,24 @@ dir=$HOME/.bin/fb
 case $1 in
   rm)
     name=$2
-
+    
     if projectid=$( cat ${2:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
       url="https://console.firebase.google.com/project/$projectid/settings/general"
-      echo "To delete project on firebase go to your browser and newly opened link $url"
       open $url
+      echo
+      echo "To delete project on firebase go to your browser and newly opened link $url and click on \"Delete project\" in the absolute bottom of the page"
+      echo
+      echo "(Once you are done, close the tab and hit enter to continue)"
+      read
     fi
     
     mui rm $name
+      
+    echo
+    echo "===============================================================" 
+    echo "🎉 Congratulations! Your project has been successfully deleted." 
+    echo "===============================================================" 
+    echo
     ;;
   *)
     name=$1
