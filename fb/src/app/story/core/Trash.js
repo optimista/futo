@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     position: "fixed",
     width: 300,
     transform: "translate(-50%, 50%)",
-    zIndex: -1
+    zIndex: 1
   },
   hover: { backgroundColor: theme.palette.primary.main },
   icon: {

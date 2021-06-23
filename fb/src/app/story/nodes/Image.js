@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
 const Image = ({ id: key, ...props }) => {
   const state = useState(), { content, height, placeholder, width } = state.story.nodes[key], classes = useStyles();
   return url(content) && height && width ?
-    <Box sx={{ '& > div': { display: "block !important" } }}>
+    <Box sx={{ '& > div': { display: "block !important", overflow: "visible !important" } }}>
       <ImageNext blurDataURL={placeholder || Image.DEFAULT_PLACEHOLDER} className={classes.image} draggable="false" height={height} placeholder="blur" src={content} width={width} {...props} />
     </Box>
     :

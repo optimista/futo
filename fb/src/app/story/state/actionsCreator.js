@@ -110,7 +110,7 @@ const actionsCreator = (state, action) => {
 
     case "RENDER_NODE_RESIZE": {
       const { height, key, width } = action;
-      return [{ type: "render-node-resize", key, height, width }].concat(state.caret.key === key ? [{ type: "on-present-ready", key, action: { type: "PRESENT", key }}].concat(state.story.nodes[key].type === "image" ? [{ type: "caret-blur" }] : []) : []); } // on-present-ready because INIT_EDITOR's add 
+      return [{ type: "render-node-resize", key, height, width }].concat(state.caret?.key === key ? [{ type: "on-present-ready", key, action: { type: "PRESENT", key }}].concat(state.story.nodes[key].type === "image" ? [{ type: "caret-blur" }] : []) : []); } // on-present-ready because INIT_EDITOR's add 
 
     case "TEXT_LEFT_MOUSE_UP": {
       const { key, x, y } = action;
