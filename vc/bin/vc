@@ -23,6 +23,7 @@ case $1 in
     vercel init nextjs $name
     cd $name
     npm i
+    npm i next@latest react@latest react-dom@latest
     vercel --confirm
 
     # Clean-up
