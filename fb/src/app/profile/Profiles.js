@@ -1,9 +1,9 @@
-import { firebase } from 'core/utils'
-import { datetime, docWId, timestampToDate, wServerTimestamp } from 'core/utils/converters'
+import { collection } from 'core/utils'
+import { datetime, docWId, timestampToDate, wTimestamp } from 'core/utils/converters'
 
-const Profiles = firebase.firestore().collection('profiles').withConverter({
+const Profiles = collection('profiles').withConverter({
   fromFirestore: snapshot => (doc => ({ ...doc, time: datetime(doc.timestamp) })).call(null, timestampToDate(docWId(snapshot))),
-  toFirestore: doc => wServerTimestamp(doc)
+  toFirestore: doc => wTimestamp(doc)
 });
 
 export default Profiles;

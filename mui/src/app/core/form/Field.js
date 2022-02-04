@@ -1,11 +1,15 @@
-import { CircularProgress, TextField } from '@material-ui/core'
-import { Check, Clear } from '@material-ui/icons'
-import { useContext } from 'react'
+import { CircularProgress, TextField } from '@mui/material'
+import { Check, Clear } from '@mui/icons-material'
+import PropTypes from 'prop-types'
 
-import { FormContext } from 'core/form'
+import { useForm } from 'core/form'
 
+/**
+ * - Integrates `useModel` from `@futo-ui/hooks`
+ * - Props of the [`@mui/TextField`](https://mui.com/api/text-field) component are also available.
+ */
 const Field = ({ helperText, label, name, onKeyDown, ...props }) => {
-  const model = useContext(FormContext);
+  const model = useForm();
 
   const endAdornment = name => {
     switch(true) {
@@ -19,5 +23,27 @@ const Field = ({ helperText, label, name, onKeyDown, ...props }) => {
 
   return <TextField error={model.errors.has(name)} helperText={helperText ?? model.errors[name]?.message} inputRef={model.refs[name]} InputProps={{ endAdornment: model.validatesInline(name) && endAdornment(name) }} label={label ?? name} onChange={model.handleChange(name)} onKeyDown={handleKeyDown} value={model[name]} {...props} />
 }
+
+Field.propTypes = {
+  /**
+   * The helper text content.
+   */
+  helperText: PropTypes.string,
+
+  /**
+   * The label content.
+   */
+  label: PropTypes.string,
+  
+  /**
+   * Name attribute of the `input` element.
+   */
+  name: PropTypes.string,
+  
+  /**
+   * Callback fired when the key is pressed.
+   */
+  onKeyDown: PropTypes.func,
+};
 
 export default Field;

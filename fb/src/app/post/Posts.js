@@ -1,9 +1,9 @@
-import { firebase } from 'core/utils'
-import { docWId, time, timestampToDate, wServerTimestamp } from 'core/utils/converters'
+import { collection } from 'core/utils'
+import { docWId, time, timestampToDate, wTimestamp } from 'core/utils/converters'
 
-const Posts = firebase.firestore().collection('posts').withConverter({
+const Posts = collection('posts').withConverter({
   fromFirestore: snapshot => (doc => ({ ...doc, time: time(doc.timestamp) })).call(null, timestampToDate(docWId(snapshot))), 
-  toFirestore: doc => wServerTimestamp(doc)
+  toFirestore: doc => wTimestamp(doc)
 });
 
 export default Posts;

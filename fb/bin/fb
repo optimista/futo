@@ -9,16 +9,14 @@ case $1 in
     if projectid=$( cat ${2:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
       url="https://console.firebase.google.com/project/$projectid/settings/general"
       open $url
-      echo
+      echo "\n // FIREBASE REMOVAL"
       echo "To delete project on firebase go to your browser and newly opened link $url and click on \"Delete project\" in the absolute bottom of the page"
       echo
-      echo "(Once you are done, close the tab and hit enter to continue)"
-      read
+      read "?(Once you are done, close the tab and hit enter to continue)"
     fi
     
     mui rm $name
       
-    echo
     echo "===============================================================" 
     echo "🎉 Congratulations! Your project has been successfully deleted." 
     echo "===============================================================" 
@@ -27,8 +25,17 @@ case $1 in
   *)
     name=$1
     ccname=${${(C)name}//-} # camel case name
+    populate=true
+    
+    for arg in "$@"; do
+      case $arg in
+        --without-populate)
+          populate=false
+          ;;
+      esac
+    done
 
-    if mui $name; then 
+    if mui $name --without-chromatic; then 
       projectid=$name-$( openssl rand -base64 16 | tr -d "=+/" | cut -c1-5 | tr '[:upper:]' '[:lower:]' )
       cd $name
 
@@ -38,7 +45,7 @@ case $1 in
       url=https://console.firebase.google.com/project/$projectid/settings/general/web
       open $url
       echo
-      echo "Hey! To continue Firestore Cloud storage integration go to your chrome browser to newly opened link $url and set Google Cloud Platform (GCP) resource location and public-facing name to $ccname."
+      echo "Hey! To continue Firestore Cloud storage integration go to your browser to newly opened link $url and set Google Cloud Platform (GCP) resource location and public-facing name to $ccname."
       echo
       echo "(Once you are done, close the tab and hit enter to continue)"
       read
@@ -56,8 +63,7 @@ case $1 in
 
       npm install firebase firebase-admin # SERVER SIDE HERE TOO
       cp $dir/src/app/core/utils/*.js app/core/utils/
-      sed -i '' "/databaseURL/s/projectid/$projectid/" app/core/utils/server.js # SERVER SIDE
-      $( echo $createapp ) | sed -n '/^firebase/,/^})/p' | sed 's/^/  /' | sed -i '' '/^if (!firebase\.apps\.length)/r /dev/stdin' app/core/utils/firebase.js
+      $( echo $createapp ) | sed -n '/^  "projectId"/,/^  "messagingSenderId"/p' | sed -i '' '/^const firebase/r /dev/stdin' app/core/utils/firebase.js
       
       # firestore.rules setup
       cp $dir/src/firestore.rules firestore.rules
@@ -83,21 +89,14 @@ case $1 in
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/form/*.js app/core/form/
       cp $dir/src/app/core/layouts/*.js app/core/layouts/
+      cp $dir/src/app/core/locales/*.js app/core/locales/*.js && rm $dir/src/app/core/layouts/PageLayout.js
       cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
-      cp $dir/src/public/name.png public/$name.png
-      cp -r $dir/src/app/core/locales app/core/locales
+      cp $dir/src/public/* public/ && mv public/name.png public/$name.png
       cp -r $dir/src/app/post app/post
       cp -r $dir/src/app/profile app/profile 
       cp -r $dir/src/app/story app/story 
       cp -r $dir/src/app/user app/user
       cp -r $dir/src/pages/account pages/ # account pages
-
-      ## MODIFICATIONS
-      sed -i '' "/^    <Avatar/s/name/$name/g" app/core/Logo.js
-      sed -i '' "s/myapp/$name/g" app/core/layouts/PageLayout.js
-      sed -i '' "s/MyApp/$ccname/g" app/post/PostJoinDialog.js
-      sed -i '' "/<meta property=\"og:url\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
-      sed -i '' "/<meta name=\"twitter:site\"/s/myapp/$name/" pages/\[username\].js # PROFILE PAGE META TAGS
       
       ### Add AuthProvider
       sed -i '' "s/import { theme } from 'core\/utils'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
@@ -108,13 +107,17 @@ case $1 in
       ### Stories
       cp -r $dir/src/pages/s pages/ 
 
+      ### Storybook
+      cp -r $dir/src/storybook/* storybook/ && rm storybook/core/layouts/PageLayout.stories.jsx 
+      chr $name
+
       echo 
       echo "We are going to configure firebase-admin, enable E-mail/Password authentication, create a compound query for the post feed, a compound query for the story feed and set an e-mail template for password reset."
       echo
       
       echo 
       url="https://vercel.com/$(vercel whoami)/$name/settings/environment-variables"
-      echo "(1/5) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
+      echo "(1/6) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
       echo "NAME: GOOGLE_APP_CREDENTIALS"
       echo "VALUE: "
       echo $keysbase64
@@ -126,7 +129,7 @@ case $1 in
       
       echo 
       url=https://console.firebase.google.com/project/$projectid/authentication
-      echo "(2/5) Second, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
+      echo "(2/6) Second, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
       open $url
       echo
       echo "(Once you are done, close the tab and hit enter to continue)"
@@ -134,7 +137,7 @@ case $1 in
      
       echo 
       url=https://console.firebase.google.com/project/$projectid/firestore/indexes
-      echo "(3/5) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
+      echo "(3/6) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
       echo "Collection ID: posts"
       echo "Field #1: profileId | Ascending" 
       echo "Field #2: timestamp | Descending"
@@ -145,7 +148,7 @@ case $1 in
       read
       
       echo 
-      echo "(4/5) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
+      echo "(4/6) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
       echo "Collection ID: stories"
       echo "Field #1: profileId | Ascending" 
       echo "Field #2: editedAt | Descending"
@@ -156,7 +159,7 @@ case $1 in
       
       echo
       url=https://console.firebase.google.com/project/$projectid/authentication/emails
-      echo "(5/5) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
+      echo "(5/6) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
       echo "Sender name: Your name"
       echo "Subject: %APP_NAME% - Reset your password"
       echo "Message:"
@@ -165,14 +168,17 @@ case $1 in
       open $url
       
       echo 
-      echo "(Once you are done, close the tab and hit enter to continue)"
-      read
+      read "?(Once you are done, close the tab and hit enter to continue)"
 
-      echo
-      echo "======================================" 
-      echo "🎉 Congratulations! That's everything." 
-      echo "======================================" 
-      echo
+      if $populate; then
+        cp -r $dir/src/pages/populate pages/ 
+        pop $name
+        echo
+        echo "======================================" 
+        echo "🎉 Congratulations! That's everything." 
+        echo "======================================" 
+        echo
+      fi
     else
       exit 1
     fi

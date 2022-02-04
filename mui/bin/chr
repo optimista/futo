@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+dir=$HOME/.bin/mui
+
+npm install chromatic --save-dev 
+git add -A . && git commit -m "Storybook" && git push
+
+name=$1
+url=https://www.chromatic.com
+open $url
+echo
+echo "// CHROMATIC INTEGRATION"
+read "project_token?Hello, to integrate your storybook with Chromatic go to your browser to newly opened link $url, sign in / go to app, click on your nickname in upper left and then on the button \"Add project\". Then add a project with the name \"$name\". Afterwards, copy the project token, write it here and hit enter: "
+echo 
+$dir/exp/chromatic $project_token

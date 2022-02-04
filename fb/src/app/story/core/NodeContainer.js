@@ -1,23 +1,28 @@
-import { useResizeObserver } from '@futo-ui/hooks'
-import { nonselectable } from '@futo-ui/utils'
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
+import PropTypes from 'prop-types'
 
-import { useDispatch, useState } from 'story/context'
+import { useState } from 'story/context'
 
-const NodeContainer = ({ children, grabbable = false, id: key, sx, ...props }) => {
-  const dispatch = useDispatch(), state = useState(), { x, y } = state.story.positions[key],
-        ref = useResizeObserver(key, { onResize: ({ height, width }) => dispatch({ type: "RENDER_NODE_RESIZE", key, height, width }) });
-
-  return <Box id={key} ref={ref} sx={{
-    left: x, position: "absolute", top: y,
-    transition: t => t.transitions.create('opacity', { duration: t.transitions.duration.standard, easing: t.transitions.easing.easeInOut }),
-    ...(state.grab.dragged ? nonselectable : {}),
-    ...(state.grab.dragged && state.grab.handle === "node" && state.grab.key === key ? { pointerEvents: "none" } : {}),
-    ...(state.grab.dragged && state.grab.handle === "node" && state.grab.key === key && state.trash.over ? { opacity: 0.5 } : {}),
-    ...(state.view.shown[key] ? {} : { opacity: 0, pointerEvents: "none" }),
-    ...state.story.sx?.[key],
-    ...sx
-  }} {...props}>{children}</Box>
+/**
+ * - Container for the node in the story. 
+ * - Integrates decorators for dragging & selecting, transition, positioning & observer for resizing.
+ * - Props of the [`@mui/Box`](https://mui.com/api/box) are also available.
+ */
+const NodeContainer = ({ id: key, sx, ...props }) => {
+  const state = useState(), { x, y } = state.story.positions[key];
+  return <Box id={key} sx={{ left: x, position: "absolute", top: y, ...sx }} {...props} />
 }
+
+NodeContainer.propTypes = {
+  /**
+   * Identifier for the node. Important for resize observer. 
+   */
+  id: PropTypes.string, 
+
+  /**
+   * The @mui system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+};
 
 export default NodeContainer;

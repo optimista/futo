@@ -1,20 +1,23 @@
-import { Button, CircularProgress } from '@material-ui/core'
-import { Refresh } from '@material-ui/icons'
-import { useContext } from 'react'
+import { LoadingButton } from '@mui/lab'
+import { Refresh } from '@mui/icons-material'
+import PropTypes from 'prop-types'
 
-import { FormContext } from 'core/form'
+import { useForm } from 'core/form'
 
+/**
+ * - Integrates `useModel` from `@futo-ui/hooks`
+ * - Props of the [`@mui/LoadingButton`](https://mui.com/api/loading-button) component are also available.
+ */
 const Submit = ({ children, ...props }) => {
-  const model = useContext(FormContext);
-
-  let content, ownProps = {};
-  switch(true) {
-    case model.isSending: content = <CircularProgress />; break;
-    case model.isFail: ownProps = { ...ownProps, startIcon: <Refresh /> }; content = "Try again"; break;
-    default: content = children; break;
-  }
-
-  return <Button type="submit" {...ownProps} {...props}>{content}</Button>
+  const model = useForm();
+  return <LoadingButton loading={model.isSending} startIcon={model.isFail && <Refresh />} type="submit" {...props}>{ model.isFail ? "Try again" : children }</LoadingButton>
 }
+
+Submit.propTypes = {
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
+};
 
 export default Submit;

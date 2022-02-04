@@ -12,7 +12,9 @@ case $1 in
     vercel --prod;;
   rm)
     name=$2
+    echo "\n// VERCEL REMOVAL"
     $dir/exp/vc-rm $name
+    echo "\n// DIRECTORY REMOVAL"
     rm -rf $name
     ;;
   *)

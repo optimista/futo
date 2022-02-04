@@ -1,4 +1,4 @@
-import { firebase } from 'core/utils'
+import { Timestamp } from 'firebase/firestore'
 
 const datetime = date => {
   const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date),
@@ -33,6 +33,6 @@ const timestampToDate = (doc, key = "timestamp") =>
 
 const wo = (doc, keys) => keys.reduce((doc, key) => { delete doc[key]; return doc; }, doc);
 
-const wServerTimestamp = (doc, key = "timestamp") => ({ ...doc, [key]: firebase.firestore.FieldValue.serverTimestamp() });
+const wTimestamp = (doc, key = "timestamp") => ({ ...doc, [key]: Timestamp.now() });
 
-export { datetime, docWId, time, timestampToDate, wServerTimestamp, wo };
+export { datetime, docWId, time, timestampToDate, wTimestamp, wo };

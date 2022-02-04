@@ -1,5 +1,7 @@
+import { getStorage, ref } from "firebase/storage"
+
 import { firebase } from 'core/utils'
 
-const storage = ref => firebase.storage().ref(ref);
+const storage = r => ref(getStorage(firebase), r);
 
 export default storage;

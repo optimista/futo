@@ -1,11 +1,12 @@
 import { useModel } from '@futo-ui/hooks'
-import { Skeleton, Typography } from '@material-ui/core'
+import { Skeleton, Typography } from '@mui/material'
+import { confirmPasswordReset, getAuth, signInWithEmailAndPassword, verifyPasswordResetCode } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
-import { errorMessage, firebase } from 'core/utils'
+import { errorMessage } from 'core/utils'
 import { minLength } from 'core/validators'
 import { userErrorMessage } from 'user'
 import { USER_ERRORS } from 'user/locales'
@@ -16,12 +17,15 @@ const AccountResetConfirm = () => {
               generalError: err => errorMessage(err),
               syncValidators: { password: { f: minLength(6), message: USER_ERRORS["user/password-short"] }}
             }, onSubmit: () => {
-            firebase.auth().confirmPasswordReset(oobCode, user.password).then(() => {
-              firebase.auth().signInWithEmailAndPassword(user.email, user.password).then(() => router.push("/"))
+              confirmPasswordReset(getAuth(), oobCode, user.password).then(() => {
+              signInWithEmailAndPassword(getAuth(), user.email, user.password).then(() => router.push("/"))
             }).catch(err => user.fail(userErrorMessage(err)));
           }}); 
 
-  useEffect(() => router.isReady && firebase.auth().verifyPasswordResetCode(oobCode).then(email => user.set('email', email), err => router.push({ pathname: "/account/reset", query: { err: btoa(JSON.stringify(userErrorMessage(err))) }  })), [router.isReady]); 
+  useEffect(() => router.isReady &&
+    verifyPasswordResetCode(getAuth(), oobCode).then(email => user.set('email', email), err => router.push({ pathname: "/account/reset", query: { err: window.btoa(JSON.stringify(userErrorMessage(err))) }  })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [router.isReady]); 
  
   return (
     <FocusLayout maxWidth="xs">

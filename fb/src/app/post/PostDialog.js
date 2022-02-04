@@ -1,22 +1,50 @@
 import { useModal } from '@futo-ui/hooks'
-import { Button, Dialog, DialogActions, DialogTitle, Typography } from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogTitle, Typography } from '@mui/material'
+import PropTypes from 'prop-types'
 
 import { Field, Form, Submit } from 'core/form'
 import { PostCardLayout } from 'post'
 import { ProfileAvatar } from 'profile'
 
-const DiscardDialog = ({ onClose, onDiscard, title, ...props }) => 
+/**
+ * - Shown when user is about to discard their edits.
+ * - Props of the [`@mui/Dialog`](https://mui.com/api/dialog) are also available.
+ */
+const DiscardDialog = ({ onClose, onDiscard, title = "Discard the edited changes?", ...props }) => 
   <Dialog fullWidth={false} maxWidth="xs" onClose={onClose} {...props}>
-    <DialogTitle>
-      <Typography variant="h6">{title || "Discard the edited changes?"}</Typography>
-    </DialogTitle>
+    <DialogTitle sx={{ typography: "h6" }}>{title}</DialogTitle>
     <DialogActions>
       <Button onClick={onClose} variant="outlined">Cancel</Button>
       <Button onClick={onDiscard}>Discard</Button>
     </DialogActions>
   </Dialog>
 
-const PostDialog = ({ post, onClose, ...props }) => {
+DiscardDialog.propTypes = {
+  /**
+   * Callback fired when the [`@mui/Dialog`](https://mui.com/api/dialog) requests to be closed.
+   *
+   * @param {object} event The event source of the callback.
+   * @param {string} reason Can be: `"escapeKeyDown"`, `"backdropClick"`.
+   */
+  onClose: PropTypes.func,
+  
+  /**
+   * Callback fired when the user requests to discard the changes. 
+   */
+  onDiscard: PropTypes.func,
+  
+  /**
+   * The title of the dialog modal.
+   * @default "Discard the edited changes?"
+   */
+  title: PropTypes.string,
+};
+
+/**
+ * - Dialog to create or edit a post. 
+ * - Props of the [`@mui/Dialog`](https://mui.com/api/dialog) are also available.
+ */
+const PostDialog = ({ post, onClose = () => {}, ...props }) => {
   // Discard dialog functionality
   const discard = useModal(false),
         handleClose = () => post.isChanged ? discard.open() : onClose(),
@@ -46,4 +74,19 @@ const PostDialog = ({ post, onClose, ...props }) => {
   )
 }
 
-export default PostDialog
+PostDialog.propTypes = {
+  /**
+   * Callback fired when the [`@mui/Dialog`](https://mui.com/api/dialog) requests to be closed.
+   *
+   * @param {object} event The event source of the callback.
+   * @param {string} reason Can be: `"escapeKeyDown"`, `"backdropClick"`.
+   */
+  onClose: PropTypes.func,
+  
+  /**
+   * Post `@futo-ui/hooks/useModel` model instance / object.
+   */
+  post: PropTypes.object,
+};
+
+export { PostDialog as default, DiscardDialog }

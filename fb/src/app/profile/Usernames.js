@@ -1,5 +1,5 @@
-import { firebase } from 'core/utils'
+import { collection } from 'core/utils'
 
-const Usernames = firebase.firestore().collection('usernames');
+const Usernames = collection('usernames');
 
 export default Usernames;

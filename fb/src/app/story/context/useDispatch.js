@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { DispatchContext } from 'story/context'
+import { DispatchContext } from 'story/context/DispatchProvider'
 
 const useDispatch = () => useContext(DispatchContext);
 

@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+
+set project_token [lindex $argv 0]
+set timeout -1 
+spawn npx chromatic --project-token=$project_token;
+expect -ex {Would you like me to add it for you? [y/N]}
+send "y\r";
+expect eof

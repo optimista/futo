@@ -1,40 +1,32 @@
-import { Loading } from 'core'
+import { keys } from '@futo-ui/utils'
+import { useState } from 'react'
+
+import { LoadingPage } from 'core'
 import { FixedLayout } from 'core/layouts'
-import { NodeContainer, StoryAlign, StoryContainer, useStoryLoad } from 'story/core'
-import { Image, Text } from 'story/nodes'
-import { useRootReducer } from 'story/state'
-import { DispatchProvider, StoreProvider } from 'story/context'
+import { NodeContainer, StoryContainer, useStoryLoad } from 'story/core'
+import { Text } from 'story/nodes'
+import { StoreProvider } from 'story/context'
 
 const StoryPage = () => {
   // Reducer
-  const [state, dispatch] = useRootReducer();
+  const [state, setStory] = useState({ story: { nodes: {}, positions: {} } });
 
   // Loader
-  useStoryLoad(story => dispatch({ type: "INIT_VIEWER", story }));
-
-  // Renders
-  const renderNode = key => { switch(state.story.nodes[key].type) {
-    case "image": return <Image id={key} />;
-    default: return <Text id={key} />;
-  }}
+  useStoryLoad(story => setStory({ story }));
 
   return (
     <FixedLayout>
-      <Loading ready={state.story.profileId}>
-        <DispatchProvider value={dispatch}>
-          <StoreProvider value={state}>
-            <StoryContainer>
-              <StoryAlign>
-                { state.story.order.map(key => 
-                  <NodeContainer key={key} id={key}>
-                    {renderNode(key)}
-                  </NodeContainer>
-                )}
-              </StoryAlign>
-            </StoryContainer>
-          </StoreProvider>
-        </DispatchProvider>
-      </Loading>
+      <LoadingPage ready={Boolean(state.story.profileId)}>
+        <StoreProvider value={state}>
+          <StoryContainer>
+            { keys(state.story.nodes).map(key => 
+              <NodeContainer key={key} id={key}>
+                <Text id={key} />
+              </NodeContainer>
+            )}
+          </StoryContainer>
+        </StoreProvider>
+      </LoadingPage>
     </FixedLayout>
   )
 }

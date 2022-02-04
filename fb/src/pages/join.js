@@ -1,10 +1,12 @@
 import { useModel } from '@futo-ui/hooks'
-import { Link, Typography } from '@material-ui/core'
+import { Link, Typography } from '@mui/material'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { doc, writeBatch } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
-import { errorMessage, firebase } from 'core/utils'
+import { db, errorMessage } from 'core/utils'
 import { maxLength, minLength, presence } from 'core/validators'
 import { Profiles, Usernames } from 'profile'
 import { userErrorMessage } from 'user'
@@ -38,18 +40,18 @@ const JoinForm = () => {
           },
           onSubmit: () => {
             // Request!
-            firebase.auth().createUserWithEmailAndPassword(user.email, user.password).then(userCredential => {
-              const batch = firebase.firestore().batch(),
+            createUserWithEmailAndPassword(getAuth(), user.email, user.password).then(userCredential => {
+              const batch = writeBatch(db()),
                     profileId = userCredential.user.uid;
 
-              batch.set(Profiles.doc(profileId), { displayName: "", photoURL: "", username: user.username });
-              batch.set(Usernames.doc(user.username), { profileId });
+              batch.set(doc(Profiles, profileId), { displayName: "", photoURL: "", username: user.username });
+              batch.set(doc(Usernames, user.username), { profileId });
               
               batch.commit().then(() => {
                 router.push("/")
               }).catch(() => { // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
                 user.fail(errorMessage({}, USER_ERRORS["user/registration-not-successful/title"]));
-                firebase.auth().currentUser.delete();
+                getAuth().currentUser.delete();
               });
             }, err => user.fail(userErrorMessage(err)));
           }

@@ -1,10 +1,6 @@
-import firebase from 'firebase/app'
+import { getApps, initializeApp } from 'firebase/app'
 
-import 'firebase/auth'
-import 'firebase/firestore'
-import 'firebase/storage'
-
-if (!firebase.apps.length) {
-}
+const firebase = getApps().length === 1 ? getApps()[0] : initializeApp({
+})
 
 export default firebase;

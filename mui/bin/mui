@@ -4,9 +4,9 @@ dir=$HOME/.bin/mui
 
 case $1 in
   check)
-    wget -q -O /tmp/_app.js https://raw.githubusercontent.com/mui-org/material-ui/next/examples/nextjs/pages/_app.js
-    wget -q -O /tmp/_document.js https://raw.githubusercontent.com/mui-org/material-ui/next/examples/nextjs/pages/_document.js
-    wget -q -O /tmp/theme.js https://raw.githubusercontent.com/mui-org/material-ui/next/examples/nextjs/src/theme.js
+    wget -q -O /tmp/_app.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/pages/_app.js
+    wget -q -O /tmp/_document.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/pages/_document.js
+    wget -q -O /tmp/theme.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/src/theme.js
 
     diff -u $dir/latest/pages/_app.js /tmp/_app.js &&
     diff -u $dir/latest/pages/_document.js /tmp/_document.js &&
@@ -14,12 +14,34 @@ case $1 in
     ;;
   rm)
     name=$2
+
+    grep -q '"chromatic": "npx chromatic --project-token=' "$name/package.json"
+    chr_rm=$?
+
+    gl rm $name
     vc rm $name
+
+    if [ "$chr_rm" -eq 0 ]; then
+      url=https://www.chromatic.com
+      open $url
+      echo "\n// CHROMATIC REMOVAL"
+      echo "Don't forget to remove your project '$name' from chromatic! I opened the URL for you."
+      echo
+    fi
     ;;
   *)
     if mui check; then
       name=$1
       ccname=${${(C)name}//-} # camel case name
+      chromatic=true
+      
+      for arg in "$@"; do
+        case $arg in
+          --without-chromatic)
+            chromatic=false
+            ;;
+        esac
+      done
    
       vc $name 
       cd $name
@@ -30,16 +52,45 @@ case $1 in
       npm install path
       cp $dir/src/next.config.js .
       
-      # install @material-ui/core
-      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @material-ui/core@next @material-ui/icons@next @material-ui/styles@next babel-plugin-import nprogress  
-      cp $dir/src/.babelrc.js .
+      # install @mui/material
+      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material@latest @mui/lab@latest @mui/material@latest nprogress  
       cp -r $dir/src/app/core app
       cp -r $dir/src/styles . 
       cp -r $dir/src/pages . 
+      sed -i '' -e "s/my-app/$name/" -e "s/MyApp/$ccname/" app/core/locales/NAMES.js
       sed -i '' "s/MyApp/"$ccname"App/" pages/_app.js
-      sed -i '' "s/My page/"$ccname"/g" pages/_app.js # change title
       sed -i '' "s/MyDocument/"$ccname"Document/g" pages/_document.js # change name of Document class
-      sed -i '' "s/MyApp/$ccname/" pages/index.js
+
+      # storybook
+      cd .. && gl $name && cd $name
+      npm install babel-plugin-import
+      npm install npm-add-script patch-package --save-dev
+      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
+      $dir/exp/storybook-init
+
+      DIFF1=$(diff $dir/latest/.storybook/main.js .storybook/main.js)
+      DIFF2=$(diff $dir/latest/.storybook/preview.js .storybook/preview.js)
+      if [ "$DIFF1" != "" ]; then
+        echo "There is a new .storybook/main.js! We already copied our version, but check the differences and maybe update our version."
+        echo "\n$DIFF1\n"
+        cp .storybook/main.js $dir/latest/.storybook/main.js
+      fi
+      if [ "$DIFF2" != "" ]; then
+        echo "There is a new .storybook/preview.js! We already copied our version, but check the differences and maybe update our version."
+        echo "\n$DIFF2\n"
+        cp .storybook/preview.js $dir/latest/.storybook/preview.js
+      fi
+
+      cp -r $dir/src/.storybook/* .storybook/ # If you move patches to the root, "-r" option is not necessary anymore
+      rm -rf stories && cp -r $dir/src/storybook . 
+      npm run postinstall # patching
+
+      $chromatic && chr $name
+      
+      echo "================" 
+      echo "Mui is finished." 
+      echo "================" 
+      echo
     else
       echo
       mv /tmp/_app.js $dir/latest/pages/_app.js

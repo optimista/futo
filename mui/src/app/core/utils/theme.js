@@ -1,6 +1,7 @@
-import { Fade } from '@material-ui/core'
-import { alpha, createTheme, darken, lighten } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
+import { CircularProgress, Fade } from '@mui/material'
+import { listItemIconClasses } from '@mui/material/ListItemIcon';
+import { red } from '@mui/material/colors';
+import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
 import NextLink from 'next/link'
 import { forwardRef } from 'react'
 
@@ -59,14 +60,6 @@ export default createTheme({
       styleOverrides: { root: { borderRadius: 0, justifyContent: "center", marginBottom: theme.spacing(3), marginTop: theme.spacing(1), width: "100%" } },
       variants: [
         {
-          props: { severity: "error", variant: 'outlined' },
-          style: {
-            color: getColor(theme.palette.primary.main, 0.6),
-            border: `1px solid ${theme.palette.primary.main}`,
-            [`& > .MuiAlert-icon`]: { color: theme.palette.primary.main },
-          },
-        },
-        {
           props: { severity: "error", variant: 'standard' },
           style: {
             border: 0,
@@ -86,7 +79,7 @@ export default createTheme({
       styleOverrides: { root: { borderWidth: "0 0 1px 0" } }
     },
     MuiBadge: {
-      defaultProps: { color: "primary" },
+      defaultProps: { color: "error" },
       variants: [
         { 
           props: { variant: "small" },
@@ -99,10 +92,10 @@ export default createTheme({
       ]
     },
     MuiCardHeader: { styleOverrides: { action: { alignSelf: "center" } } },
-    MuiCircularProgress: { defaultProps: { color: "inherit", size: 24 } },
+    MuiCircularProgress: { defaultProps: { size: 24 } },
     MuiContainer: { defaultProps: { disableGutters: true } },
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
-    MuiLink: { defaultProps: { component: Link } },
+    MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
     MuiSvgIcon: { styleOverrides: { fontSizeLarge: {
       fontSize: theme.typography.pxToRem(28)
@@ -111,25 +104,37 @@ export default createTheme({
 
     // Buttons
     MuiButton: {
-      defaultProps: { disableElevation: true, variant: "contained"  },
+      defaultProps: { disableElevation: true, disableRipple: true, variant: "contained"  },
       styleOverrides: {
-        contained: { fontWeight: 400, padding: theme.spacing(1, 4) },
-        outlined: { padding: theme.spacing(0.875, 3.875), '&:hover': { backgroundColor: theme.palette.background.default } },
-        outlinedPrimary: { borderColor: theme.palette.primary.main },
-        outlinedError: { borderColor: theme.palette.error.main },
+        root: { padding: theme.spacing(1, 4) },
+        contained: { fontWeight: 400 },
+        outlined: { padding: theme.spacing(0.875, 3.875), '&:hover': { backgroundColor: theme.palette.background.default } }, // Padding because of border
+        outlinedPrimary: { borderColor: theme.palette.primary.main }, // It's actually lighter and darkens only on hover
+        outlinedError: { borderColor: theme.palette.error.main }, // It's actually lighter and darkens only on hover
       }
     },
-    MuiButtonBase: { defaultProps: { disableRipple: true } },
+    // If we don't disableRipple for ButtonBase, it will persist for IconButton. If we put disableRipple to IconButton, it will cancel out the hover for IconButton
+    MuiButtonBase: { defaultProps: { disableRipple: true, LinkComponent: Link } }, 
     MuiIconButton: {
-      defaultProps: { color: "primary", disableRipple: true, disableFocusRipple: true, size: "small" },
+      defaultProps: { color: "primary", disableFocusRipple: true, size: "small" },
       styleOverrides: {
-        root: { padding: theme.spacing(0.5) },
         colorSecondary: {
           '&:hover': {
             backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
             color: theme.palette.primary.main,
           }
-        }
+        },
+        sizeSmall: { padding: theme.spacing(0.5) }
+      }
+    },
+    MuiLoadingButton: {
+      defaultProps: { loadingIndicator: <CircularProgress color="inherit" size={24} />, variant: "contained" },
+      styleOverrides: {
+        root: {
+          // MuiLoadingButton-loading shouldn't be here, but upwards instead of root key, the same for containedPrimary actually... This is mess! 
+          '&.MuiLoadingButton-loading.MuiButton-containedPrimary.Mui-disabled': { backgroundColor: theme.palette.primary.main }, 
+          '&.MuiLoadingButton-loading.MuiButton-containedPrimary > .MuiLoadingButton-loadingIndicator': { color: theme.palette.primary.contrastText }
+        },
       }
     },
 
@@ -141,13 +146,13 @@ export default createTheme({
     },
     MuiDialogActions: { styleOverrides: { root: { padding: theme.spacing(2, 0, 0, 0), '& > :not(:first-of-type)': { marginLeft: theme.spacing(2) } } } },
     MuiDialogContent: { styleOverrides: { root: { padding: theme.spacing(1, 0) } } },
-    MuiDialogTitle: { defaultProps: { disableTypography: true }, styleOverrides: { root: { padding: theme.spacing(0, 0, 1, 0) } } },
+    MuiDialogTitle: { defaultProps: { sx: { typography: "h5" } }, styleOverrides: { root: { padding: theme.spacing(0, 0, 1, 0) } } },
     
     // Form
     MuiFormControl: { styleOverrides: { marginDense: { marginBottom: theme.spacing(1), marginTop: theme.spacing(2) }, marginNormal: { marginBottom: theme.spacing(3) } } },
     MuiFormHelperText: { styleOverrides: { root: { bottom: "-0.1rem", position: "absolute", transform: "translate(0, 100%)" } } },
     MuiInput: { styleOverrides: { underline } },
-    MuiInputBase: { styleOverrides: { root: { lineHeight: 1.5 }, inputAdornedEnd: { marginRight: theme.spacing(1) } } },
+    MuiInputBase: { styleOverrides: { root: { lineHeight: 1.5 }, adornedEnd: { '& > :nth-child(2)': { flexShrink: 0 } }, inputAdornedEnd: { marginRight: theme.spacing(1) } } }, // flexShrink not to cut width from adornment
     MuiInputLabel: {
       styleOverrides: {
         root: { fontSize: "0.875rem", fontWeight: 300, letterSpacing: 2, textTransform: "uppercase" }, animated: { transitionDuration: theme.transitions.duration.shortest },
@@ -167,17 +172,12 @@ export default createTheme({
 
     // List
     MuiList: { styleOverrides: { root: { '&:focus': { outline: "none" } }, padding: { padding: theme.spacing(0.5, 0) } } },
-    MuiListItemIcon: { styleOverrides: { root: { marginRight: theme.spacing(1.5), minWidth: "auto", '& > .MuiSvgIcon-root': { color: theme.palette.text.primary } } } },
+    MuiListItemIcon: { styleOverrides: { root: { marginRight: theme.spacing(1.5), minWidth: "auto !important", '& > .MuiSvgIcon-root': { color: theme.palette.text.primary } } } },
     MuiListItemText: { defaultProps: { disableTypography: true } },
 
     // Menu / Tooltip
-    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) } } },
+    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { fontSize: "1.5rem" } } } },
     MuiPaper: { defaultProps: { variant: "outlined" }, styleOverrides: { rounded: { borderRadius: 2 } } },
-    MuiPopover: { defaultProps: { // I think I don't use Popover at all to be honest (Menu and Tooltip are both Popper)
-      anchorOrigin: { vertical: 'top', horizontal: 'right' },
-      transformOrigin: { vertical: 'top', horizontal: 'right' },
-      TransitionComponent: Fade
-    }},
     MuiTooltip: { 
       defaultProps: {
         enterDelay: 500,

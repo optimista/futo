@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+echo 
+url=http://localhost:8963/populate
+echo "(6/6) To populate the application with a basic data, go to a newly opened link $url, and wait until populating ends. Let's wait a minute until it opens to be sure."
+vercel dev --listen 8963 &>/dev/null &
+sleep 5
+open $url 
+read "?(Once populating is done, close the tab and hit enter to continue)"
+pid=$(lsof -i tcp:8963 | tail -n1 | tr -s " " | cut -d" " -f2)
+kill $pid
+rm -rf pages/populate

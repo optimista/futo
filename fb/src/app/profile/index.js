@@ -1,4 +1,3 @@
-export { default as Profile } from './Profile'
 export { default as ProfileMenuButton } from './ProfileMenuButton'
 export { default as ProfileAvatar } from './ProfileAvatar'
 export { default as Profiles } from './Profiles'

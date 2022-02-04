@@ -1,7 +1,11 @@
-import { Box, Link, Typography } from '@material-ui/core'
+import { Box, Link, Typography } from '@mui/material'
+import PropTypes from 'prop-types'
 
 import { Field, Form, Submit } from 'core/form'
 
+/**
+ * - Defines [`core/form/Form`](/docs/core-form-form--default) for logging in. 
+ */
 const LoginForm = ({ user }) =>
   <>
     <Typography variant="h5">Return to your stories.</Typography>
@@ -17,5 +21,12 @@ const LoginForm = ({ user }) =>
       <Link color="textSecondary" href="/account/reset" variant="body2">Forgot your password?</Link>
     </Box>
   </>
+
+LoginForm.propTypes = {
+  /**
+   * User `@futo-ui/hooks/useModel` model instance / object.
+   */
+  user: PropTypes.object.isRequired,
+};
 
 export default LoginForm;

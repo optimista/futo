@@ -46,11 +46,11 @@ describe('pages/', () => {
     it('works', () => cy.visit("/login"))
   });
   
-  context('new.js', () => {
-    it('works', () => cy.visit("/new"))
+  context('create.js', () => {
+    it('works', () => cy.visit("/create"))
     context('if user is not logged in', () => {
       it('redirects to /index.js', () => {
-        cy.visit('/new');
+        cy.visit('/create');
         cy.location().should(loc => {
           expect(loc.pathname).to.eq('/');
         })

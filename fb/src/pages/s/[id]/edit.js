@@ -1,23 +1,158 @@
+import { delay, empty, equal, focus, keys, max, offset } from '@futo-ui/utils'
+import { Box, Typography } from '@mui/material'
+import { refType } from '@mui/utils'
+import { doc, updateDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
+import { Component, createRef, forwardRef, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
 
 import { FixedLayout } from 'core/layouts'
-import { storage } from 'core/utils'
-import { Stories } from 'story'
-import { NodeContainer, StoryAlign, StoryContainer, StoryNotification, Trash, useStoryLoad } from 'story/core'
-import { DispatchProvider, StoreProvider } from 'story/context'
-import { ImageEditable, TextEditable } from 'story/nodes'
-import { autosaveReducer, caretReducer, preloadsReducer, trashReducer, useRootReducer } from 'story/state'
+import { NodeContainer, StoryContainer, useReducer, useStoryLoad } from 'story/core'
+import { DispatchProvider, StoreProvider, useDispatch, useState } from 'story/context'
+import { Text } from 'story/nodes'
 import { storyPath } from 'story/utils'
 import { Authorize } from 'user'
 
+class ContentEditableBase extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = props.innerRef || createRef();
+    this.handleBlur = this.handleBlur.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { current } = this.ref;
+    return current.innerText !== nextProps.html || !equal(this.props.sx, nextProps.sx);
+  }
+  componentDidUpdate() { const el = this.ref.current; if (this.props.html !== el.innerText) el.innerText = this.props.html; }
+  handleBlur(e) { const { onBlur } = this.props; onBlur && onBlur(e); }
+  handleInput(e) {
+    const { onChange } = this.props, { innerText } = e.target;
+    // Remove <br /> added if content is empty, see: https://github.com/st-h/ember-content-editable/issues/92#issuecomment-495228204
+    if (empty(innerText)) { const firstChild = this.ref.current.childNodes[0]; firstChild && firstChild.remove(); } 
+    onChange && onChange({ target: { value: e.target.innerText } }); }
+  handleKeyDown(e) { const { onKeyDown } = this.props; onKeyDown && onKeyDown(e); }
+  handlePaste(e) { e.preventDefault();
+    var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+    document.execCommand("insertText", false, text);
+  }
+
+  render() {
+    const { html = "", innerRef, onBlur, onKeyDown, placeholder, sx, ...props } = this.props;
+    return <Box component="span" contentEditable dangerouslySetInnerHTML={{ __html: html }} onBlur={this.handleBlur} onInput={this.handleInput} onKeyDown={this.handleKeyDown} onPaste={this.handlePaste} placeholder={placeholder} ref={this.ref} sx={{ cursor: "text", display: "inline-block", minWidth: 1, outline: "none", "&:empty::before": { color: "#aaaaaa", content: "attr(placeholder)" }, ...sx }} {...props} />;
+  }
+}
+
+/**
+ * - React component for a div with editable contents 
+ * - Inspired by [`react-contenteditable`](https://github.com/lovasoa/react-contenteditable) package
+ */
+const ContentEditable = forwardRef((props, ref) => <ContentEditableBase innerRef={ref} {...props} />);
+ContentEditable.displayName = "ContentEditable";
+ContentEditable.propTypes = {
+  /**
+   * The content / value of the `contenteditable` element.
+   * @default ""
+   */
+  html: PropTypes.string,
+
+  /**
+   * Pass a ref to the `contenteditable` element.
+   */
+  innerRef: refType,
+
+  /**
+   * Callback fired when the `contenteditable` is blurred.
+   */
+  onBlur: PropTypes.func,
+
+  /**
+   * Callback fired when the key is down.
+   */
+  onKeyDown: PropTypes.func,
+ 
+  /**
+   * The short hint displayed in the `contenteditable` element before the user enters a value.
+   */
+  placeholder: PropTypes.string,
+
+  /**
+   * The @mui system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+};
+
+/**
+ * - Shows the textual content of the node in editable way.
+ * - Integrates generative placeholder, focusing, dispatches on blur, change & image load, splitting on enter & toggling between menu & writing. 
+ */
+const Caret = () => {
+  const dispatch = useDispatch(), state = useState(), caretRef = useRef(null),
+        { content } = state.story.nodes[state.caret.key];
+
+  useEffect(() => { if (state.caret.pending) {
+    focus(caretRef.current, state.caret.offset); dispatch({ type: "caret-focus-finish" }); }},
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.caret.pending]);
+
+  const handleBlur = () => { if (empty(content)) dispatch({ type: "story-node-remove", key: state.caret.key }); dispatch({ type: "caret-blur" }); }
+  const handleChange = e => { dispatch({ type: "story-node-change", key: state.caret.key, content: e.target.value }); dispatch({ type: "autosave-trigger" }); }
+
+  return <ContentEditable html={content} onBlur={handleBlur} onChange={handleChange} placeholder="Start writing..." ref={caretRef} />
+}
+
+/**
+ * - Obtains and shows the content of [`story/nodes/Text`](/docs/story-nodes-text--default) node.
+ * - Integrates switching to edit mode & editing itself if node is being edited.
+ */
+const TextEditable = ({ id: key }) => {
+  const dispatch = useDispatch(), state = useState();
+
+  const handleMouseUp = e => e.button === 0 &&
+    dispatch({ type: "caret-focus", key, offset: offset({ x: e.clientX, y: e.clientY }) });
+
+  return key === state.caret.key ? <Caret /> : <Text id={key} onMouseUp={handleMouseUp} sx={{ cursor: "pointer" }} />;
+};
+
+TextEditable.propTypes = {
+  /**
+   * Identifier for the node to obtain `content`.
+   */
+  id: PropTypes.string, 
+};
+
+/**
+ * - Notification of the story, mostly that it has been saved. 
+ * - Integrates control prop of `show` & CSS `opacity` transition.
+ */
+const StoryNotification = ({ children, show = false }) => {
+  return <Typography sx={{ opacity: show ? 1 : 0, px: 3,
+    transition: t => t.transitions.create('opacity', { duration: t.transitions.duration.standard, easing: t.transitions.easing.easeInOut }),
+  }}>{children}</Typography>
+}
+
+StoryNotification.propTypes = {
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
+
+  /**
+   * Determines if the notification is shown or not. 
+   * @default false
+   */ 
+  show: PropTypes.bool,
+};
+
 const StoryEditPage = () => {
   // Reducer
-  const [state, dispatch] = useRootReducer({ autosaveReducer, caretReducer, preloadsReducer, trashReducer });
+  const [state, dispatch] = useReducer();
     
   // Loader
-  useStoryLoad(story => dispatch({ type: "INIT_EDITOR", story }));
-
+  useStoryLoad(story => dispatch({ type: "story-load", story }));
+    
   // Autosave
   const router = useRouter(), { id } = router.query, timer = useRef(null);
   useEffect(() => {
@@ -26,25 +161,20 @@ const StoryEditPage = () => {
       clearTimeout(timer.current);
       timer.current = setTimeout(() => { if (!ignore) {
         dispatch({ type: "autosave-notification-show" });
-        Stories.doc(id).set(state.story).then(() => !ignore && dispatch({ type: "AUTOSAVE_SUCCESS" }))
-        // Needs to be moved to Cloud Functions:
-        storage("stories/"+id+"/").listAll().then(res => !ignore && res.items.map(ref => !state.story.nodes[ref.name] && ref.delete())) 
+        updateDoc(doc(Stories, id), state.story).then(() => !ignore && dispatch({ type: "autosave-success" })).then(() => delay(5000)).then(() => dispatch({ type: "autosave-notification-hide" }))
       }}, 2000); }
     return () => ignore = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.autosave.trigger]);
  
   // Handlers
-  const handleContainerMouseUp = e => e.currentTarget === e.target &&
-    dispatch({ type: "CONTAINER_LEFT_MOUSE_UP", x: e.clientX, y: e.clientY });
-  
-  const handleNodeMouseDown = key => e => e.button === 0 &&
-    dispatch({ type: "GRAB_START_NODE", key, x: e.screenX, y: e.screenY });
-
-  // Renders
-  const renderNode = key => { switch(state.story.nodes[key].type) {
-    case "image": return <ImageEditable id={key} />;
-    default: return <TextEditable id={key} />;
-  }}
+  const handleContainerMouseUp = e => {
+    if (e.currentTarget === e.target) {
+      const key = max(keys(state.story.nodes).map(k => parseInt(k))) + 1 + "n"; 
+      dispatch({ type: "story-node-add", key, x: e.clientX, y: e.clientY });
+      dispatch({ type: "caret-focus", key });
+    }
+  }
 
   return (
     <FixedLayout toolbarLeft={
@@ -53,14 +183,11 @@ const StoryEditPage = () => {
         <DispatchProvider value={dispatch}>
           <StoreProvider value={state}>
             <StoryContainer onMouseUp={handleContainerMouseUp} sx={{ cursor: "pointer" }}>
-              <StoryAlign>
-                { state.story.order.map(key => 
-                  <NodeContainer id={key} key={key} onMouseDown={handleNodeMouseDown(key)}>
-                    {renderNode(key)}
-                  </NodeContainer>
-                )}
-              </StoryAlign>
-              { state.grab.dragged && state.grab.handle === "node" && <Trash /> }
+              { keys(state.story.nodes).map(key => 
+                <NodeContainer id={key} key={key}>
+                  <TextEditable id={key} />
+                </NodeContainer>
+              )}
             </StoryContainer>
           </StoreProvider>
         </DispatchProvider>
@@ -69,4 +196,4 @@ const StoryEditPage = () => {
   )
 }
 
-export default StoryEditPage;
+export { StoryEditPage as default, Caret, ContentEditable, StoryNotification, TextEditable };

@@ -1,11 +1,12 @@
 import { useModel } from '@futo-ui/hooks'
-import { Alert, Typography } from '@material-ui/core'
+import { Alert, Typography } from '@mui/material'
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
-import { errorMessage, firebase } from 'core/utils'
+import { errorMessage } from 'core/utils'
 import { presence } from 'core/validators'
 import { userErrorMessage } from 'user'
 import { USER_ERRORS } from 'user/locales'
@@ -24,10 +25,15 @@ const AccountReset = () => {
               ],
             }
           },
-          onSubmit: () => { firebase.auth().sendPasswordResetEmail(user.email).then(user.success).catch(err => user.fail(userErrorMessage(err))); }
+          onSubmit: () => { sendPasswordResetEmail(getAuth(), user.email).then(user.success).catch(err => {
+            console.log(err);
+            user.fail(userErrorMessage(err))
+          }); }
         });
 
-  useEffect(() => router.isReady && err && user.fail(JSON.parse(atob(err))), [router.isReady]);
+  useEffect(() => router.isReady && err && user.fail(JSON.parse(window.atob(err))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [router.isReady]);
 
   return (
     <FocusLayout maxWidth="xs">

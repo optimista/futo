@@ -1,5 +1,24 @@
-import { DispatchContext } from 'story/context'
+import PropTypes from 'prop-types'
+import { createContext } from 'react'
 
-const DispatchProvider = ({ children, ...props }) => <DispatchContext.Provider {...props}>{children}</DispatchContext.Provider>
+const DispatchContext = createContext(() => {});
 
-export default DispatchProvider;
+/**
+ * - Provides story reducer's `dispatch` method. 
+ * - Props of the [`Context.Provider`](https://reactjs.org/docs/context.html#contextprovider) are also available.
+ */
+const DispatchProvider = props => <DispatchContext.Provider {...props} />
+
+DispatchProvider.propTypes = { 
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
+
+  /**
+   * The story reducer's dispatch method. 
+   */
+  value: PropTypes.func.isRequired
+}
+
+export { DispatchProvider as default, DispatchContext };

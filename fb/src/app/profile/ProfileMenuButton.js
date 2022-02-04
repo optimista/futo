@@ -1,41 +1,58 @@
 import { useDialog, useMenu } from '@futo-ui/hooks'
-import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@material-ui/core'
-import { ExitToAppSharp, HistoryEdu } from '@material-ui/icons'
+import { ExitToAppSharp, HistoryEdu } from '@mui/icons-material'
+import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@mui/material'
+import { getAuth, signOut } from 'firebase/auth'
+import PropTypes from 'prop-types'
 
 import { IconButton, Menu } from 'core'
-import { firebase } from 'core/utils'
 import { ProfileAvatar } from 'profile'
-import { LoginForm, useAuth, useLoginModel } from 'user'
+import { LoginForm, useLoginModel } from 'user'
+import { useAuth } from 'user'
 
-const LoginDialogButton = ({ children, ...props }) => {
+/**
+ * - Button that opens a [`@mui/Dialog`](https://mui.com/api/dialog) with [`user/LoginForm`](/docs/user-loginform--default).
+ * - Props of the [`@mui/Button`](https://mui.com/api/button) are also available.
+ */
+const LoginDialogButton = ({ children = "log in", ...props }) => {
   const user = useLoginModel({ success: () => dialog.close() }),
         dialog = useDialog(user);
 
   return (
     <>
-      <Button onClick={dialog.open} {...props}>{ children || "log in" }</Button>
+      <Button onClick={dialog.open} {...props}>{children}</Button>
       <Dialog onClose={dialog.close} open={dialog.isOpen}><LoginForm user={user} /></Dialog>
     </>
   )
 } 
 
+LoginDialogButton.propTypes = {
+  /**
+   * The content of the button.
+   * @default "log in"
+   */
+  children: PropTypes.node,
+};
+
+/**
+ * - Button that opens a user's [`core/Menu`](/docs/core-menu--default).
+ * - Shows `LoginDialogButton` if user is not logged in.
+ * - Integrates links to stories, profile & option to log out.
+ */
 const ProfileMenuButton = ({ avatar }) => {
   const auth = useAuth(),
         menu = useMenu();
-  
+
+  if (!auth.isReady) return <></>
   if (auth.isReady && !auth.isLoggedIn) return <LoginDialogButton />;
 
-  const handleLogout = () => {
-    menu.close();
-    firebase.auth().signOut();
-  }
+  const handleLogout = () => { menu.close(); signOut(getAuth()); }
 
   const invisible = !auth.isLoggedIn || !auth.profile || Boolean(auth?.profile?.displayName);
 
   return (
     <>
-      <Badge badgeContent={1} color="error" invisible={invisible} overlap="circular" variant="small">
-        <IconButton aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" onClick={menu.open} hideTooltip={menu.isOpen} tooltip="Account">
+      <Badge badgeContent={1} invisible={invisible} overlap="circular" variant="small">
+        <IconButton onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: "Account" }}>
           {avatar || <ProfileAvatar />}
         </IconButton>
       </Badge>
@@ -48,7 +65,7 @@ const ProfileMenuButton = ({ avatar }) => {
         </MenuItem>
         <MenuItem component={Link} href={"/" + auth.profile?.username}>
           <ListItemIcon>
-            <Badge badgeContent={1} color="error" invisible={invisible} overlap="circular" variant="dot">
+            <Badge badgeContent={1} invisible={invisible} overlap="circular" variant="dot">
               <ProfileAvatar sx={{ height: t => t.spacing(3), width: t => t.spacing(3) }} />
             </Badge>
           </ListItemIcon>
@@ -65,4 +82,12 @@ const ProfileMenuButton = ({ avatar }) => {
   )
 }
 
-export default ProfileMenuButton;
+ProfileMenuButton.propTypes = {
+  /**
+   * Determines which avatar / icon is being used in the button. 
+   * @default <ProfileAvatar />
+   */
+  avatar: PropTypes.node, 
+};
+
+export { ProfileMenuButton as default, LoginDialogButton };
