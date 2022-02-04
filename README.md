@@ -2,9 +2,6 @@
 
 Collection of boilerplate generator scripts (`vc`, `mui`, `fb`, `tw`) which generate a web application project with following integrations
 
-## Prerequisites
-Install `gl` script from here: https://github.com/optimista/gl (check explanation in the bottom or installation procedure on the link)
-
 ## 1. `vc` = Vercel / Next.js (1/3)
 Generates a new, minimal Vercel / Next.js project and 'cleans it up' - removes some stuff that we do not need.
 
@@ -94,6 +91,10 @@ tw rm myappname # To remove existing project (must be run from parent directory)
 ```
 brew install expect
 ```
+
+### `gl`
+
+Follow instructions from [here](https://github.com/optimista/gl)
 
 ### `npm`
 
