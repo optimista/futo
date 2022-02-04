@@ -53,7 +53,7 @@ const PostCard = ({ post, onEdit }) => {
           :
           <Skeleton width={160} />
       }>
-      <Typography variant="body1" color="textPrimary" component="p" style={{ whiteSpace: 'pre-wrap' }}>{post ? post.content : <Skeleton />}</Typography>
+      <Typography style={{ whiteSpace: 'pre-wrap' }}>{post ? post.content : <Skeleton />}</Typography>
     </PostCardLayout>
   )
 }

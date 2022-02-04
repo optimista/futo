@@ -97,7 +97,7 @@ export default createTheme({
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
-    MuiSvgIcon: { styleOverrides: { fontSizeLarge: {
+    MuiSvgIcon: { styleOverrides: { root: { height: "1rem", width: "1rem" }, fontSizeLarge: {
       fontSize: theme.typography.pxToRem(28)
     } } },
     MuiToolbar: { defaultProps: { variant: "dense" } },

@@ -11,7 +11,7 @@ const TypographyStory = {
     align: { table: { disable: true } },
     children: { control: { type: "text" } },
     classes: { table: { disable: true } },
-    component: { control: { type: null } },
+    component: { table: { disable: true } },
     gutterBottom: { table: { defaultValue: { summary: "false" } } },
     noWrap: { table: { disable: true } },
     paragraph: { table: { defaultValue: { summary: "false" } } },
