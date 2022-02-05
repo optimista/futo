@@ -97,8 +97,9 @@ export default createTheme({
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
-    MuiSvgIcon: { styleOverrides: { root: { height: "1rem", width: "1rem" }, fontSizeLarge: {
-      fontSize: theme.typography.pxToRem(28)
+    MuiSvgIcon: { styleOverrides: { fontSizeLarge: {
+      height: "1.75rem",
+      width: "1.75rem",
     } } },
     MuiToolbar: { defaultProps: { variant: "dense" } },
 
@@ -176,7 +177,7 @@ export default createTheme({
     MuiListItemText: { defaultProps: { disableTypography: true } },
 
     // Menu / Tooltip
-    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { fontSize: "1.5rem" } } } },
+    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { height: "1.5rem", width: "1.5rem" } } } },
     MuiPaper: { defaultProps: { variant: "outlined" }, styleOverrides: { rounded: { borderRadius: 2 } } },
     MuiTooltip: { 
       defaultProps: {

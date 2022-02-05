@@ -1,6 +1,6 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
 import { base64 } from '@futo-ui/utils'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 
 import { errorMessage, upload } from 'core/utils'
 import { presence } from 'core/validators'
@@ -20,7 +20,7 @@ const useProfileDialog = initProfile => {
         batch.set(doc(Usernames, newUsername), { userId: auth.uid });
         batch.delete(doc(Usernames, oldUsername));
         batch.commit(); */
-        const update = data => updateDoc(doc(Profiles, profile.id), { bio: profile.bio || "", displayName: profile.displayName || "", ...data }).then(dialog.close);
+        const update = data => setDoc(doc(Profiles, profile.id), { bio: profile.bio || "", displayName: profile.displayName || "", ...data }, { merge: true }).then(dialog.close);
 
         if (base64(profile.photoURL, AVATAR_IMAGE_TYPES)) {
           upload("profiles/"+profile.id+"/original", profile.photoURL)

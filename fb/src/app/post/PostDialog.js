@@ -69,7 +69,7 @@ const PostDialog = ({ post, onClose = () => {}, ...props }) => {
             }/>
           </Form>
       </Dialog>
-      <DiscardDialog onDiscard={handleDiscard} title={!post.id && "Discard the new post?"} onClose={discard.close} open={discard.isOpen} />
+      <DiscardDialog onDiscard={handleDiscard} title={!post.id ? "Discard the new post?" : undefined} onClose={discard.close} open={discard.isOpen} />
     </>
   )
 }
