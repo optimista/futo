@@ -1,6 +1,6 @@
 import { AppBar, Button, Toolbar, Typography } from '@mui/material'
 
-import { NAMES } from 'core/locales'
+import { NAMES } from 'core/i18n'
 
 AppBar.__docgenInfo.description = "- For more see: [`AppBar`](https://mui.com/api/app-bar)\n- We use only following props:"
 

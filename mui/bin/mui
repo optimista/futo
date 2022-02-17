@@ -57,7 +57,7 @@ case $1 in
       cp -r $dir/src/app/core app
       cp -r $dir/src/styles . 
       cp -r $dir/src/pages . 
-      sed -i '' -e "s/my-app/$name/" -e "s/MyApp/$ccname/" app/core/locales/NAMES.js
+      sed -i '' -e "s/my-app/$name/" -e "s/MyApp/$ccname/" app/core/i18n/NAMES.js
       sed -i '' "s/MyApp/"$ccname"App/" pages/_app.js
       sed -i '' "s/MyDocument/"$ccname"Document/g" pages/_document.js # change name of Document class
 

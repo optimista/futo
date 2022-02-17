@@ -65,8 +65,7 @@ PageLayout.propTypes = {
  * - One [`@mui/ListItemButton`](https://mui.com/api/list-item-button) for the aside drawer in the [`core/layouts/FeedLayout`](/docs/core-layouts-feedlayout--default)
  */
 const DrawerItem = ({ children, href, Icon, ...props }) => {
-  const theme = useTheme(),
-        mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const theme = useTheme(), mdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <ListItemButton component={Link} href={href} {...props}>

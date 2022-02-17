@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 
 import { theme } from 'core/utils'
+import { LocaleProvider } from 'core/utils/i18n'
 
 import '../styles/nprogress.css'
 
@@ -51,7 +52,9 @@ const MyApp = props => {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <LocaleProvider>
+          <Component {...pageProps} />
+        </LocaleProvider>
       </ThemeProvider>
     </CacheProvider>
   );

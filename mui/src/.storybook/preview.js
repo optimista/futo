@@ -4,6 +4,7 @@ import { ThemeProvider as Emotion10ThemeProvider } from 'emotion-theming';
 import * as NextImage from "next/image";
 
 import { theme } from '../app/core/utils'
+import { LocaleProvider } from '../app/core/utils/i18n'
 
 const OriginalNextImage = NextImage.default;
 Object.defineProperty(NextImage, "default", {
@@ -11,18 +12,20 @@ Object.defineProperty(NextImage, "default", {
   value: (props) => <OriginalNextImage {...props} unoptimized />,
 });
 
-const withThemeProvider = (Story, context) => {
-  return (
-    <Emotion10ThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Story {...context} />
-      </ThemeProvider>
-    </Emotion10ThemeProvider>
-  );
-};
-
-export const decorators = [withThemeProvider];
+export const decorators = [
+  (Story, context) => {
+    return (
+      <Emotion10ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <LocaleProvider>
+            <Story {...context} />
+          </LocaleProvider>
+        </ThemeProvider>
+      </Emotion10ThemeProvider>
+    );
+  }
+];
 
 export const parameters = {
   controls: { expanded: true, sort: 'requiredFirst'},

@@ -1,6 +1,6 @@
 import { Button, Toolbar, Typography } from '@mui/material'
 
-import { NAMES } from 'core/locales'
+import { NAMES } from 'core/i18n'
 
 import AppBarStory from './AppBar.stories'
 

@@ -89,7 +89,7 @@ case $1 in
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/form/*.js app/core/form/
       cp $dir/src/app/core/layouts/*.js app/core/layouts/
-      cp $dir/src/app/core/locales/*.js app/core/locales/*.js && rm $dir/src/app/core/layouts/PageLayout.js
+      cp $dir/src/app/core/i18n/*.js app/core/i18n/*.js && rm $dir/src/app/core/layouts/PageLayout.js
       cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
       cp $dir/src/public/* public/ && mv public/name.png public/$name.png
       cp -r $dir/src/app/post app/post
@@ -99,7 +99,7 @@ case $1 in
       cp -r $dir/src/pages/account pages/ # account pages
       
       ### Add AuthProvider
-      sed -i '' "s/import { theme } from 'core\/utils'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
+      sed -i '' "s/import { LocaleProvider } from 'core\/utils\/locale'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
       sed -i '' "s/      <ThemeProvider theme={theme}>/      <AuthProvider>\n&/" pages/_app.js
       sed -i '' "s/      <\/ThemeProvider>/&\n      <\/AuthProvider>/" pages/_app.js
       sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' pages/_app.js
