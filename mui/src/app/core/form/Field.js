@@ -33,7 +33,7 @@ Field.propTypes = {
   /**
    * The label content.
    */
-  label: PropTypes.string,
+  label: PropTypes.node,
   
   /**
    * Name attribute of the `input` element.

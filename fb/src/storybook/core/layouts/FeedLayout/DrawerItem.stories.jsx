@@ -5,7 +5,7 @@ import { DrawerItem } from 'core/layouts/FeedLayout'
 const DrawerItemStory = {
   component: DrawerItem,
   title: 'core/layouts/FeedLayout/DrawerItem',
-  argTypes: { "Icon": { control: { type: null } } }
+  argTypes: { children: { control: { type: "text" } }, "Icon": { control: { type: null } } }
 }
 
 const Default = args => <DrawerItem {...args} />

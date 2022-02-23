@@ -4,9 +4,19 @@ import { useTheme } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 
 import { Logo, Tooltip } from 'core'
-import { NAMES } from 'core/locales'
+import { GENERAL, NAMES } from 'core/i18n'
+import { I, IProvider } from 'core/utils/i18n'
 import { ProfileAvatar, ProfileMenuButton } from 'profile'
 import { useAuth } from 'user'
+
+const PROFILE_BUTTON = {
+  "en": {
+    "Your profile": "Your profile",
+  },
+  "es": {
+    "Your profile": "Tu perfil",
+  }
+}
 
 /**
  * - [`@mui/Button`](https://mui.com/api/button) to profile with [`profile/ProfileAvatar`](/docs/profile-profileavatar--default) & name of the user. 
@@ -19,7 +29,7 @@ const ProfileButton = () => {
 
   return (
     <Button href={"/" + auth.profile.username} startIcon={<ProfileAvatar sx={{ height: t => t.spacing(4), width: t => t.spacing(4) }} />} sx={{ borderRadius: 17, mr: 1, pl: 0.5, pr: 2, py: 0.125, textTransform: "none" }} variant="text">
-      {auth.profile.displayName || "Your profile"}
+      {auth.profile.displayName || <I dict={PROFILE_BUTTON} k="Your profile" width={73} /> }
     </Button>
   )
 };
@@ -65,7 +75,8 @@ PageLayout.propTypes = {
  * - One [`@mui/ListItemButton`](https://mui.com/api/list-item-button) for the aside drawer in the [`core/layouts/FeedLayout`](/docs/core-layouts-feedlayout--default)
  */
 const DrawerItem = ({ children, href, Icon, ...props }) => {
-  const theme = useTheme(), mdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const theme = useTheme(),
+        mdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <ListItemButton component={Link} href={href} {...props}>
@@ -81,7 +92,7 @@ DrawerItem.propTypes = {
   /**
    * The title of the drawer item. 
    */
-  children: PropTypes.string,
+  children: PropTypes.node,
   
   /**
    * Indicates the [`@mui/ListItemButton`](https://mui.com/api/list-item-button) destination. 
@@ -94,6 +105,17 @@ DrawerItem.propTypes = {
   Icon: PropTypes.elementType,
 };
 
+const FEED_LAYOUT = {
+  "en": {
+    "Home": "Home",
+    "Theme": "Theme"
+  },
+  "es": {
+    "Home": "Inicio",
+    "Theme": "Tema"
+  }
+}
+
 /**
  * - Adds a responsive aside drawer to a [`core/Feed`](/docs/core-feed--default).
  * - Props of the [`core/layouts/PageLayout`](/docs/core-layouts-pagelayout--default) component are also available.
@@ -102,25 +124,27 @@ const FeedLayout = ({ children, ...props }) => {
   const auth = useAuth();
 
   return (
-    <PageLayout maxWidth="md" {...props}>
-      <Grid container spacing={0} sx={{ justifyContent: "center" }}>
-        <Grid item sx={{ width: t => ({ xs: t.spacing(7.5), md: 200 }) }}>
-          <List>
-            <DrawerItem href="/" Icon={HomeOutlined}>Home</DrawerItem>
-            <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn}>Profile</DrawerItem>
-            <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn}>Stories</DrawerItem>
-          </List>
-          <List>
-            <DrawerItem href="/join" Icon={PersonAddOutlined}>Join</DrawerItem>
-            <DrawerItem href="/login" Icon={LockOutlined}>Login</DrawerItem>
-            <DrawerItem href="/theme" Icon={PaletteOutlined}>Theme</DrawerItem>
-          </List>
+    <IProvider value={FEED_LAYOUT}>
+      <PageLayout maxWidth="md" {...props}>
+        <Grid container spacing={0} sx={{ justifyContent: "center" }}>
+          <Grid item sx={{ width: t => ({ xs: t.spacing(7.5), md: 200 }) }}>
+            <List>
+              <DrawerItem href="/" Icon={HomeOutlined}><I k="Home" width={60} /></DrawerItem>
+              <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Profile" width={60} /></DrawerItem>
+              <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Stories" width={60} /></DrawerItem>
+            </List>
+            <List>
+              <DrawerItem href="/join" Icon={PersonAddOutlined}><I dict={GENERAL} k="Join" width={60} /></DrawerItem>
+              <DrawerItem href="/login" Icon={LockOutlined}><I dict={GENERAL} k="Login" width={60} /></DrawerItem>
+              <DrawerItem href="/theme" Icon={PaletteOutlined}><I k="Theme" width={60} /></DrawerItem>
+            </List>
+          </Grid>
+          <Grid item sx={{ width: t => ({ xs: "calc(100% - "+t.spacing(7.5)+")", md: "calc(100% - 200px)" }) }}>
+            {children}
+          </Grid>
         </Grid>
-        <Grid item sx={{ width: t => ({ xs: "calc(100% - "+t.spacing(7.5)+")", md: "calc(100% - 200px)" }) }}>
-          {children}
-        </Grid>
-      </Grid>
-    </PageLayout>
+      </PageLayout>
+    </IProvider>
   )
 }
 

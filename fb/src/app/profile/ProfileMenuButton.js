@@ -5,33 +5,37 @@ import { getAuth, signOut } from 'firebase/auth'
 import PropTypes from 'prop-types'
 
 import { IconButton, Menu } from 'core'
+import { l, I, useLocale } from 'core/utils/i18n'
+import { GENERAL } from 'core/i18n'
 import { ProfileAvatar } from 'profile'
 import { LoginForm, useLoginModel } from 'user'
 import { useAuth } from 'user'
 
 /**
  * - Button that opens a [`@mui/Dialog`](https://mui.com/api/dialog) with [`user/LoginForm`](/docs/user-loginform--default).
- * - Props of the [`@mui/Button`](https://mui.com/api/button) are also available.
  */
-const LoginDialogButton = ({ children = "log in", ...props }) => {
+const LoginDialogButton = () => {
   const user = useLoginModel({ success: () => dialog.close() }),
         dialog = useDialog(user);
 
   return (
     <>
-      <Button onClick={dialog.open} {...props}>{children}</Button>
+      <Button onClick={dialog.open}><I dict={GENERAL} k="Login" width={80} /></Button>
       <Dialog onClose={dialog.close} open={dialog.isOpen}><LoginForm user={user} /></Dialog>
     </>
   )
 } 
 
-LoginDialogButton.propTypes = {
-  /**
-   * The content of the button.
-   * @default "log in"
-   */
-  children: PropTypes.node,
-};
+const PROFILE_MENU_BUTTON = {
+  "en": {
+    "Account": "Account",
+    "Logout": "Logout"
+  },
+  "es": {
+    "Account": "Cuenta",
+    "Logout": "Cerrar sesión"
+  }
+}
 
 /**
  * - Button that opens a user's [`core/Menu`](/docs/core-menu--default).
@@ -39,8 +43,7 @@ LoginDialogButton.propTypes = {
  * - Integrates links to stories, profile & option to log out.
  */
 const ProfileMenuButton = ({ avatar }) => {
-  const auth = useAuth(),
-        menu = useMenu();
+  const auth = useAuth(), locale = useLocale(), menu = useMenu();
 
   if (!auth.isReady) return <></>
   if (auth.isReady && !auth.isLoggedIn) return <LoginDialogButton />;
@@ -52,7 +55,7 @@ const ProfileMenuButton = ({ avatar }) => {
   return (
     <>
       <Badge badgeContent={1} invisible={invisible} overlap="circular" variant="small">
-        <IconButton onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: "Account" }}>
+        <IconButton onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: l("Account", PROFILE_MENU_BUTTON, locale) }}>
           {avatar || <ProfileAvatar />}
         </IconButton>
       </Badge>
@@ -61,7 +64,7 @@ const ProfileMenuButton = ({ avatar }) => {
           <ListItemIcon>
             <HistoryEdu />
           </ListItemIcon>
-          <ListItemText primary="Stories" />
+          <ListItemText primary={<I dict={GENERAL} k="Stories" width={50} />} />
         </MenuItem>
         <MenuItem component={Link} href={"/" + auth.profile?.username}>
           <ListItemIcon>
@@ -69,13 +72,13 @@ const ProfileMenuButton = ({ avatar }) => {
               <ProfileAvatar sx={{ height: t => t.spacing(3), width: t => t.spacing(3) }} />
             </Badge>
           </ListItemIcon>
-          <ListItemText primary="Profile" />
+          <ListItemText primary={<I dict={GENERAL} k="Profile" width={50} />} />
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <ExitToAppSharp />
           </ListItemIcon>
-          <ListItemText primary="Logout" />
+          <ListItemText primary={<I dict={PROFILE_MENU_BUTTON} k="Logout" width={50} />} />
         </MenuItem>
       </Menu>
     </>

@@ -5,6 +5,9 @@ import { Field, Form } from 'core/form'
 const FieldStory = {
   component: Field,
   title: 'core/form/Field',
+  argTypes: {
+    label: { control: { type: "text" } }
+  },
   decorators: [
     Story => {
       const model = useModel({ email: "" });

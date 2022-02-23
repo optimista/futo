@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { useForm } from 'core/form'
 import { l, useLocale } from 'core/utils/i18n'
 
-const dict = {
+const SUBMIT = {
   en: {
     "Try again": "Try again"
   },
@@ -20,7 +20,7 @@ const dict = {
  */
 const Submit = ({ children, ...props }) => {
   const locale = useLocale(), model = useForm();
-  return <LoadingButton loading={model.isSending} startIcon={model.isFail && <Refresh />} type="submit" {...props}>{ model.isFail ? l("Try again", dict, locale) : children }</LoadingButton>;
+  return <LoadingButton loading={model.isSending} startIcon={model.isFail && <Refresh />} type="submit" {...props}>{ model.isFail ? l("Try again", SUBMIT, locale) : children }</LoadingButton>;
 }
 
 Submit.propTypes = {

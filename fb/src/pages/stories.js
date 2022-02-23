@@ -7,16 +7,34 @@ import PropTypes from 'prop-types'
 
 import { Feed, IconButton, Menu } from 'core'
 import { FeedLayout } from 'core/layouts'
+import { GENERAL } from 'core/i18n'
+import { l, I, IProvider, useLocale } from 'core/utils/i18n'
 import { Stories } from 'story'
 import { storyPath, storyEditPath } from 'story/utils'
 import { Authorize, useAuth } from 'user'
+
+const STORY_CARD = {
+  lastEdited: ({ editedAtTime, nodes }, lastEditedStr, nodesStr) => lastEditedStr + ": " + editedAtTime + " · " + keys(nodes).length + " " + nodesStr,
+  "en": {
+    "Last edited": story => STORY_CARD.lastEdited(story, "Last edited", "nodes"),
+    "Untitled Story": "Untitled Story",
+    "Edit story": "Edit story",
+    "Remove story": "Remove story"
+  },
+  "es": {
+    "Last edited": story => STORY_CARD.lastEdited(story, "Última modificación", "nodos"),
+    "Untitled Story": "Historia sin título",
+    "Edit story": "Editar historia",
+    "Remove story": "Eliminar historia"
+  }
+}
 
 /**
  * - [`@mui/Card`](/docs/mui-card--default) for the story component.
  * - Includes [`@mui/MenuItem`](https://mui.com/api/menu-item) to edit & to remove the story.
  */
 const StoryCard = ({ story }) => {
-  const auth = useAuth(), menu = useMenu();
+  const auth = useAuth(), locale = useLocale(), menu = useMenu();
 
   const handleRemove = () => {
     menu.close();
@@ -24,57 +42,52 @@ const StoryCard = ({ story }) => {
   }
 
   // Helpers
-  const description = s => s.nodes[keys(story.nodes)[1]]?.content,
-        lastEdited = ({ editedAtTime, nodes }) => "Last edited: " + editedAtTime + " · " + keys(nodes).length + " nodes",
-        title = s => s.nodes[keys(story.nodes)[0]]?.content || "Untitled Story";
+  const sKeys = story ? keys(story.nodes).sort((a,b) => parseInt(a) - parseInt(b)) : [];
 
   return (
-    <Card sx={{ border: 0, display: "flex", justifyContent: "space-between" }}>
-      <CardContent>
-        {
-          story ?
-            <>
-              <Link href={storyPath(story)} sx={{ display: "block" }} underline="none" variant="h6">{title(story)}</Link>
-              { description(story) && <Typography variant="subtitle1">{description(story)}</Typography> }
-              <Typography variant="overline">{lastEdited(story)}</Typography>
-            </>
-            :
-            <>
-              <Skeleton width={200} />
-              <Skeleton width={400} />
-              <Skeleton width={180} />
-            </>
-        }
-      </CardContent>
-      { auth.isLoggedIn && story?.profileId === auth.uid && 
-        <CardActions>
+    <IProvider value={STORY_CARD}>
+      <Card sx={{ border: 0, display: "flex", justifyContent: "space-between" }}>
+        <CardContent>
           {
-            story ?
-              <>
-                <IconButton color="secondary" onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: "More" }}>
-                  <ExpandMore />
-                </IconButton>
-                <Menu anchorEl={menu.el} arrow open={menu.isOpen} onClose={menu.close} placement="end">
-                  <MenuItem component={Link} href={storyEditPath(story)}>
-                    <ListItemIcon>
-                      <EditOutlined />
-                    </ListItemIcon>
-                    <ListItemText primary="Edit story" />
-                  </MenuItem>
-                  <MenuItem onClick={handleRemove}>
-                    <ListItemIcon>
-                      <DeleteOutlined />
-                    </ListItemIcon>
-                    <ListItemText primary="Remove story" />
-                  </MenuItem>
-                </Menu>
-              </>
-              :
-              <Skeleton height={32} variant="circular" width={32} />
+            <>
+              <Link href={story ? storyPath(story) : "#"} sx={{ display: "block" }} underline="none" variant="h6">
+                { story && (0 < sKeys.length || locale) ? story.nodes[sKeys[0]].content || l("Untitled Story", STORY_CARD, locale) : <Skeleton width={240} /> }
+              </Link>
+              { (!story || 1 < sKeys.length) && <Typography variant="subtitle1">{story ? story.nodes[sKeys[1]].content : <Skeleton width={320} />}</Typography> }
+              <Typography variant="overline"><I arg={story} k={story ? "Last edited" : undefined} width={180} /></Typography>
+            </>
           }
-        </CardActions>
-      }
-    </Card>
+        </CardContent>
+        { auth.isLoggedIn && story?.profileId === auth.uid && 
+          <CardActions>
+            {
+              story ?
+                <>
+                  <IconButton color="secondary" onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: l("More", GENERAL, locale) }}>
+                    <ExpandMore />
+                  </IconButton>
+                  <Menu anchorEl={menu.el} arrow open={menu.isOpen} onClose={menu.close} placement="end">
+                    <MenuItem component={Link} href={storyEditPath(story)}>
+                      <ListItemIcon>
+                        <EditOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary={<I k="Edit story" width={90} />} />
+                    </MenuItem>
+                    <MenuItem onClick={handleRemove}>
+                      <ListItemIcon>
+                        <DeleteOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary={<I k="Remove story" width={90} />} />
+                    </MenuItem>
+                  </Menu>
+                </>
+                :
+                <Skeleton height={32} variant="circular" width={32} />
+            }
+          </CardActions>
+        }
+      </Card>
+    </IProvider>
   )
 }
 
@@ -92,14 +105,27 @@ StoryCard.propTypes = {
 const StoryFeed = props =>
   <Feed Item={({ item, ...props }) => <StoryCard story={item} {...props} />} collection={Stories} sortBy="editedAt" {...props} />
 
+const STORIES_PAGE = {
+  "en": {
+    "Your Stories": "Your Stories",
+    "Write a story": "Write a story"
+  },
+  "es": {
+    "Your Stories": "Tus historias",
+    "Write a story": "Escribir una historia"
+  }
+}
+
 const StoriesPage = () => {
   const auth = useAuth();
   return (
     <Authorize>
       <FeedLayout maxWidth="lg">
         <Box sx={{ display: "flex", justifyContent: "space-between", p: t => t.spacing(2, 1, 4, 1) }}>
-          <Typography variant="h4">Your Stories</Typography>
-          <Button href="/create">Write a story</Button>
+          <IProvider value={STORIES_PAGE}>
+            <Typography variant="h4"><I k="Your Stories" width={170} /></Typography>
+            <Button href="/create"><I k="Write a story" width={120} /></Button>
+          </IProvider>
         </Box>
         <StoryFeed profileId={auth.uid} />
       </FeedLayout>

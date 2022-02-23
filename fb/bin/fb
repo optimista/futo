@@ -87,9 +87,8 @@ case $1 in
       npm install @futo-ui/hooks@0.11.26 @futo-ui/utils@0.8.54
       cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
-      cp $dir/src/app/core/form/*.js app/core/form/
       cp $dir/src/app/core/layouts/*.js app/core/layouts/
-      cp $dir/src/app/core/i18n/*.js app/core/i18n/*.js && rm $dir/src/app/core/layouts/PageLayout.js
+      cp $dir/src/app/core/i18n/*.js app/core/i18n/*.js && rm app/core/layouts/PageLayout.js
       cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
       cp $dir/src/public/* public/ && mv public/name.png public/$name.png
       cp -r $dir/src/app/post app/post
@@ -161,7 +160,7 @@ case $1 in
       url=https://console.firebase.google.com/project/$projectid/authentication/emails
       echo "(5/6) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
       echo "Sender name: Your name"
-      echo "Subject: %APP_NAME% - Reset your password"
+      echo "Subject: %APP_NAME% - Reset your password / Restablecer su contraseña"
       echo "Message:"
       find $dir/templates -type f -exec cat {} \; -exec echo \;
       echo "Action URL: https://$name.vercel.app/account/confirm"

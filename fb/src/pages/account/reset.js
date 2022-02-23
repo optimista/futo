@@ -7,28 +7,45 @@ import { useEffect } from 'react'
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
 import { errorMessage } from 'core/utils'
+import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { presence } from 'core/validators'
 import { userErrorMessage } from 'user'
-import { USER_ERRORS } from 'user/locales'
+import { RESET, USER_ERRORS, USER_FIELDS } from 'user/i18n'
 import { emailFormatAt, emailFormatDomain } from 'user/validators'
 
+const ACCOUNT_RESET = {
+  emailSent: (weveSentTo, email, clickTheLink) => weveSentTo + email + ". " + clickTheLink, 
+  "en": {
+    "Reset link sent": "Reset link successfully sent!",
+
+    "We've sent": email => ACCOUNT_RESET.emailSent("We've sent an email to ", email, "Click the link the email to reset your password."),
+    "Send a password reset": "Send a password reset link on your e-mail address.",
+    "Send reset link": "Send reset link"
+  },
+  "es": {
+    "Reset link sent": "¡Enlace para restablecer enviado con éxito!",
+    "We've sent": email => ACCOUNT_RESET.emailSent("Hemos enviado un correo e. a ", email, "Haga clic en el enlace del correo e. para restablecer su contraseña."),
+    "Send a password reset": "Envíe un enlace de restablecimiento de contraseña en su correo e.",
+    "Send reset link": "Enviar enlace de restablecimiento"
+  },
+}
+
 const AccountReset = () => {
-  const router = useRouter(), { err } = router.query,
+  const locale = useLocale(), router = useRouter(), { err } = router.query,
         user = useModel({ email: "" }, {
           validation: { disableInline: true, 
-            generalError: err => errorMessage(err),
+            generalError: err => { console.log("xx", err); errorMessage({ key: err.code, locale }) },
             syncValidators: {
               email: [
-                { f: presence, message: USER_ERRORS["user/email-empty"] },
-                { f: emailFormatAt, message: USER_ERRORS["user/email-without-at"] },
-                { f: emailFormatDomain, message: USER_ERRORS["user/email-invalid-domain"] },
+                { f: presence, message: l("user/email-empty", USER_ERRORS, locale) },
+                { f: emailFormatAt, message: l("user/email-without-at", USER_ERRORS, locale) },
+                { f: emailFormatDomain, message: l("user/email-invalid-domain", USER_ERRORS, locale) },
               ],
             }
           },
-          onSubmit: () => { sendPasswordResetEmail(getAuth(), user.email).then(user.success).catch(err => {
-            console.log(err);
-            user.fail(userErrorMessage(err))
-          }); }
+          onSubmit: () => {
+            // For multilanguage support: https://firebase.google.com/docs/auth/admin/email-action-links
+            sendPasswordResetEmail(getAuth(), user.email).then(user.success).catch(({ code }) => user.fail(userErrorMessage(code === "auth/too-many-requests" ? code + "-reset" : code, locale))); }
         });
 
   useEffect(() => router.isReady && err && user.fail(JSON.parse(window.atob(err))),
@@ -37,18 +54,20 @@ const AccountReset = () => {
 
   return (
     <FocusLayout maxWidth="xs">
-      { 
-        user.isSuccess ? <>
-          <Typography paragraph variant="h5">Reset link successfully sent!</Typography>
-          <Alert severity="success">{"We've sent an email to "+user.email+". Click the link in the email to reset your password."}</Alert>
-        </> : <>
-          <Typography paragraph variant="h5">Reset your password</Typography>
-          <Typography>Send a password reset link on your e-mail address.</Typography>
-          <Form model={user} actions={<Submit>Send reset link</Submit>}>
-            <Field autoFocus name="email" type="email" />
-          </Form>
-        </>
-      }
+      <IProvider value={ACCOUNT_RESET}>
+        { 
+          user.isSuccess ? <>
+            <Typography paragraph variant="h5"><I k="Reset link sent" width={300} /></Typography>
+            <Alert severity="success"><I arg={user.email} k="We've sent" lines={2} width={378} /></Alert>
+          </> : <>
+            <Typography paragraph variant="h5"><I dict={RESET} k="Reset your password." width={222} /></Typography>
+            <Typography><I k="Send a password reset" width={364} /></Typography>
+            <Form model={user} actions={<Submit><I k="Send reset link" width={120} /></Submit>}>
+              <Field autoFocus label={<I dict={USER_FIELDS} k="email" width={80} />} name="email" type="email" />
+            </Form>
+          </>
+        }
+      </IProvider>
     </FocusLayout>
   )
 }

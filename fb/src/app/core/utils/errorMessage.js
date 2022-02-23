@@ -1,21 +1,21 @@
-import { ERRORS } from 'core/locales'
+import { ERRORS } from 'core/i18n'
+import { l } from 'core/utils/i18n'
 
-const errorMessage = (err = {}, initTitle) => {
-  let title = initTitle;
-  switch(err.code) {
+const errorMessage = ({ key, locale, title }) => {
+  switch(key) {
     case "auth/network-request-failed":
     case "unavailable":
-      title = ERRORS["auth/network-request-failed/title"];
+      title = l("auth/network-request-failed/title", ERRORS, locale);
       break;
   } 
 
   let message;
-  switch(err.code) {
+  switch(key) {
     case "unavailable":
-      message = ERRORS["auth/network-request-failed"];
+      message = l("auth/network-request-failed", ERRORS, locale);
       break;
     default:
-      message = ERRORS[err.code] || ERRORS["something-wrong"];
+      message = l(key, ERRORS, locale) || l("something-wrong", ERRORS, locale);
       break;
   }
   

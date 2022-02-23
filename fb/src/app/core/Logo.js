@@ -2,7 +2,7 @@ import { Link } from '@mui/material'
 import PropTypes from 'prop-types'
 
 import { Avatar } from 'core'
-import { NAMES } from 'core/locales'
+import { NAMES } from 'core/i18n'
 
 /**
  * - Integrates [`@mui/Link`](https://mui.com/api/link) to home & shows logo of the project. 

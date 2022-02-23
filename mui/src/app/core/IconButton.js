@@ -5,7 +5,7 @@ import { Tooltip } from 'core'
 
 /**
  * - Includes [`core/Tooltip`](/docs/core-tooltip--default).
- * - Props of the [`@mui/IconButton`](/docs/mui-iconbutton--default) component are also available.
+ * - Props of the [`@mui/IconButton`](https://mui.com/api/icon-button/) component are also available.
  */
 const IconButton = ({ children, TooltipProps, ...props }) => {
   const renderIconButton = <MuiIconButton {...props}>{children}</MuiIconButton>;
@@ -18,7 +18,7 @@ IconButton.propTypes = {
    */
   children: PropTypes.node.isRequired,
   /**
-   * Props applied to the [`core/Tooltip`](?path=/docs/core-tooltip--default) component.
+   * Props applied to the [`core/Tooltip`](/docs/core-tooltip--default) component.
    */
   TooltipProps: PropTypes.object,
 };

@@ -7,34 +7,55 @@ import { useRouter } from 'next/router'
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
 import { db, errorMessage } from 'core/utils'
+import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { maxLength, minLength, presence } from 'core/validators'
 import { Profiles, Usernames } from 'profile'
 import { userErrorMessage } from 'user'
-import { USER_ERRORS } from 'user/locales'
+import { USER_ERRORS, USER_FIELDS } from 'user/i18n'
 import { emailFormatAt, emailFormatDomain, emailUniqueness, usernameFormatCharacters, usernameFormatNoConsecutive, usernameFormatNoBeginEnd, usernameUniqueness } from 'user/validators'
 
+const JOIN_FORM = {
+  "en": {
+    "Curate your stories.": "Curate your stories.",
+    "Have a free account.": "Have a free account.",
+    "Already registered?": "Already registered?",
+    "Get started now": "Get started now",
+    "username": "username"
+  },
+  "es": {
+    "Curate your stories.": "Cura tus historias.",
+    "Have a free account.": "Ten una cuenta gratis.",
+    "Already registered?": "¿Ya registrado?",
+    "Get started now": "Comience ahora",
+    "username": "nombre de usuario"
+  }
+}
+
+/**
+ * - Defines [`core/form/Form`](/docs/core-form-form--default) for joining / registration. 
+ */
 const JoinForm = () => {
-  const router = useRouter(), 
+  const locale = useLocale(), router = useRouter(), 
         user = useModel({ email: "", password: "", username: "" }, {
           validation: {
-            generalError: err => errorMessage(err, USER_ERRORS["user/registration-not-successful/title"]),
+            generalError: err => errorMessage({ key: err.code, locale, title: l("user/registration-not-successful/title", USER_ERRORS, locale) }),
             asyncValidators: {
-              email: { f: emailUniqueness, message: USER_ERRORS["auth/email-already-in-use"] },
-              username: { f: usernameUniqueness, message: USER_ERRORS["user/username-exists"] }
+              email: { f: emailUniqueness, message: l("auth/email-already-in-use", USER_ERRORS, locale) },
+              username: { f: usernameUniqueness, message: l("user/username-exists", USER_ERRORS, locale) }
             },
             syncValidators: {
               email: [
-                { f: presence, message: USER_ERRORS["user/email-empty"] },
-                { f: emailFormatAt, message: USER_ERRORS["user/email-without-at"] },
-                { f: emailFormatDomain, message: USER_ERRORS["user/email-invalid-domain"] },
+                { f: presence, message: l("user/email-empty", USER_ERRORS, locale) },
+                { f: emailFormatAt, message: l("user/email-without-at", USER_ERRORS, locale) },
+                { f: emailFormatDomain, message: l("user/email-invalid-domain", USER_ERRORS, locale) },
               ],
-              password: { f: minLength(6), message: USER_ERRORS["user/password-short"] },
+              password: { f: minLength(6), message: l("user/password-short", USER_ERRORS, locale) },
               username: [
-                { f: presence, message: USER_ERRORS["user/username-empty"] },
-                { f: maxLength(16), message: USER_ERRORS["user/username-long"] },
-                { f: usernameFormatCharacters, message: USER_ERRORS["user/username-characters"] },
-                { f: usernameFormatNoConsecutive, message: USER_ERRORS["user/username-consecutive"] },
-                { f: usernameFormatNoBeginEnd, message: USER_ERRORS["user/username-begin-end"] },
+                { f: presence, message: l("user/username-empty", USER_ERRORS, locale) },
+                { f: maxLength(16), message: l("user/username-long", USER_ERRORS, locale) },
+                { f: usernameFormatCharacters, message: l("user/username-characters", USER_ERRORS, locale) },
+                { f: usernameFormatNoConsecutive, message: l("user/username-consecutive", USER_ERRORS, locale) },
+                { f: usernameFormatNoBeginEnd, message: l("user/username-begin-end", USER_ERRORS, locale) },
               ]
             },
           },
@@ -50,26 +71,26 @@ const JoinForm = () => {
               batch.commit().then(() => {
                 router.push("/")
               }).catch(() => { // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
-                user.fail(errorMessage({}, USER_ERRORS["user/registration-not-successful/title"]));
+                user.fail(errorMessage({ title: l("user/registration-not-successful/title", USER_ERRORS, locale) }));
                 getAuth().currentUser.delete();
               });
-            }, err => user.fail(userErrorMessage(err)));
+            }, err => user.fail(userErrorMessage(err.code, locale)));
           }
         });
 
   return (
-    <>
-      <Typography variant="h5">Curate your stories.</Typography>
-      <Typography variant="h5">Have a free account.</Typography>
+    <IProvider value={JOIN_FORM}>
+      <Typography variant="h5"><I k="Curate your stories." width={210} /></Typography>
+      <Typography variant="h5"><I k="Have a free account." width={210} /></Typography>
       <Form actionsJustify="space-between" model={user} actions={<>
-        <Link href="/login" variant="body2">Already registered?</Link>
-        <Submit>Get started now</Submit>
+        <Link href="/login" variant="body2"><I k="Already registered?" width={130} /></Link>
+        <Submit><I k="Get started now" width={120} /></Submit>
       </>}>
-        <Field name="email" type="email" autoFocus />
-        <Field name="password" type="password" />
-        <Field name="username" inputProps={{ maxLength: 16 }} />
+        <Field label={<I dict={USER_FIELDS} k="email" width={80} />} name="email" type="email" autoFocus />
+        <Field label={<I dict={USER_FIELDS} k="password" width={80} />} name="password" type="password" />
+        <Field label={<I k="username" width={80} />} name="username" inputProps={{ maxLength: 16 }} />
       </Form>
-    </>
+    </IProvider>
   );
 }
 
@@ -81,4 +102,4 @@ const Join = () => {
   );
 }
 
-export default Join;
+export { Join as default, JoinForm };

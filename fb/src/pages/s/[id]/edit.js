@@ -7,6 +7,8 @@ import { Component, createRef, forwardRef, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import { FixedLayout } from 'core/layouts'
+import { I, l, useLocale } from 'core/utils/i18n'
+import { Stories } from 'story'
 import { NodeContainer, StoryContainer, useReducer, useStoryLoad } from 'story/core'
 import { DispatchProvider, StoreProvider, useDispatch, useState } from 'story/context'
 import { Text } from 'story/nodes'
@@ -84,12 +86,21 @@ ContentEditable.propTypes = {
   sx: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
 };
 
+const CARET = {
+  "en": {
+    "Start writing...": "Start writing..."
+  },
+  "es": {
+    "Start writing...": "Empieza a escribir..."
+  }
+}
+
 /**
  * - Shows the textual content of the node in editable way.
  * - Integrates generative placeholder, focusing, dispatches on blur, change & image load, splitting on enter & toggling between menu & writing. 
  */
 const Caret = () => {
-  const dispatch = useDispatch(), state = useState(), caretRef = useRef(null),
+  const dispatch = useDispatch(), state = useState(), caretRef = useRef(null), locale = useLocale(),
         { content } = state.story.nodes[state.caret.key];
 
   useEffect(() => { if (state.caret.pending) {
@@ -100,7 +111,7 @@ const Caret = () => {
   const handleBlur = () => { if (empty(content)) dispatch({ type: "story-node-remove", key: state.caret.key }); dispatch({ type: "caret-blur" }); }
   const handleChange = e => { dispatch({ type: "story-node-change", key: state.caret.key, content: e.target.value }); dispatch({ type: "autosave-trigger" }); }
 
-  return <ContentEditable html={content} onBlur={handleBlur} onChange={handleChange} placeholder="Start writing..." ref={caretRef} />
+  return <ContentEditable html={content} onBlur={handleBlur} onChange={handleChange} placeholder={l("Start writing...", CARET, locale)} ref={caretRef} />
 }
 
 /**
@@ -146,6 +157,17 @@ StoryNotification.propTypes = {
   show: PropTypes.bool,
 };
 
+const STORY_EDIT_PAGE = {
+  "en": {
+    "Saving...": "Saving...",
+    "Saved.": "Saved."
+  },
+  "es": {
+    "Saving...": "Guardando...",
+    "Saved.": "Guardado."
+  }
+}
+
 const StoryEditPage = () => {
   // Reducer
   const [state, dispatch] = useReducer();
@@ -170,7 +192,7 @@ const StoryEditPage = () => {
   // Handlers
   const handleContainerMouseUp = e => {
     if (e.currentTarget === e.target) {
-      const key = max(keys(state.story.nodes).map(k => parseInt(k))) + 1 + "n"; 
+      const key = max(keys(state.story.nodes).map(k => parseInt(k)).concat([0])) + 1 + "n"; 
       dispatch({ type: "story-node-add", key, x: e.clientX, y: e.clientY });
       dispatch({ type: "caret-focus", key });
     }
@@ -178,7 +200,7 @@ const StoryEditPage = () => {
 
   return (
     <FixedLayout toolbarLeft={
-      <StoryNotification show={state.autosave.notification}>{state.autosave.pending ? "Saving..." : "Saved."}</StoryNotification>}>
+      <StoryNotification show={state.autosave.notification}><I dict={STORY_EDIT_PAGE} k={state.autosave.pending ? "Saving..." : "Saved."} width={60} /></StoryNotification>}>
       <Authorize ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)} uid={state.story.profileId}>
         <DispatchProvider value={dispatch}>
           <StoreProvider value={state}>

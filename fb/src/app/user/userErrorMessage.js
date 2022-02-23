@@ -1,31 +1,31 @@
 import { errorMessage } from 'core/utils'
-import { USER_ERRORS } from 'user/locales'
+import { l } from 'core/utils/i18n'
+import { USER_ERRORS } from 'user/i18n'
 
-const userErrorMessage = (err = {}, title) => {
-  let key;
-  switch(err.code) {
+const userErrorMessage = (key, locale) => {
+  let field;
+  switch(key) {
     case "auth/email-already-in-use":  // pages/join.js
     case "auth/invalid-email":         // pages/join.js, LoginForm, pages/account/reset.js
     case "auth/user-disabled":         // LoginForm 
     case "auth/user-mismatch":         // ProfileDeleteDialog 
     case "auth/user-not-found":        // LoginForm
-      key = "email";
+      field = "email";
       break;
     case "auth/wrong-password":        // ProfileDeleteDialog 
     case "auth/wrong-password-login":  // LoginForm
     case "auth/weak-password":         // pages/join.js // I never encountered it (I tried "password")
-      key = "password";
+      field = "password";
       break;
     default:
-      key = "main"
+      field = "main"
       break;
   }
 
   let message;
-  switch(err.code) {
-    case "auth/too-many-requests":     // LoginForm
+  switch(key) {
     case "auth/weak-password":         // pages/join.js // I never encountered it (I tried "password")
-      message = err.message;
+      message = l("user/password-short", USER_ERRORS, locale);
       break;
     case "auth/email-already-in-use":  // pages/join.js
     case "auth/invalid-email":         // pages/join.js, LoginForm, pages/account/reset.js
@@ -33,14 +33,15 @@ const userErrorMessage = (err = {}, title) => {
     case "auth/user-mismatch":         // ProfileDeleteDialog 
     case "auth/user-not-found":        // LoginForm
     case "auth/operation-not-allowed": // pages/join.js
+    case "auth/too-many-requests":     // LoginForm
     case "auth/wrong-password":        // ProfileDeleteDialog 
     case "auth/wrong-password-login":  // LoginForm
     default:
-      message = USER_ERRORS[err.code];
+      message = l(key, USER_ERRORS, locale);
       break;
   }
  
-  return message ? { [key]: { message, title } } : errorMessage(err, title);
+  return message ? { [field]: { message } } : errorMessage({ key, locale });
 }
 
 export default userErrorMessage;

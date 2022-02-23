@@ -3,9 +3,9 @@ import Head from 'next/head'
 
 import { PageLayout } from 'core/layouts'
 import { NAMES } from 'core/i18n'
-import { T, TProvider } from 'core/utils/i18n'
+import { I, IProvider } from 'core/utils/i18n'
 
-const dict = {
+const HOME = {
   "en": {
     "Welcome": "Welcome to "+NAMES.ccname+" application!",
     "Generated Pages": "Generated Pages",
@@ -17,21 +17,19 @@ const dict = {
 }
 
 const Home = () => 
-  <>
+  <IProvider value={HOME}>
     <Head>
       <title>{NAMES.ccname}</title>
     </Head>
     <PageLayout>
-      <TProvider value={dict}>
-        <Typography gutterBottom variant="h4">{NAMES.ccname}</Typography>
-        <Typography paragraph><T k="Welcome" width={220} /></Typography>
-        <br />
-        <Typography gutterBottom variant="h5"><T k="Generated Pages" width={183} /></Typography>
-        <List>
-          <ListItem><Link href="/">/</Link></ListItem>
-        </List>
-      </TProvider>
+      <Typography gutterBottom variant="h4">{NAMES.ccname}</Typography>
+      <Typography paragraph><I k="Welcome" width={220} /></Typography>
+      <br />
+      <Typography gutterBottom variant="h5"><I k="Generated Pages" width={183} /></Typography>
+      <List>
+        <ListItem><Link href="/">/</Link></ListItem>
+      </List>
     </PageLayout>
-  </>
+  </IProvider>
 
 export default Home;

@@ -5,15 +5,27 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import PropTypes from 'prop-types'
 
 import { Feed, IconButton, Menu } from 'core'
+import { GENERAL } from 'core/i18n'
+import { I, l, useLocale } from 'core/utils/i18n'
 import { PostCardLayout, PostDialog, Posts, usePostDialog } from 'post'
+import { POST_ACTIONS } from 'post/i18n'
 import { ProfileAvatar } from 'profile'
 import { useAuth } from 'user'
+
+const POST_CARD = {
+  "en": {
+    "Delete post": "Delete post",
+  },
+  "es": {
+    "Delete post": "Eliminar publicación",
+  }
+};
 
 /**
  * - Shows post as a [`@mui/Card`](https://mui.com/api/card) within the [`core/Feed`](/docs/core-feed--default). 
  */
 const PostCard = ({ post, onEdit }) => {
-  const auth = useAuth(), menu = useMenu();
+  const auth = useAuth(), locale = useLocale(), menu = useMenu();
 
   const handleEdit = e => { menu.close(); onEdit(e); }
   const handleRemove = () => { menu.close(); deleteDoc(doc(Posts, post.id)); }
@@ -22,7 +34,7 @@ const PostCard = ({ post, onEdit }) => {
     <PostCardLayout
       action={
         auth.isLoggedIn && post?.profileId === auth.uid && <>
-          <IconButton color="secondary" onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: "More" }}>
+          <IconButton color="secondary" onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: l("More", GENERAL, locale) }}>
             <MoreHoriz />
           </IconButton>
           <Menu anchorEl={menu.el} open={menu.isOpen} onClose={menu.close} placement="end">
@@ -30,13 +42,13 @@ const PostCard = ({ post, onEdit }) => {
               <ListItemIcon>
                 <EditOutlined />
               </ListItemIcon>
-              <ListItemText primary="Edit post" />
+              <ListItemText primary={<I dict={POST_ACTIONS} k="Edit post" width={72} />} />
             </MenuItem>
             <MenuItem onClick={handleRemove}>
               <ListItemIcon>
                 <DeleteOutlined />
               </ListItemIcon>
-              <ListItemText primary="Delete post" />
+              <ListItemText primary={<I dict={POST_CARD} k="Delete post" width={72} />} />
             </MenuItem>
           </Menu>
         </>
