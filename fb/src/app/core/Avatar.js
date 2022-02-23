@@ -10,7 +10,7 @@ import PropTypes from 'prop-types'
 const Avatar = ({ ready = true, src, ...props }) => {
   const emptyAvatar = <MuiAvatar {...props} />;
   if (!ready) return <Skeleton variant="circular">{emptyAvatar}</Skeleton>;
-  return empty(src) ? emptyAvatar : <MuiAvatar {...props}><Image layout="fill" src={src} /></MuiAvatar>;
+  return empty(src) ? emptyAvatar : <MuiAvatar {...props}><Image layout="fill" priority src={src} /></MuiAvatar>;
 }
 
 Avatar.propTypes = {

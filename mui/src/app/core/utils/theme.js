@@ -138,6 +138,15 @@ export default createTheme({
         },
       }
     },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "100%",
+          padding: theme.spacing(0.75),
+          border: 0
+        }
+      }
+    },
 
     // Dialog
     MuiBackdrop: { styleOverrides: { root: { backgroundColor: "rgba(255,255,255,0.6)" } } },

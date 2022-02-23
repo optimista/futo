@@ -84,11 +84,11 @@ case $1 in
       sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
 
       ## MAIN
-      npm install @futo-ui/hooks@0.11.26 @futo-ui/utils@0.8.54
+      npm install @futo-ui/hooks @futo-ui/utils
       cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/layouts/*.js app/core/layouts/
-      cp $dir/src/app/core/i18n/*.js app/core/i18n/*.js && rm app/core/layouts/PageLayout.js
+      cp $dir/src/app/core/i18n/*.js app/core/i18n/ && rm app/core/layouts/PageLayout.js
       cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
       cp $dir/src/public/* public/ && mv public/name.png public/$name.png
       cp -r $dir/src/app/post app/post
@@ -98,7 +98,7 @@ case $1 in
       cp -r $dir/src/pages/account pages/ # account pages
       
       ### Add AuthProvider
-      sed -i '' "s/import { LocaleProvider } from 'core\/utils\/locale'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
+      sed -i '' "s/import { LocaleProvider } from 'core\/utils\/i18n'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
       sed -i '' "s/      <ThemeProvider theme={theme}>/      <AuthProvider>\n&/" pages/_app.js
       sed -i '' "s/      <\/ThemeProvider>/&\n      <\/AuthProvider>/" pages/_app.js
       sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' pages/_app.js
