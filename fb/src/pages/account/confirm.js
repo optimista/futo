@@ -39,7 +39,7 @@ const AccountResetConfirm = () => {
   useEffect(() => router.isReady &&
     verifyPasswordResetCode(getAuth(), oobCode).then(email => user.set('email', email), err => router.push({ pathname: "/account/reset", query: { err: window.btoa(JSON.stringify(userErrorMessage(err.code, locale))) }  })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.isReady]); 
+    [router.isReady]); // locale could technically be a problem, but so far it works
  
   return (
     <FocusLayout maxWidth="xs">

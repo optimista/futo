@@ -20,16 +20,16 @@ NProgress.configure({ showSpinner: false });
 const MyApp = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props, router = useRouter();
   
-  const handleRouteChange = (_, { shallow }) => !shallow && NProgress.start();
-  const handleRouteComplete = () => NProgress.done();
-  const handleRouteError = () => NProgress.done();
-
   React.useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
   }, []);
 
   React.useEffect(() => {
+    const handleRouteChange = (_, { shallow }) => !shallow && NProgress.start();
+    const handleRouteComplete = () => NProgress.done();
+    const handleRouteError = () => NProgress.done();
+
     router.events.on('routeChangeStart', handleRouteChange)
     router.events.on('routeChangeComplete', handleRouteComplete)
     router.events.on('routeChangeError', handleRouteError)

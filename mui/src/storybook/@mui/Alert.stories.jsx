@@ -17,17 +17,24 @@ const AlertStory = {
     iconMapping: { table: { disable: true } },
     onClose: { table: { disable: true } },
     role: { table: { disable: true } },
-    severity: radio(["error", "success"], "error"),
+    severity: radio(["error", "info", "success"], "error"),
     sx,
-    variant: { table: { disable: true } }
+    variant: radio(["outlined", "standard"], "standard")
   },
 }
 
 const Default = args => <Alert {...args} />;
+const Notification = Default.bind({}); 
 const Success = Default.bind({}); 
 
 Default.args = {
   children: "No internet connection"
+}
+
+Notification.args = {
+  children: "Saving...",
+  severity: "info",
+  variant: "outlined"
 }
 
 Success.args = {
@@ -35,4 +42,4 @@ Success.args = {
   severity: "success"
 }
 
-export { AlertStory as default, Default, Success } 
+export { AlertStory as default, Default, Notification, Success } 

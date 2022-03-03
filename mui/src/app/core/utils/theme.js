@@ -57,20 +57,19 @@ export default createTheme({
     // Misc
     MuiAlert: {
       defaultProps: { severity: "error" },
-      styleOverrides: { root: { borderRadius: 0, justifyContent: "center", marginBottom: theme.spacing(3), marginTop: theme.spacing(1), width: "100%" } },
+      styleOverrides: { root: { justifyContent: "center", width: "100%" } },
       variants: [
         {
-          props: { severity: "error", variant: 'standard' },
-          style: {
-            border: 0,
-            color: getColor(theme.palette.primary.main, 0.6),
-            backgroundColor: getBackgroundColor(theme.palette.primary.main, 0.9),
-            [`& > .MuiAlert-icon`]: { color: theme.palette.primary.main }
-          },
+          props: { variant: "outlined" },
+          style: { borderColor: theme.palette.grey[200], borderRadius: 6, color: theme.palette.text.primary, '& > .MuiAlert-icon': { color: theme.palette.primary.main } }
         },
         {
-          props: { severity: "success", variant: 'standard' },
-          style: { border: 0 },
+          props: { variant: "standard" },
+          style: { border: 0, borderRadius: 0, marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }
+        },
+        {
+          props: { severity: "error", variant: 'standard' },
+          style: { backgroundColor: getBackgroundColor(theme.palette.primary.main, 0.9), color: getColor(theme.palette.primary.main, 0.6), '& > .MuiAlert-icon': { color: theme.palette.primary.main } },
         },
       ]
     },
@@ -97,6 +96,15 @@ export default createTheme({
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
+    MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" } }, styleOverrides: { root: { backgroundColor: theme.palette.background.default } } },
+    MuiSnackbarContent: { styleOverrides: { root: {
+      borderColor: theme.palette.grey[200],
+      borderRadius: 6,
+      color: theme.palette.text.primary,
+      [theme.breakpoints.up('sm')]: {
+        minWidth: "auto",
+      }
+    }, message: { padding: 0 } } },
     MuiSvgIcon: { styleOverrides: { fontSizeLarge: {
       height: "1.75rem",
       width: "1.75rem",
@@ -112,6 +120,7 @@ export default createTheme({
         outlined: { padding: theme.spacing(0.875, 3.875), '&:hover': { backgroundColor: theme.palette.background.default } }, // Padding because of border
         outlinedPrimary: { borderColor: theme.palette.primary.main }, // It's actually lighter and darkens only on hover
         outlinedError: { borderColor: theme.palette.error.main }, // It's actually lighter and darkens only on hover
+        text: { borderRadius: 6, padding: theme.spacing(1, 2) }
       }
     },
     // If we don't disableRipple for ButtonBase, it will persist for IconButton. If we put disableRipple to IconButton, it will cancel out the hover for IconButton
@@ -136,15 +145,6 @@ export default createTheme({
           '&.MuiLoadingButton-loading.MuiButton-containedPrimary.Mui-disabled': { backgroundColor: theme.palette.primary.main }, 
           '&.MuiLoadingButton-loading.MuiButton-containedPrimary > .MuiLoadingButton-loadingIndicator': { color: theme.palette.primary.contrastText }
         },
-      }
-    },
-    MuiToggleButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: "100%",
-          padding: theme.spacing(0.75),
-          border: 0
-        }
       }
     },
 

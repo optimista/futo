@@ -1,4 +1,4 @@
-const FIELDS = {
+const USER_FIELDS = {
   "en": {
     "email": "email",
     "password": "password",
@@ -9,4 +9,4 @@ const FIELDS = {
   }
 }
 
-export default FIELDS;
+export default USER_FIELDS;

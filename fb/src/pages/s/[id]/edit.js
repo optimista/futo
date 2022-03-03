@@ -1,13 +1,15 @@
 import { delay, empty, equal, focus, keys, max, offset } from '@futo-ui/utils'
-import { Box, Typography } from '@mui/material'
+import { Alert, Box, Snackbar, Typography } from '@mui/material'
 import { refType } from '@mui/utils'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { Component, createRef, forwardRef, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
+import { Loading, Logo } from 'core'
 import { FixedLayout } from 'core/layouts'
 import { I, l, useLocale } from 'core/utils/i18n'
+import { ProfileMenuButton } from 'profile'
 import { Stories } from 'story'
 import { NodeContainer, StoryContainer, useReducer, useStoryLoad } from 'story/core'
 import { DispatchProvider, StoreProvider, useDispatch, useState } from 'story/context'
@@ -176,14 +178,15 @@ const StoryEditPage = () => {
   useStoryLoad(story => dispatch({ type: "story-load", story }));
     
   // Autosave
-  const router = useRouter(), { id } = router.query, timer = useRef(null);
+  const router = useRouter(), { id } = router.query, storyRef = useRef(null), timer = useRef(null);
+  useEffect(() => storyRef.current = state.story, [state.story]);
   useEffect(() => {
     let ignore = false;
     if (state.autosave.pending) {
       clearTimeout(timer.current);
       timer.current = setTimeout(() => { if (!ignore) {
         dispatch({ type: "autosave-notification-show" });
-        updateDoc(doc(Stories, id), state.story).then(() => !ignore && dispatch({ type: "autosave-success" })).then(() => delay(5000)).then(() => dispatch({ type: "autosave-notification-hide" }))
+        updateDoc(doc(Stories, id), storyRef.current).then(() => !ignore && dispatch({ type: "autosave-success" })).then(() => delay(5000)).then(() => dispatch({ type: "autosave-notification-hide" }))
       }}, 2000); }
     return () => ignore = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,14 +200,21 @@ const StoryEditPage = () => {
       dispatch({ type: "caret-focus", key });
     }
   }
+  
+  const AuthorizeStory = props =>
+    <Authorize ready={Boolean(state.story.profileId)} uid={state.story.profileId} {...props} />
 
   return (
-    <FixedLayout toolbarLeft={
-      <StoryNotification show={state.autosave.notification}><I dict={STORY_EDIT_PAGE} k={state.autosave.pending ? "Saving..." : "Saved."} width={60} /></StoryNotification>}>
-      <Authorize ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)} uid={state.story.profileId}>
+    <FixedLayout toolbarLeft={<Logo />} toolbarRight={<ProfileMenuButton />}>
+      <AuthorizeStory fallback={<Loading />} redirect={storyPath(state.story)}>
         <DispatchProvider value={dispatch}>
           <StoreProvider value={state}>
             <StoryContainer onMouseUp={handleContainerMouseUp} sx={{ cursor: "pointer" }}>
+              <Snackbar open={state.autosave.notification}> 
+                <Alert severity={state.autosave.pending ? "info" : "success"} sx={{ mb: 0, width: '100%' }}>
+                  <I dict={STORY_EDIT_PAGE} k={state.autosave.pending ? "Saving..." : "Saved."} />
+                </Alert>
+              </Snackbar>
               { keys(state.story.nodes).map(key => 
                 <NodeContainer id={key} key={key}>
                   <TextEditable id={key} />
@@ -213,7 +223,7 @@ const StoryEditPage = () => {
             </StoryContainer>
           </StoreProvider>
         </DispatchProvider>
-      </Authorize>
+      </AuthorizeStory>
     </FixedLayout>
   )
 }

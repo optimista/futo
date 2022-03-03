@@ -1,9 +1,6 @@
 import { Toolbar } from '@mui/material'
 import PropTypes from 'prop-types'
 
-import { Logo } from 'core'
-import { ProfileMenuButton } from 'profile'
-
 const toolbar = {
   height: 0,
   minHeight: "auto",
@@ -21,12 +18,10 @@ const FixedLayout = ({ children, toolbarLeft, toolbarRight }) => {
     <>
       { children }
       <Toolbar disableGutters sx={{ ...toolbar, left: 24 }}> 
-        <Logo />
         { toolbarLeft }
       </Toolbar>
       <Toolbar disableGutters sx={{ ...toolbar, right: 24 }}>
         { toolbarRight }
-        <ProfileMenuButton />
       </Toolbar>
     </>
   )
