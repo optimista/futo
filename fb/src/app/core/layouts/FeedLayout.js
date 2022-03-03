@@ -108,11 +108,13 @@ DrawerItem.propTypes = {
 const FEED_LAYOUT = {
   "en": {
     "Home": "Home",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "Login": "Login"
   },
   "es": {
     "Home": "Inicio",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "Login": "Inicia sesión",
   }
 }
 
@@ -135,7 +137,7 @@ const FeedLayout = ({ children, ...props }) => {
             </List>
             <List>
               <DrawerItem href="/join" Icon={PersonAddOutlined}><I dict={GENERAL} k="Join" width={60} /></DrawerItem>
-              <DrawerItem href="/login" Icon={LockOutlined}><I dict={GENERAL} k="Login" width={60} /></DrawerItem>
+              <DrawerItem href="/login" Icon={LockOutlined}><I k="Login" width={60} /></DrawerItem>
               <DrawerItem href="/theme" Icon={PaletteOutlined}><I k="Theme" width={60} /></DrawerItem>
             </List>
           </Grid>

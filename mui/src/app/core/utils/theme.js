@@ -98,6 +98,7 @@ export default createTheme({
     MuiSkeleton: { defaultProps: { animation: "wave" } },
     MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" } }, styleOverrides: { root: { backgroundColor: theme.palette.background.default } } },
     MuiSnackbarContent: { styleOverrides: { root: {
+      backgroundColor: theme.palette.background.default,
       borderColor: theme.palette.grey[200],
       borderRadius: 6,
       color: theme.palette.text.primary,

@@ -20,7 +20,7 @@ const LoginDialogButton = () => {
 
   return (
     <>
-      <Button onClick={dialog.open}><I dict={GENERAL} k="Login" width={80} /></Button>
+      <Button onClick={dialog.open}><I dict={GENERAL} k="Log in" width={80} /></Button>
       <Dialog onClose={dialog.close} open={dialog.isOpen}><LoginForm user={user} /></Dialog>
     </>
   )

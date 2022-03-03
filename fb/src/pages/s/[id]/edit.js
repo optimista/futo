@@ -136,29 +136,6 @@ TextEditable.propTypes = {
   id: PropTypes.string, 
 };
 
-/**
- * - Notification of the story, mostly that it has been saved. 
- * - Integrates control prop of `show` & CSS `opacity` transition.
- */
-const StoryNotification = ({ children, show = false }) => {
-  return <Typography sx={{ opacity: show ? 1 : 0, px: 3,
-    transition: t => t.transitions.create('opacity', { duration: t.transitions.duration.standard, easing: t.transitions.easing.easeInOut }),
-  }}>{children}</Typography>
-}
-
-StoryNotification.propTypes = {
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-
-  /**
-   * Determines if the notification is shown or not. 
-   * @default false
-   */ 
-  show: PropTypes.bool,
-};
-
 const STORY_EDIT_PAGE = {
   "en": {
     "Saving...": "Saving...",
@@ -228,4 +205,4 @@ const StoryEditPage = () => {
   )
 }
 
-export { StoryEditPage as default, Caret, ContentEditable, StoryNotification, TextEditable };
+export { StoryEditPage as default, Caret, ContentEditable, TextEditable };

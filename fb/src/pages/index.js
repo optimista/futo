@@ -32,7 +32,7 @@ const PostJoinDialog = props => {
         <DialogContent><I k="Once you join" lines={2} /></DialogContent>
         <DialogActions>
           <Button href="/join" variant="outlined"><I dict={GENERAL} k="Join" width={60} /></Button>
-          <Button href="/login"><I dict={GENERAL} k="Login" width={60} /></Button>
+          <Button href="/login"><I dict={GENERAL} k="Log in" width={60} /></Button>
         </DialogActions>
       </Dialog>
     </IProvider>

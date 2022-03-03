@@ -30,7 +30,7 @@ const LoginForm = ({ user }) =>
     <Typography variant="h5"><I k="Log into your account." width={233} /></Typography>
     <Form model={user} actionsJustify="space-between" actions={<>
       <Link href="/join" variant="body2"><I k="Don't have an account yet?" width={161} /></Link>
-      <Submit><I dict={GENERAL} k="Login" width={80} /></Submit>
+      <Submit><I dict={GENERAL} k="Log in" width={80} /></Submit>
     </>}>
       <Field label={<I dict={USER_FIELDS} k="email" width={80} />} name="email" type="email" autoFocus />
       <Field label={<I dict={USER_FIELDS} k="password" width={80} />} name="password" type="password" />

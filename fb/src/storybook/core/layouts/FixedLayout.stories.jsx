@@ -1,4 +1,6 @@
+import { Logo } from 'core'
 import { FixedLayout } from 'core/layouts'
+import { ProfileMenuButton } from 'profile'
 
 const FixedLayoutStory = {
   component: FixedLayout,
@@ -18,5 +20,10 @@ const FixedLayoutStory = {
 }
 
 const Default = args => <FixedLayout {...args} />
+
+Default.args = {
+  toolbarLeft: <Logo />,
+  toolbarRight: <ProfileMenuButton />
+}
 
 export { FixedLayoutStory as default, Default } 

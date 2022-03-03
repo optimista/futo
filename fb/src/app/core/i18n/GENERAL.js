@@ -1,14 +1,14 @@
 const GENERAL = {
   "en": {
     "Join": "Join",
-    "Login": "Login",
+    "Log in": "Log in",
     "More": "More",
     "Profile": "Profile",
     "Stories": "Stories",
   },
   "es": {
     "Join": "Regístrate",
-    "Login": "Inicia sesión",
+    "Log in": "Inicia sesión",
     "More": "Más",
     "Profile": "Perfil",
     "Stories": "Historias",

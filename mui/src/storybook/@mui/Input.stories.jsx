@@ -44,7 +44,7 @@ const Default = args => <Input {...args} />
 const Validating = Default.bind({});
 
 Default.args = {
-  endAdornment: <Check /> 
+  endAdornment: <Check fontSize="small" /> 
 }
 
 Default.parameters = {
