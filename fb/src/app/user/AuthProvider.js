@@ -5,7 +5,7 @@ import { createContext, useEffect, useState } from 'react'
 
 import { Profiles } from 'profile'
 
-const AuthContext = createContext({ isLoggedIn: true, isReady: true, profile: { photoURL: "/mockup-avatar.jpg" }, uid: "", user: null });
+const AuthContext = createContext({ isLoggedIn: true, isReady: true, profile: { photoURL: "/mockup-avatar.jpg" }, uid: "defaultProfileId", user: null });
 
 /**
  * - Obtains & provides destructured `auth` object, `profile` of the currently logged in user, flag `isLoggedIn` whether user is actually logged in & flag `isReady` that determines whether we already fetched the `auth` object.

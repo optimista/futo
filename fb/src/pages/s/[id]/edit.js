@@ -1,5 +1,5 @@
 import { delay, empty, equal, focus, keys, max, offset } from '@futo-ui/utils'
-import { Alert, Box, Snackbar, Typography } from '@mui/material'
+import { Alert, Box, Snackbar } from '@mui/material'
 import { refType } from '@mui/utils'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
@@ -178,12 +178,9 @@ const StoryEditPage = () => {
     }
   }
   
-  const AuthorizeStory = props =>
-    <Authorize ready={Boolean(state.story.profileId)} uid={state.story.profileId} {...props} />
-
   return (
     <FixedLayout toolbarLeft={<Logo />} toolbarRight={<ProfileMenuButton />}>
-      <AuthorizeStory fallback={<Loading />} redirect={storyPath(state.story)}>
+      <Authorize fallback={<Loading />} ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)} uid={state.story.profileId}>
         <DispatchProvider value={dispatch}>
           <StoreProvider value={state}>
             <StoryContainer onMouseUp={handleContainerMouseUp} sx={{ cursor: "pointer" }}>
@@ -200,7 +197,7 @@ const StoryEditPage = () => {
             </StoryContainer>
           </StoreProvider>
         </DispatchProvider>
-      </AuthorizeStory>
+      </Authorize>
     </FixedLayout>
   )
 }
