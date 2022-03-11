@@ -13,7 +13,7 @@ const Field = ({ helperText, label, name, onKeyDown, ...props }) => {
 
   const endAdornment = name => {
     switch(true) {
-      case model.isValidating(name): return <CircularProgress size={16} sx={{ ml: "2px", mr: "3px" }} />
+      case model.isValidating(name): return <CircularProgress size={16} sx={t => ({ ml: t.spacing(0.25), mr: t.spacing(0.5) })} />
       case model.isValidated(name) && model.errors.has(name): return <Clear fontSize="small" />
       case model.isValidated(name) && !model.errors.has(name): return <Check fontSize="small" />
     }

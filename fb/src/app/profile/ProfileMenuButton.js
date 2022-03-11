@@ -69,7 +69,7 @@ const ProfileMenuButton = ({ avatar }) => {
         <MenuItem component={Link} href={"/" + auth.profile?.username}>
           <ListItemIcon>
             <Badge badgeContent={1} invisible={invisible} overlap="circular" variant="dot">
-              <ProfileAvatar sx={{ height: t => t.spacing(3), width: t => t.spacing(3) }} />
+              <ProfileAvatar sx={{ height: t => t.spacing(2.75), width: t => t.spacing(2.75) }} />
             </Badge>
           </ListItemIcon>
           <ListItemText primary={<I dict={GENERAL} k="Profile" width={50} />} />

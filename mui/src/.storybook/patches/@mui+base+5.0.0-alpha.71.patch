@@ -1,5 +1,5 @@
 diff --git a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
-index 10ec7f7..e73a5b8 100644
+index 10ec7f7..41a6548 100644
 --- a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
 +++ b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
 @@ -142,9 +142,9 @@ function ClickAwayListener(props) {
@@ -7,10 +7,10 @@ index 10ec7f7..e73a5b8 100644
      return undefined;
    }, [handleClickAway, mouseEvent]);
 -  return /*#__PURE__*/_jsx(React.Fragment, {
-+  return /*#__PURE__*/React.createElement(React.Fragment, { children: _jsx(React.Fragment, {
++  return React.createElement(React.Fragment, { children: _jsx(React.Fragment, {
      children: /*#__PURE__*/React.cloneElement(children, childrenProps)
 -  });
-+  })});
++  }) });
  }
  
  process.env.NODE_ENV !== "production" ? ClickAwayListener.propTypes

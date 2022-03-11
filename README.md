@@ -23,7 +23,7 @@ Yes, the script has the same abbreviation as `vc` shortcut for `vercel`, for tha
 Does everything above and integrates into the project Material-UI component library with a Storybook published on Chromatic.
 
 ### Demo
-http://mui-demo.vercel.app
+http://mui-demo.vercel.app  
 https://620df925d5ac24003ae2a993-pxxlqzdqle.chromatic.com
 
 ### Screens
@@ -46,7 +46,7 @@ Does everything above and creates and sets up Google's Firebase project with a w
 Also creates keys and configures project for the use of firebase on server side. Demonstrates fetching on server side on profile page on pre-loading of the information for social media open graph tags.
 
 ### Demo
-http://fb-demo.vercel.app
+http://fb-demo.vercel.app  
 https://61fc3a8873363b003abfe5da-lnooncupxu.chromatic.com
 
 ### Screens

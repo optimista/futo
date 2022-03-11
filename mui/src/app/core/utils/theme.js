@@ -57,7 +57,7 @@ export default createTheme({
     // Misc
     MuiAlert: {
       defaultProps: { severity: "error" },
-      styleOverrides: { root: { justifyContent: "center", width: "100%" } },
+      styleOverrides: { icon: { fontSize: "1.375rem", height: "1.375rem", width: "1.375rem" }, root: { justifyContent: "center", width: "100%" } },
       variants: [
         {
           props: { variant: "outlined" },
@@ -96,7 +96,10 @@ export default createTheme({
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
-    MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" } }, styleOverrides: { root: { backgroundColor: theme.palette.background.default } } },
+    MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" } }, styleOverrides: {
+      root: { backgroundColor: theme.palette.background.default },
+      anchorOriginBottomRight: { bottom: 24, left: "auto", right: 24 }
+    }},
     MuiSnackbarContent: { styleOverrides: { root: {
       backgroundColor: theme.palette.background.default,
       borderColor: theme.palette.grey[200],
@@ -106,10 +109,11 @@ export default createTheme({
         minWidth: "auto",
       }
     }, message: { padding: 0 } } },
-    MuiSvgIcon: { styleOverrides: { fontSizeLarge: {
-      height: "1.75rem",
-      width: "1.75rem",
-    } } },
+    MuiSvgIcon: { styleOverrides: { 
+      fontSizeInherit: { height: "inherit", width: "inherit" },
+      fontSizeLarge: { height: "1.75rem", width: "1.75rem" },
+      fontSizeMedium: { height: "1.5rem", width: "1.5rem" }
+    }},
     MuiToolbar: { defaultProps: { variant: "dense" } },
 
     // Buttons
@@ -118,6 +122,7 @@ export default createTheme({
       styleOverrides: {
         root: { padding: theme.spacing(1, 4) },
         contained: { fontWeight: 400 },
+        startIcon: { '&>.MuiSvgIcon-root:nth-of-type(1)': { fontSize: "1.375rem", height: "1.375rem", width: "1.375rem" } },
         outlined: { padding: theme.spacing(0.875, 3.875), '&:hover': { backgroundColor: theme.palette.background.default } }, // Padding because of border
         outlinedPrimary: { borderColor: theme.palette.primary.main }, // It's actually lighter and darkens only on hover
         outlinedError: { borderColor: theme.palette.error.main }, // It's actually lighter and darkens only on hover
@@ -187,15 +192,13 @@ export default createTheme({
     MuiListItemText: { defaultProps: { disableTypography: true } },
 
     // Menu / Tooltip
-    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { height: "1.5rem", width: "1.5rem" } } } },
+    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { height: "1.375rem", width: "1.375rem" } } } },
     MuiPaper: { defaultProps: { variant: "outlined" }, styleOverrides: { rounded: { borderRadius: 2 } } },
     MuiTooltip: { 
       defaultProps: {
         enterDelay: 500,
         enterNextDelay: 500,
         PopperProps: { disablePortal: true },
-        TransitionComponent: Fade,
-        TransitionProps: { timeout: 100 }
       },
       styleOverrides: {
         tooltip: {
