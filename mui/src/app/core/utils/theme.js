@@ -199,6 +199,7 @@ export default createTheme({
         enterDelay: 500,
         enterNextDelay: 500,
         PopperProps: { disablePortal: true },
+        TransitionComponent: Fade
       },
       styleOverrides: {
         tooltip: {

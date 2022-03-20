@@ -1,3 +1,4 @@
+import { metactrlkey } from '@futo-ui/utils'
 import { CircularProgress, TextField } from '@mui/material'
 import { Check, Clear } from '@mui/icons-material'
 import PropTypes from 'prop-types'
@@ -19,7 +20,7 @@ const Field = ({ helperText, label, name, onKeyDown, ...props }) => {
     }
   }
 
-  const handleKeyDown = e => e.key === 'Enter' && (!props.multiline || e.metaKey) ? model.handleSubmit(e) : (onKeyDown && onKeyDown(e));
+  const handleKeyDown = e => e.key === 'Enter' && (!props.multiline || metactrlkey(e)) ? model.handleSubmit(e) : (onKeyDown && onKeyDown(e));
 
   return <TextField error={model.errors.has(name)} helperText={helperText ?? model.errors[name]?.message} inputRef={model.refs[name]} InputProps={{ endAdornment: model.validatesInline(name) && endAdornment(name) }} label={label ?? name} onChange={model.handleChange(name)} onKeyDown={handleKeyDown} value={model[name]} {...props} />
 }
