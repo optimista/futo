@@ -34,7 +34,7 @@ const AccountReset = () => {
   const locale = useLocale(), router = useRouter(), { err } = router.query,
         user = useModel({ email: "" }, {
           validation: { disableInline: true, 
-            generalError: err => { console.log("xx", err); errorMessage({ key: err.code, locale }) },
+            generalError: err => errorMessage({ key: err.code, locale }), 
             syncValidators: {
               email: [
                 { f: presence, message: l("user/email-empty", USER_ERRORS, locale) },
@@ -58,7 +58,7 @@ const AccountReset = () => {
         { 
           user.isSuccess ? <>
             <Typography paragraph variant="h5"><I k="Reset link sent" width={300} /></Typography>
-            <Alert severity="success"><I arg={user.email} k="We've sent" lines={2} width={378} /></Alert>
+            <Alert severity="success" sx={{ mb: 3, mt: 1 }}><I arg={user.email} k="We've sent" lines={2} width={378} /></Alert>
           </> : <>
             <Typography paragraph variant="h5"><I dict={RESET} k="Reset your password." width={222} /></Typography>
             <Typography><I k="Send a password reset" width={364} /></Typography>

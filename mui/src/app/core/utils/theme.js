@@ -12,7 +12,6 @@ const theme = createTheme({
   palette: {
     primary: { main: '#000000'},
     secondary: { main: '#cccccc' },
-    error: { main: red[600], dark: red[600] }, // setting dark for contained buttons (hover state)
     background: { default: '#ffffff' },
     text: { primary: "rgba(0, 0, 0, 0.8)" },
     action: {
@@ -65,16 +64,20 @@ export default createTheme({
         },
         {
           props: { variant: "standard" },
-          style: { border: 0, borderRadius: 0, marginBottom: theme.spacing(3), marginTop: theme.spacing(1) }
+          style: { border: 0, borderRadius: 0 }
         },
         {
           props: { severity: "error", variant: 'standard' },
           style: { backgroundColor: getBackgroundColor(theme.palette.primary.main, 0.9), color: getColor(theme.palette.primary.main, 0.6), '& > .MuiAlert-icon': { color: theme.palette.primary.main } },
         },
+        {
+          props: { severity: "info", variant: 'standard' },
+          style: { backgroundColor: theme.palette.error.dark, color: theme.palette.common.white, fontWeight: "bold", '& > .MuiAlert-icon': { color: theme.palette.common.white } },
+        },
       ]
     },
     MuiAppBar: {
-      defaultProps: { color: "inherit", elevation: 1 },
+      defaultProps: { color: "inherit" },
       styleOverrides: { root: { borderWidth: "0 0 1px 0" } }
     },
     MuiBadge: {
@@ -90,7 +93,7 @@ export default createTheme({
         }
       ]
     },
-    MuiCardHeader: { styleOverrides: { action: { alignSelf: "center" } } },
+    MuiCardHeader: { styleOverrides: { action: { alignSelf: "center", marginBottom: 0, marginTop: 0, marginRight: 0 } } },
     MuiCircularProgress: { defaultProps: { size: 24 } },
     MuiContainer: { defaultProps: { disableGutters: true } },
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
@@ -149,7 +152,8 @@ export default createTheme({
         root: {
           // MuiLoadingButton-loading shouldn't be here, but upwards instead of root key, the same for containedPrimary actually... This is mess! 
           '&.MuiLoadingButton-loading.MuiButton-containedPrimary.Mui-disabled': { backgroundColor: theme.palette.primary.main }, 
-          '&.MuiLoadingButton-loading.MuiButton-containedPrimary > .MuiLoadingButton-loadingIndicator': { color: theme.palette.primary.contrastText }
+          '&.MuiLoadingButton-loading > .MuiLoadingButton-loadingIndicator': { color: theme.palette.primary.contrastText },
+          '&.MuiLoadingButton-loading.MuiButton-containedError.Mui-disabled': { backgroundColor: theme.palette.error.main }, 
         },
       }
     },
@@ -192,8 +196,9 @@ export default createTheme({
     MuiListItemText: { defaultProps: { disableTypography: true } },
 
     // Menu / Tooltip
-    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} svg`]: { height: "1.375rem", width: "1.375rem" } } } },
+    MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} > svg`]: { height: "1.375rem", width: "1.375rem" } } } },
     MuiPaper: { defaultProps: { variant: "outlined" }, styleOverrides: { rounded: { borderRadius: 2 } } },
+    MuiPopper: { styleOverrides: { root: { zIndex: 1150 } } },
     MuiTooltip: { 
       defaultProps: {
         enterDelay: 500,
@@ -223,7 +228,7 @@ export default createTheme({
           }
         },
       }
-    }
+    },
   },
   palette: theme.palette,
   shape: { borderRadius: 2 },

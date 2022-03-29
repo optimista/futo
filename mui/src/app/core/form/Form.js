@@ -10,7 +10,7 @@ const Form = ({ actions, actionsJustify, model, children, sx }) =>
   <FormProvider value={model}>
     <Box component="form" noValidate onSubmit={model.handleSubmit} sx={sx}>
       <Box sx={{ boxSizing: "border-box", pt: 3, pb: 4 }}>
-        { model.error && <Alert sx={{ justifyContent: model.error.title && "normal" }}>{model.error.title && <AlertTitle>{model.error.title}</AlertTitle>}{model.error.message}</Alert> }
+        { model.error && <Alert sx={{ justifyContent: model.error.title && "normal", mb: 3, mt: 1 }}>{model.error.title && <AlertTitle>{model.error.title}</AlertTitle>}{model.error.message}</Alert> }
         { children }
       </Box>
       <Box sx={{ alignItems: "center", display: "flex", justifyContent: actionsJustify || "flex-end", '> button:not(:first-of-type)': actionsJustify ? {} : { ml: 2 } }}>

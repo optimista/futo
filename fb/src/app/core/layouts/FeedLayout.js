@@ -37,13 +37,13 @@ const ProfileButton = () => {
 /**
  * - Adds [`@mui/AppBar`](https://mui.com/api/app-bar) (~Header) to the page with logo, title and [`profile/ProfileMenuButton`](/docs/profile-profilemenubutton--default).
  */
-const PageLayout = ({ children, maxWidth }) => {
+const PageLayout = ({ children, maxWidth = "md" }) => {
   const auth = useAuth();
 
   return (
     <>
       <AppBar>
-        <Toolbar>
+        <Toolbar variant="dense">
           <Logo sx={{ height: t => t.spacing(4), width: t => t.spacing(4) }} />
           <Typography sx={{ flexGrow: 1, letterSpacing: 5, px: 2 }}><Link href="/" underline="none">{NAMES.name}</Link></Typography>
           { auth.isLoggedIn && <ProfileButton /> }
@@ -51,9 +51,7 @@ const PageLayout = ({ children, maxWidth }) => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Container maxWidth={maxWidth} sx={{ py: 4 }}>
-        {children || <></>}
-      </Container>
+      { maxWidth ? <Container maxWidth={maxWidth} sx={{ py: 4 }}>{children || <></>}</Container> : children }
     </>
   )
 }
@@ -66,7 +64,7 @@ PageLayout.propTypes = {
 
   /**
    * Determines the max-width of the contents inside [`core/layouts/PageLayout`](/docs/core-layouts-pagelayout--default).
-   * @default 'lg'
+   * @default "md"
    */
   maxWidth: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', false]),
 };
@@ -127,7 +125,7 @@ const FeedLayout = ({ children, ...props }) => {
 
   return (
     <IProvider value={FEED_LAYOUT}>
-      <PageLayout maxWidth="md" {...props}>
+      <PageLayout {...props}>
         <Grid container spacing={0} sx={{ justifyContent: "center" }}>
           <Grid item sx={{ width: t => ({ xs: t.spacing(7.5), md: 200 }) }}>
             <List>

@@ -37,10 +37,10 @@ const userErrorMessage = (key, locale) => {
     case "auth/wrong-password":        // ProfileDeleteDialog 
     case "auth/wrong-password-login":  // LoginForm
     default:
-      message = l(key, USER_ERRORS, locale);
+      try { message = l(key, USER_ERRORS, locale); } catch {};
       break;
   }
- 
+
   return message ? { [field]: { message } } : errorMessage({ key, locale });
 }
 

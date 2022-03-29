@@ -5,24 +5,19 @@ import { DispatchProvider, StoreProvider } from 'story/context'
 import { NodeContainer, useReducer } from 'story/core'
 import { Text } from 'story/nodes'
 
-import { transformSource } from 'storybook/story/utils'
+import { heightDecorator, transformSource } from 'storybook/story/utils'
 
 const NodeContainerStory = {
   component: NodeContainer,
   title: 'story/core/NodeContainer',
-  decorators: [
-    (Story, { viewMode }) =>
-      <div style={{ height: viewMode === 'docs' ? 400 : "100vh", transform: 'scale(1)' }}>
-        <Story />
-      </div>
-  ],
+  decorators: [heightDecorator],
   parameters: { layout: "fullscreen" }
 }
 
 const Default = args => {
   const [state, dispatch] = useReducer();
   
-  useEffect(() => dispatch({ type: "story-load", story: { nodes: { "x1": { content: "Node #1" } }, positions: { "x1": { x: 468, y: 188 }}}}), []);
+  useEffect(() => dispatch({ type: "story-load", story: { id: "s1", nodes: { "x1": { content: "Node #1" } }, positions: { "x1": { x: 468, y: 188 }}}}), []);
 
   return empty(state.story.nodes) ? <></> : 
     <DispatchProvider value={dispatch}>

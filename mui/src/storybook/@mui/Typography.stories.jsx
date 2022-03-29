@@ -16,7 +16,7 @@ const TypographyStory = {
     noWrap: { table: { disable: true } },
     paragraph: { table: { defaultValue: { summary: "false" } } },
     sx,
-    variant: radio(["h4", "h5", "h6", "body1", "subtitle1", "overline"], "body1"),
+    variant: radio(["h4", "h5", "h6", "body1", "subtitle1", "caption", "overline"], "body1"),
     variantMapping: { table: { disable: true } },
   }
 }

@@ -10,9 +10,7 @@ import { transformSource } from 'storybook/story/utils'
 const TextEditableStory = {
   component: TextEditable,
   title: 'pages/s/[id]/edit/TextEditable',
-  argTypes: {
-    id: { control: { type: null } }
-  },
+  argTypes: { id: { control: { type: null } } },
   decorators: [Story => <div style={{ position: "relative" }}><Story /></div>]
 }
 
@@ -20,7 +18,7 @@ const Default = args => {
   // Reducer
   const [state, dispatch] = useReducer();
 
-  useEffect(() => dispatch({ type: "story-load", story: { nodes: { "x1": { content: "Something" } } }}), []);
+  useEffect(() => dispatch({ type: "story-load", story: { id: "s1", nodes: { "x1": { content: "Something" } } }}), []);
 
   return empty(state.story.nodes) && !state.caret.key ? <></> : 
     <DispatchProvider value={dispatch}>

@@ -185,7 +185,7 @@ const StoryEditPage = () => {
           <StoreProvider value={state}>
             <StoryContainer onMouseUp={handleContainerMouseUp} sx={{ cursor: "pointer" }}>
               <Snackbar open={state.autosave.notification}> 
-                <Alert severity={state.autosave.pending ? "info" : "success"} sx={{ mb: 0, width: '100%' }}>
+                <Alert severity={state.autosave.pending ? "info" : "success"} variant="outlined">
                   <I dict={STORY_EDIT_PAGE} k={state.autosave.pending ? "Saving..." : "Saved."} />
                 </Alert>
               </Snackbar>

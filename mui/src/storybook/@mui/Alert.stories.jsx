@@ -25,6 +25,7 @@ const AlertStory = {
 
 const Default = args => <Alert {...args} />;
 const Notification = Default.bind({}); 
+const Info = Default.bind({}); 
 const Success = Default.bind({}); 
 
 Default.args = {
@@ -37,9 +38,14 @@ Notification.args = {
   variant: "outlined"
 }
 
+Info.args = {
+  children: "This is a prototype",
+  severity: "info"
+}
+
 Success.args = {
   children: "Registration has been successful!",
   severity: "success"
 }
 
-export { AlertStory as default, Default, Notification, Success } 
+export { AlertStory as default, Default, Notification, Info, Success } 

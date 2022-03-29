@@ -1,6 +1,11 @@
+import { withReactContext } from 'storybook-react-context'
+
 import { Logo } from 'core'
 import { FixedLayout } from 'core/layouts'
 import { ProfileMenuButton } from 'profile'
+import { AuthContext } from 'user/AuthProvider'
+
+import { heightDecorator } from 'storybook/story/utils'
 
 const FixedLayoutStory = {
   component: FixedLayout,
@@ -11,10 +16,11 @@ const FixedLayoutStory = {
     toolbarRight: { control: { type: "text" } }
   },
   decorators: [
-    (Story, { viewMode }) =>
-      <div style={{ height: viewMode === 'docs' ? 488 : "100vh", transform: 'scale(1)' }}>
-        <Story />
-      </div>
+    heightDecorator,
+    withReactContext({
+      Context: AuthContext,
+      initialState: { isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } },
+    }),
   ],
   parameters: { layout: "fullscreen" }
 }

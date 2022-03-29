@@ -19,6 +19,7 @@ import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { Posts, PostDialog, PostFeed, usePostDialog } from 'post'
 import { ProfileAvatar, Profiles, Usernames, useProfileDialog } from 'profile'
 import { AVATAR_IMAGE_TYPES } from 'profile/constants'
+import { Stories } from 'story'
 import { useAuth, userErrorMessage } from 'user'
 import { USER_FIELDS } from 'user/i18n'
 
@@ -151,23 +152,23 @@ const PROFILE_DIALOG = {
 const ProfileDialog = ({ profile, ...props }) => {
   const auth = useAuth(), locale = useLocale(), router = useRouter(),
         user = useModel({ email: "", password: "" }, { onSubmit: () => {
-          reauthenticateWithCredential(getAuth().currentUser, EmailAuthProvider.credential(user.email, user.password)).then(() => {
-            getDocs(query(Posts, where("profileUsername", "==", auth.profile.username))).then(snapshot => {
-              const batches = [writeBatch(db())]; let i = 0, ops = 2;
-              batches[i].delete(doc(Profiles, auth.profile.id));
-              batches[i].delete(doc(Usernames, auth.profile.username));
+          reauthenticateWithCredential(getAuth().currentUser, EmailAuthProvider.credential(user.email, user.password)).then(async () => {
+            const batches = [writeBatch(db())]; let i = 0, ops = 2;
+            batches[i].delete(doc(Profiles, auth.profile.id));
+            batches[i].delete(doc(Usernames, auth.profile.username));
 
-              snapshot.forEach(doc => {
-                batches[i].delete(doc.ref); ops++;
-                if (ops === 2) { batches.push(writeBatch(db())); i++; ops = 0; }
-              }); 
+            const snapshotPosts = await getDocs(query(Posts, where("profileId", "==", auth.uid))),
+                  snapshotStories = await getDocs(query(Stories, where("profileId", "==", auth.uid))),
+                  addDoc = doc => { batches[i].delete(doc.ref); ops++; if (ops === 500) { batches.push(writeBatch(db())); i++; ops = 0; } };
 
-              Promise.all(batches.map(b => b.commit()))
-                .then(() => auth.profile.photoURL ? deleteObject(storage(auth.profile.photoURL)) : Promise.resolve())
-                .then(() => getAuth().currentUser.delete())
-                .then(() => router.push("/"))
-                .catch(err => user.fail(userErrorMessage(err.code, locale)));
-            });
+            snapshotPosts.forEach(addDoc); 
+            snapshotStories.forEach(addDoc); 
+
+            Promise.all(batches.map(b => b.commit()))
+              .then(() => auth.profile.photoURL ? deleteObject(storage(auth.profile.photoURL)) : Promise.resolve())
+              .then(() => getAuth().currentUser.delete())
+              .then(() => router.push("/"))
+              .catch(err => user.fail(userErrorMessage(err.code, locale)));
           }).catch(err => user.fail(userErrorMessage(err.code, locale)));
         }}),
         deleteDialog = useDialog(user);
@@ -243,7 +244,7 @@ const Profile = ({ profileId }) => {
               <ProfileAvatar ready={Boolean(profile)} src={profile?.photoURL} />
             </AspectRatioBox>
           </Grid>
-          { isMyProfile && <Grid item sx={{ pb: 1 }}>
+          { isMyProfile && <Grid item sx={{ pb: 1, pt: 2 }}>
             <Badge badgeContent={1} invisible={Boolean(profile.displayName)}>
               <Button onClick={profileDialog.open} variant="outlined" ><I dict={COMMONS} k="Edit profile" width={90} /></Button>
             </Badge>

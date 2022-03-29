@@ -18,7 +18,7 @@ IProvider.propTypes = {
   /**
    * The dictionary 
    */
-  value: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.func, PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.func]))])).isRequired,
+  value: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.func, PropTypes.objectOf(PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.func]))])).isRequired,
 }
 
 export { IProvider as default, IContext };

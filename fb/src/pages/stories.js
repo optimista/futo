@@ -50,7 +50,7 @@ const StoryCard = ({ story }) => {
         <CardContent>
           {
             <>
-              <Link href={story ? storyPath(story) : "#"} sx={{ display: "block" }} underline="none" variant="h6">
+              <Link href={storyPath(story)} sx={{ display: "block" }} underline="none" variant="h6">
                 { story && (0 < sKeys.length || locale) ? story.nodes[sKeys[0]].content || l("Untitled Story", STORY_CARD, locale) : <Skeleton width={240} /> }
               </Link>
               { (!story || 1 < sKeys.length) && <Typography variant="subtitle1">{story ? story.nodes[sKeys[1]].content : <Skeleton width={320} />}</Typography> }

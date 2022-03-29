@@ -107,6 +107,7 @@ case $1 in
       cp -r $dir/src/pages/s pages/ 
 
       ### Storybook
+      npm install -D storybook-react-context 
       cp -r $dir/src/storybook/* storybook/ && rm storybook/core/layouts/PageLayout.stories.jsx 
       chr $name
 

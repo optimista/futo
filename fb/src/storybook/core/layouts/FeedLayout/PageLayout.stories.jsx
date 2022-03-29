@@ -1,17 +1,23 @@
+import { withReactContext } from 'storybook-react-context'
+
 import { PageLayout } from 'core/layouts/FeedLayout'
+import { AuthContext } from 'user/AuthProvider'
+
+import { heightDecorator } from 'storybook/story/utils'
 
 const PageLayoutStory = {
   component: PageLayout,
   title: 'core/layouts/FeedLayout/PageLayout',
   argTypes: {
     children: { control: { type: "text" } },
-    maxWidth: { table: { defaultValue: { summary: "lg" } } },
+    maxWidth: { table: { defaultValue: { summary: "md" } } },
   },
   decorators: [
-    (Story, { viewMode }) =>
-      <div style={{ height: viewMode === 'docs' ? 400 : "100vh", transform: 'scale(1)' }}>
-        <Story />
-      </div>
+    heightDecorator,
+    withReactContext({
+      Context: AuthContext,
+      initialState: { isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } },
+    }),
   ],
   parameters: { layout: "fullscreen" }
 }

@@ -1,10 +1,19 @@
+import { withReactContext } from 'storybook-react-context'
+
 import { PostCard } from 'post/PostFeed'
+import { AuthContext } from 'user/AuthProvider'
 
 const PostCardStory = {
   component: PostCard,
   title: 'post/PostFeed/PostCard',
   argTypes: { post: { control: { type: null } } },
-  parameters: { layout: "padded" }
+  parameters: { layout: "padded" },
+  decorators: [
+    withReactContext({
+      Context: AuthContext,
+      initialState: { profile: { photoURL: "/mockup-avatar.jpg" } },
+    }),
+  ],
 }
 
 const Default = args => <PostCard {...args} />

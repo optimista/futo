@@ -39,7 +39,7 @@ const PROFILE_MENU_BUTTON = {
 
 /**
  * - Button that opens a user's [`core/Menu`](/docs/core-menu--default).
- * - Shows `LoginDialogButton` if user is not logged in.
+ * - Shows [`profile/ProfileMenuButton/LoginDialogButton`](/docs/profile-profilemenubutton-logindialogbutton--default) if user is not logged in.
  * - Integrates links to stories, profile & option to log out.
  */
 const ProfileMenuButton = ({ avatar }) => {

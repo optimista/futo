@@ -15,7 +15,7 @@ const errorMessage = ({ key, locale, title }) => {
       message = l("auth/network-request-failed", ERRORS, locale);
       break;
     default:
-      message = l(key, ERRORS, locale) || l("something-wrong", ERRORS, locale);
+      try { message = l(key, ERRORS, locale) } catch { message = l("something-wrong", ERRORS, locale); }
       break;
   }
   

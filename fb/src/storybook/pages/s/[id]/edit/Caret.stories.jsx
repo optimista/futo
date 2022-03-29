@@ -5,12 +5,13 @@ import { Caret } from 'pages/s/[id]/edit'
 import { DispatchProvider, StoreProvider } from 'story/context'
 import { useReducer } from 'story/core'
 
+import TextEditableStory from 'storybook/pages/s/[id]/edit/TextEditable.stories.jsx'
 import { transformSource } from 'storybook/story/utils'
 
 const CaretStory = {
   component: Caret,
   title: 'pages/s/[id]/edit/Caret',
-  decorators: [Story => <div style={{ position: "relative" }}><Story /></div>]
+  decorators: TextEditableStory.decorators
 }
 
 const Default = args => {
@@ -18,7 +19,7 @@ const Default = args => {
   const [state, dispatch] = useReducer();
 
   useEffect(() => { 
-    dispatch({ type: "story-load", story: { nodes: { "x1": { content: "abc" } } }})
+    dispatch({ type: "story-load", story: { id: "s1", nodes: { "x1": { content: "abc" } } }})
     dispatch({ type: "caret-focus", key: "x1" })
   }, []);
 
