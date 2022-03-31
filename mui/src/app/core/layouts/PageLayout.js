@@ -23,6 +23,7 @@ PageLayout.propTypes = {
    * Determine the max-width of the container.
    * The container width grows with the size of the screen.
    * Set to `false` to disable `maxWidth`.
+   * @default 'lg'
    */
   maxWidth: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl', false]),
   

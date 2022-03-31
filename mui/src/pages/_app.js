@@ -19,7 +19,7 @@ NProgress.configure({ showSpinner: false });
 
 const MyApp = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props, router = useRouter();
-  
+
   React.useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);

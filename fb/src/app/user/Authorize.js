@@ -9,7 +9,7 @@ import { useAuth } from 'user'
  */
 const Authorize = ({ children, fallback, ready = true, redirect, uid }) => {
   const auth = useAuth(), router = useRouter(), isAuthorized = uid ? auth.uid === uid : auth.isLoggedIn;
-  useEffect(() => redirect && auth.isReady && ready && !isAuthorized && router.replace(redirect), [auth.isLoggedIn, auth.isReady, ready]);
+  useEffect(() => { if (redirect && auth.isReady && ready && !isAuthorized) router.replace(redirect); }, [auth.isLoggedIn, auth.isReady, ready]);
   return auth.isReady && ready && isAuthorized ? children : (fallback || null); 
 }
 

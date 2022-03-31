@@ -6,9 +6,7 @@ import { Stories } from 'story'
 
 const useStoryLoad = onLoad => {
   const router = useRouter(), { id } = router.query;
-  useEffect(() => id && getDoc(doc(Stories, id)).then(doc => {
-    doc.exists() ? onLoad(doc.data()) : router.replace("/");
-  }, () => router.replace("/")), [id]);
+  useEffect(() => { if (id) getDoc(doc(Stories, id)).then(doc => doc.exists() ? onLoad(doc.data()) : router.replace("/"), () => router.replace("/")) }, [id]);
 };
 
 export default useStoryLoad;

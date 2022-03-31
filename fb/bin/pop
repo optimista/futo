@@ -1,8 +1,20 @@
 #!/bin/zsh
 
 echo 
+url=https://console.cloud.google.com/storage/browser?project=$( projectid $name )
+max=$(expr $2 + 1)
+
+echo "("$2"/"$max") To populate the application with a basic data, first go to a newly opened link $url, select both buckets, click on \"ADD PRINCIPAL\" on the right pane and fill in the following details:"
+echo "New principals: firebase-storage@system.gserviceaccount.com" 
+echo "Select a role: Service agents > Cloud Storage for Firebase Service Agent" 
+open $url
+
+echo 
+read "?(Once you are done, close the tab and hit enter to continue)"
+echo
+
 url=http://localhost:8963/populate
-echo "(6/6) To populate the application with a basic data, go to a newly opened link $url, and wait until populating ends. Let's wait a minute until it opens to be sure."
+echo "("$(expr $2 + 1)"/"$max") To finish populating the application with a basic data, go to a newly opened link $url, and wait until populating ends."
 vercel dev --listen 8963 &>/dev/null &
 sleep 5
 open $url 

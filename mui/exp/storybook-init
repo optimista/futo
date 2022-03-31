@@ -1,21 +1,14 @@
 #!/usr/bin/expect -f
 
-#exp_internal 1
 set timeout -1 
 spawn npx sb init;
-expect { 
-  -re "Ok to proceed\\? \\(y\\)" { 
-    send "\n";
-    expect {
-      -re "\\?.*Do you want to run the.*eslintPlugin.*fix on your project\\?.*" {
-        send "y";
-      }
-      eof
-    }
+expect {
+  {Ok to proceed? (y) } {
+    send "y\r";
+    exp_continue
   }
   -re "\\?.*Do you want to run the.*eslintPlugin.*fix on your project\\?.*" {
-    send "y";
+    send "y\r";
   }
-  eof
 }
 expect eof

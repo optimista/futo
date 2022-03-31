@@ -1,5 +1,5 @@
 diff --git a/node_modules/@mui/material/CssBaseline/CssBaseline.js b/node_modules/@mui/material/CssBaseline/CssBaseline.js
-index 4cd5f5b..21da959 100644
+index 4cd5f5b..e20eaae 100644
 --- a/node_modules/@mui/material/CssBaseline/CssBaseline.js
 +++ b/node_modules/@mui/material/CssBaseline/CssBaseline.js
 @@ -69,11 +69,11 @@ function CssBaseline(inProps) {

@@ -3,10 +3,7 @@ import { FocusLayout } from 'core/layouts'
 const FocusLayoutStory = {
   component: FocusLayout,
   title: 'core/layouts/FocusLayout',
-  argTypes: {
-    children: { control: { type: "text" } },
-    maxWidth: { table: { defaultValue: { summary: "lg" } } },
-  },
+  argTypes: { children: { control: { type: "text" } } }
 }
 
 const Default = args => <FocusLayout {...args} />

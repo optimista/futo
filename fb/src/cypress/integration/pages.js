@@ -4,9 +4,7 @@ describe('pages/', () => {
     context('if user does not exist', () => {
       it('redirects to /index.js', () => {
         cy.visit('/random');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/');
-        })
+        cy.url().should('eq', Cypress.config('baseUrl') + "/")
       })
     })
     
@@ -27,9 +25,7 @@ describe('pages/', () => {
     context('if not provided oobCode', () => {
       it('redirects to /account/reset.js', () => {
         cy.visit('/account/confirm');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/account/reset');
-        })
+        cy.url().should('contain', Cypress.config('baseUrl') + "/account/reset")
       })
     })
   });
@@ -51,9 +47,7 @@ describe('pages/', () => {
     context('if user is not logged in', () => {
       it('redirects to /index.js', () => {
         cy.visit('/create');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/');
-        })
+        cy.url().should('eq', Cypress.config('baseUrl') + "/")
       })
     })
   });
@@ -63,9 +57,7 @@ describe('pages/', () => {
     context('if story does not exist', () => {
       it('redirects to /index.js', () => {
         cy.visit('/s/random');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/');
-        })
+        cy.url().should('eq', Cypress.config('baseUrl') + "/")
       })
     })
   });
@@ -75,9 +67,7 @@ describe('pages/', () => {
     context('if story does not exist', () => {
       it('redirects to /index.js', () => {
         cy.visit('/s/random/edit');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/');
-        })
+        cy.url().should('eq', Cypress.config('baseUrl') + "/")
       })
     })
   });
@@ -87,14 +77,8 @@ describe('pages/', () => {
     context('if user is not logged in', () => {
       it('redirects to /index.js', () => {
         cy.visit('/stories');
-        cy.location().should(loc => {
-          expect(loc.pathname).to.eq('/');
-        })
+        cy.url().should('eq', Cypress.config('baseUrl') + "/")
       })
     })
-  });
-  
-  context('theme.js', () => {
-    it('works', () => cy.visit("/theme"))
   });
 })

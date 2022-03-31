@@ -3,6 +3,13 @@
 set project_token [lindex $argv 0]
 set timeout -1 
 spawn npx chromatic --project-token=$project_token;
-expect -ex {Would you like me to add it for you? [y/N]}
-send "y\r";
+expect {
+  {Ok to proceed? (y) } {
+    send "y\r";
+    exp_continue
+  }
+  {Would you like me to add it for you? \[y/N]} {
+    send "y\r";
+  }
+}
 expect eof

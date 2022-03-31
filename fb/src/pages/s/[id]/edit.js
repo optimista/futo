@@ -156,7 +156,7 @@ const StoryEditPage = () => {
     
   // Autosave
   const router = useRouter(), { id } = router.query, storyRef = useRef(null), timer = useRef(null);
-  useEffect(() => storyRef.current = state.story, [state.story]);
+  useEffect(() => { storyRef.current = state.story }, [state.story]);
   useEffect(() => {
     let ignore = false;
     if (state.autosave.pending) {

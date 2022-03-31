@@ -6,7 +6,7 @@ case $1 in
   rm)
     name=$2
     
-    if projectid=$( cat ${2:-.}/.firebaserc | sed -n '/default/{s/^.*"\([a-z0-9-]*\)"/\1/;p;}' ); then
+    if projectid=$( projectid $name ); then
       url="https://console.firebase.google.com/project/$projectid/settings/general"
       open $url
       echo "\n // FIREBASE REMOVAL"
@@ -25,12 +25,12 @@ case $1 in
   *)
     name=$1
     ccname=${${(C)name}//-} # camel case name
-    populate=true
+    base=false
     
     for arg in "$@"; do
       case $arg in
-        --without-populate)
-          populate=false
+        --base)
+          base=true
           ;;
       esac
     done
@@ -61,7 +61,7 @@ case $1 in
       # createapp == e.g. "firebase apps:sdkconfig WEB 1:233313016915:web:e6430e12bd463eb6027aa6"
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
-      npm install firebase firebase-admin # SERVER SIDE HERE TOO
+      npm install firebase firebase-admin --legacy-peer-deps # SERVER SIDE HERE TOO
       cp $dir/src/app/core/utils/*.js app/core/utils/
       $( echo $createapp ) | sed -n '/^  "projectId"/,/^  "messagingSenderId"/p' | sed -i '' '/^const firebase/r /dev/stdin' app/core/utils/firebase.js
       
@@ -78,13 +78,13 @@ case $1 in
       keysbase64="$( cat /tmp/keys | base64 )" # Is used at the ending prompts
 
       # CYPRESS INSTALL & CONFIGURATION
-      npm install cypress --save-dev
+      npm install cypress --legacy-peer-deps --save-dev
       cp $dir/src/cypress.json .
       cp -r $dir/src/cypress .
       sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
 
       ## MAIN
-      npm install @futo-ui/hooks @futo-ui/utils
+      npm install @futo-ui/hooks @futo-ui/utils --legacy-peer-deps
       cp $dir/src/next.config.js .
       cp $dir/src/app/core/*.js app/core/
       cp $dir/src/app/core/layouts/*.js app/core/layouts/
@@ -107,59 +107,45 @@ case $1 in
       cp -r $dir/src/pages/s pages/ 
 
       ### Storybook
-      npm install -D storybook-react-context 
+      npm install -D storybook-react-context --legacy-peer-deps 
       cp -r $dir/src/storybook/* storybook/ && rm storybook/core/layouts/PageLayout.stories.jsx 
       chr $name
 
       echo 
-      echo "We are going to configure firebase-admin, enable E-mail/Password authentication, create a compound query for the post feed, a compound query for the story feed and set an e-mail template for password reset."
+      echo "(I/II) For base of our project we are going to configure firebase-admin, enable E-mail/Password authentication, create a compound query for the story feed and set an e-mail template for password reset."
       echo
       
-      echo 
       url="https://vercel.com/$(vercel whoami)/$name/settings/environment-variables"
-      echo "(1/6) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
+      echo "(1/4) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
       echo "NAME: GOOGLE_APP_CREDENTIALS"
       echo "VALUE: "
       echo $keysbase64
       echo "ENVIRONMENT: Production, Preview, Development"
       open $url
       echo
-      echo "(Once you are done, close the tab and hit enter to continue)"
-      read
+      read "?(Once you are done, close the tab and hit enter to continue)"
       
       echo 
       url=https://console.firebase.google.com/project/$projectid/authentication
-      echo "(2/6) Second, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
+      echo "(2/4) Second, enable authentication by clicking on 'Get Started' on just opened link $url. After that enable E-mail/Password authentication by clicking on 'Email/Password and enabling the first toggle control.'"
       open $url
       echo
-      echo "(Once you are done, close the tab and hit enter to continue)"
-      read
+      read "?(Once you are done, close the tab and hit enter to continue)"
      
       echo 
       url=https://console.firebase.google.com/project/$projectid/firestore/indexes
-      echo "(3/6) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
-      echo "Collection ID: posts"
-      echo "Field #1: profileId | Ascending" 
-      echo "Field #2: timestamp | Descending"
-      echo "Query Scopes: Collection"
-      open $url
-      echo 
-      echo "(Once you are done, leave the tab open and hit enter to continue)"
-      read
-      
-      echo 
-      echo "(4/6) To create a compound query necessary for the story feed follow the same previous steps, but with following data:"
+      echo "(3/4) To create a compound query necessary for story feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
       echo "Collection ID: stories"
       echo "Field #1: profileId | Ascending" 
       echo "Field #2: editedAt | Descending"
       echo "Query Scopes: Collection"
+      open $url
       echo 
-      echo "(Once you are done, close the tab and hit enter to continue)"
-      read
+      read "?(Once you are done, close the tab and hit enter to continue)"
       
       echo
       url=https://console.firebase.google.com/project/$projectid/authentication/emails
-      echo "(5/6) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
+      echo "(4/4) To set an e-mail template for password reset go to another newly opened link $url, click on 'Password reset' and fill out following fields. Don't forget to change 'Your name' to your name:"
       echo "Sender name: Your name"
       echo "Subject: %APP_NAME% - Reset your password / Restablecer su contraseña"
       echo "Message:"
@@ -169,10 +155,24 @@ case $1 in
       
       echo 
       read "?(Once you are done, close the tab and hit enter to continue)"
+      echo
 
-      if $populate; then
+      if ! $base; then
+        echo 
+        echo "(II/II) To finish setting up the fb-demo project we are going to configure create a compound query for the post feed and populate the application with the basic data."
+        echo
+        url=https://console.firebase.google.com/project/$projectid/firestore/indexes
+        open $url
+        echo "(1/3) To create a compound query necessary for post feed go to newly opened link $url. Click on small link 'Create Index' and the fill out following fields:"
+        echo "Collection ID: posts"
+        echo "Field #1: profileId | Ascending" 
+        echo "Field #2: timestamp | Descending"
+        echo "Query Scopes: Collection"
+        echo 
+        read "?(Once you are done, close the tab and hit enter to continue)"
+
         cp -r $dir/src/pages/populate pages/ 
-        pop $name
+        pop $name 2
         echo
         echo "======================================" 
         echo "🎉 Congratulations! That's everything." 

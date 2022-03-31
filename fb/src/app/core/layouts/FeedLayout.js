@@ -1,4 +1,4 @@
-import { HistoryEdu, HomeOutlined, LockOutlined, PaletteOutlined, PersonOutlined, PersonAddOutlined, Settings } from '@mui/icons-material'
+import { HistoryEdu, HomeOutlined, LockOutlined, PersonOutlined, PersonAddOutlined, Settings } from '@mui/icons-material'
 import { AppBar, Button, Container, Grid, Link, List, ListItemButton, ListItemIcon, ListItemText, Skeleton, Toolbar, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import PropTypes from 'prop-types'
@@ -106,12 +106,10 @@ DrawerItem.propTypes = {
 const FEED_LAYOUT = {
   "en": {
     "Home": "Home",
-    "Theme": "Theme",
     "Login": "Login"
   },
   "es": {
     "Home": "Inicio",
-    "Theme": "Tema",
     "Login": "Inicia sesión",
   }
 }
@@ -132,11 +130,8 @@ const FeedLayout = ({ children, ...props }) => {
               <DrawerItem href="/" Icon={HomeOutlined}><I k="Home" width={60} /></DrawerItem>
               <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Profile" width={60} /></DrawerItem>
               <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Stories" width={60} /></DrawerItem>
-            </List>
-            <List>
               <DrawerItem href="/join" Icon={PersonAddOutlined}><I dict={GENERAL} k="Join" width={60} /></DrawerItem>
               <DrawerItem href="/login" Icon={LockOutlined}><I k="Login" width={60} /></DrawerItem>
-              <DrawerItem href="/theme" Icon={PaletteOutlined}><I k="Theme" width={60} /></DrawerItem>
             </List>
           </Grid>
           <Grid item sx={{ width: t => ({ xs: "calc(100% - "+t.spacing(7.5)+")", md: "calc(100% - 200px)" }) }}>

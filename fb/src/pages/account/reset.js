@@ -48,7 +48,7 @@ const AccountReset = () => {
             sendPasswordResetEmail(getAuth(), user.email).then(user.success).catch(({ code }) => user.fail(userErrorMessage(code === "auth/too-many-requests" ? code + "-reset" : code, locale))); }
         });
 
-  useEffect(() => router.isReady && err && user.fail(JSON.parse(window.atob(err))),
+  useEffect(() => { if (router.isReady && err) user.fail(JSON.parse(window.atob(err))) },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.isReady]);
 

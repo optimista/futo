@@ -53,7 +53,7 @@ case $1 in
       cp $dir/src/next.config.js .
       
       # install @mui/material
-      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material@latest @mui/lab@latest @mui/material@latest nprogress  
+      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material @mui/lab @mui/material nprogress --legacy-peer-deps 
       cp -r $dir/src/app/core app
       cp -r $dir/src/styles . 
       cp -r $dir/src/pages . 

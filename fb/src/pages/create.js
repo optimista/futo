@@ -12,9 +12,9 @@ import StoryEditPage from './s/[id]/edit'
 const StoryCreatePage = () => {
   const [{ story }] = useReducer(), auth = useAuth(), router = useRouter();
 
-  useEffect(() => auth.isReady && (auth.isLoggedIn ?
+  useEffect(() => { if (auth.isReady) auth.isLoggedIn ?
     addDoc(Stories, { ...story, profileId: auth.uid }).then(doc => router.replace(storyEditPath(doc), null, { shallow: true })) 
-    : router.replace("/"))
+    : router.replace("/") }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   , [auth.isReady]);
  

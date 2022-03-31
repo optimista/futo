@@ -1,9 +1,9 @@
-import { delay } from '@futo-ui/utils'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 import { doc, writeBatch } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
-import { LoadingPage } from 'core'
+import { Loading } from 'core'
+import { FocusLayout } from 'core/layouts'
 import { db, upload } from 'core/utils'
 import { Posts } from 'post'
 import { Profiles, Usernames } from 'profile'
@@ -17,13 +17,13 @@ const createUser = user =>
     const batch = writeBatch(db()),
           profileId = userCredential.user.uid;
           
-    batch.set(doc(Profiles, profileId), { bio: user.bio, displayName: user.displayName, username: user.username });
+    batch.set(doc(Profiles, profileId), { ...(user.bio ? { bio: user.bio } : {}), ...(user.displayName ? { displayName: user.displayName } : {}), username: user.username });
     batch.set(doc(Usernames, user.username), { profileId });
-    return batch.commit().then(() => delay(5000)).then(() => upload("profiles/"+profileId+"/original", user.photoURL)).then(photoURL => {
+    return batch.commit().then(() => user.photoURL && upload("profiles/"+profileId+"/original", user.photoURL)).then(photoURL => {
       const batch2 = writeBatch(db());
-      batch2.update(doc(Profiles, profileId), { photoURL });
+      if (photoURL) batch2.update(doc(Profiles, profileId), { photoURL });
       if (user.posts) user.posts.forEach(content => {
-        batch2.set(doc(Posts), { content, profileDisplayName: user.displayName, profileId: profileId, profilePhotoURL: photoURL, profileUsername: user.username });
+        batch2.set(doc(Posts), { content, profileDisplayName: user.displayName, profileId: profileId, ...(photoURL ? { profilePhotoURL: photoURL } : {}), profileUsername: user.username });
       })
       if (user.stories) user.stories.forEach((id, i) => {
         batch2.set(doc(Stories, id), { nodes: { "1n": { content: "Story #"+(i+1) }, "2n": { content: "Description #"+i } }, positions: { "1n": { x: 250, y: 80 }, "2n": { x: 300, y: 138 } }, profileId: profileId });
@@ -62,7 +62,7 @@ const Populate = () => {
     })).then(() => setReady(true));
   }, []);
 
-  return <LoadingPage ready={ready}>Done!</LoadingPage>
+  return ready ? <FocusLayout sx={{ textAlign: "center" }}>Done!</FocusLayout> : <Loading />;
 } 
 
 export default Populate;

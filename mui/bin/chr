@@ -2,7 +2,7 @@
 
 dir=$HOME/.bin/mui
 
-npm install chromatic --save-dev 
+npm install chromatic --legacy-peer-deps --save-dev 
 git add -A . && git commit -m "Storybook" && git push
 
 name=$1
