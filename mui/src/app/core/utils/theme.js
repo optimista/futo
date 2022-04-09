@@ -1,6 +1,5 @@
 import { CircularProgress, Fade } from '@mui/material'
 import { listItemIconClasses } from '@mui/material/ListItemIcon';
-import { red } from '@mui/material/colors';
 import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
 import NextLink from 'next/link'
 import { forwardRef } from 'react'
@@ -99,7 +98,7 @@ export default createTheme({
     MuiCssBaseline: { styleOverrides: { em: { fontStyle: "normal", fontWeight: "bold", textDecoration: "underline" } } },
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
-    MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" } }, styleOverrides: {
+    MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" }, TransitionComponent: Fade, TransitionProps: { exit: false } }, styleOverrides: {
       root: { backgroundColor: theme.palette.background.default },
       anchorOriginBottomRight: { bottom: 24, left: "auto", right: 24 }
     }},

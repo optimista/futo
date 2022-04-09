@@ -1,5 +1,5 @@
 const heightDecorator = (Story, { viewMode }) =>
-  <div style={{ height: viewMode === 'docs' ? 400 : "100vh", transform: 'scale(1)' }}>
+  <div style={{ height: viewMode === 'docs' ? 400 : "100vh", ...(viewMode === 'docs' ? { marginBottom: 16 } : {}), transform: 'scale(1)' }}>
     <Story />
   </div>
 
