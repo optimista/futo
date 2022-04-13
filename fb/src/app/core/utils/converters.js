@@ -28,6 +28,8 @@ const time = date => {
   return "Now";
 }
 
+const timestamp = date => date.getTime();
+
 const timestampToDate = (doc, key = "timestamp") =>
   ({ ...doc, [key]: doc[key] ? doc[key].toDate() : new Date() });
 
@@ -35,4 +37,4 @@ const wo = (doc, keys) => keys.reduce((doc, key) => { delete doc[key]; return do
 
 const wTimestamp = (doc, key = "timestamp") => ({ ...doc, [key]: Timestamp.now() });
 
-export { datetime, docWId, time, timestampToDate, wTimestamp, wo };
+export { datetime, docWId, time, timestamp, timestampToDate, wTimestamp, wo };
