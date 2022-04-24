@@ -116,7 +116,6 @@ export default createTheme({
       fontSizeLarge: { height: "1.75rem", width: "1.75rem" },
       fontSizeMedium: { height: "1.5rem", width: "1.5rem" }
     }},
-    MuiToolbar: { defaultProps: { variant: "dense" } },
 
     // Buttons
     MuiButton: {
@@ -171,7 +170,7 @@ export default createTheme({
     MuiFormControl: { styleOverrides: { marginDense: { marginBottom: theme.spacing(1), marginTop: theme.spacing(2) }, marginNormal: { marginBottom: theme.spacing(3) } } },
     MuiFormHelperText: { styleOverrides: { root: { bottom: "-0.1rem", position: "absolute", transform: "translate(0, 100%)" } } },
     MuiInput: { styleOverrides: { underline } },
-    MuiInputBase: { styleOverrides: { root: { lineHeight: 1.5 }, adornedEnd: { '& > :nth-child(2)': { flexShrink: 0 } }, inputAdornedEnd: { marginRight: theme.spacing(1) } } }, // flexShrink not to cut width from adornment
+    MuiInputBase: { styleOverrides: { root: { lineHeight: 1.5 }, adornedEnd: { '& > .MuiSvgIcon-root': { flexShrink: 0 } }, inputAdornedEnd: { marginRight: theme.spacing(1) } } }, // flexShrink not to cut width from adornment
     MuiInputLabel: {
       styleOverrides: {
         root: { fontSize: "0.875rem", fontWeight: 300, letterSpacing: 2, textTransform: "uppercase" }, animated: { transitionDuration: theme.transitions.duration.shortest },
@@ -229,6 +228,7 @@ export default createTheme({
       }
     },
   },
+  mixins: { toolbar: { [theme.breakpoints.up('sm')]: { minHeight: 56 } } },
   palette: theme.palette,
   shape: { borderRadius: 2 },
   transitions: theme.transitions,

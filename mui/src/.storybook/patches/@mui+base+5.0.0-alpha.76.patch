@@ -1,8 +1,8 @@
 diff --git a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
-index 90798ae..5b66c24 100644
+index a1c4f85..9a5e47c 100644
 --- a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
 +++ b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
-@@ -143,9 +143,9 @@ function ClickAwayListener(props) {
+@@ -141,9 +141,9 @@ function ClickAwayListener(props) {
  
      return undefined;
    }, [handleClickAway, mouseEvent]);

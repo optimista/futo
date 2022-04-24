@@ -1,26 +1,28 @@
 import { useDialog, useMenu } from '@futo-ui/hooks'
-import { ExitToAppSharp, HistoryEdu } from '@mui/icons-material'
+import { ExitToAppSharp, HistoryEdu, PersonAddAlt } from '@mui/icons-material'
 import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@mui/material'
 import { getAuth, signOut } from 'firebase/auth'
+import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 
 import { IconButton, Menu } from 'core'
 import { l, I, useLocale } from 'core/utils/i18n'
 import { GENERAL } from 'core/i18n'
 import { ProfileAvatar } from 'profile'
-import { LoginForm, useLoginModel } from 'user'
-import { useAuth } from 'user'
+import { useAnonymousStoriesCount } from 'story'
+import { LoginForm, useAuth, useLoginModel } from 'user'
 
 /**
  * - Button that opens a [`@mui/Dialog`](https://mui.com/api/dialog) with [`user/LoginForm`](/docs/user-loginform--default).
  */
 const LoginDialogButton = () => {
-  const user = useLoginModel({ success: () => dialog.close() }),
-        dialog = useDialog(user);
+  const auth = useAuth(), count = useAnonymousStoriesCount(), user = useLoginModel(), dialog = useDialog(user), router = useRouter();
 
   return (
     <>
-      <Button onClick={dialog.open}><I dict={GENERAL} k="Log in" width={80} /></Button>
+      <Badge badgeContent={count} invisible={router.pathname === "/create" || !auth.isAnonymous || !count}> 
+        <Button onClick={dialog.open} startIcon={<PersonAddAlt />} variant="outlined"><I dict={GENERAL} k="Log in" width={80} /></Button>
+      </Badge>
       <Dialog onClose={dialog.close} open={dialog.isOpen}><LoginForm user={user} /></Dialog>
     </>
   )
@@ -46,11 +48,11 @@ const ProfileMenuButton = ({ avatar }) => {
   const auth = useAuth(), locale = useLocale(), menu = useMenu();
 
   if (!auth.isReady) return <></>
-  if (auth.isReady && !auth.isLoggedIn) return <LoginDialogButton />;
+  if (auth.isReady && (!auth.isLoggedIn || auth.isAnonymous) ) return <LoginDialogButton />;
 
   const handleLogout = () => { menu.close(); signOut(getAuth()); }
 
-  const invisible = !auth.isLoggedIn || !auth.profile || Boolean(auth?.profile?.displayName);
+  const invisible = !auth.isLoggedIn || !auth.profile || Boolean(auth.profile.displayName);
 
   return (
     <>
@@ -59,7 +61,7 @@ const ProfileMenuButton = ({ avatar }) => {
           {avatar || <ProfileAvatar />}
         </IconButton>
       </Badge>
-      <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end">
+      <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end" style={{ zIndex: 1150 }}>
         <MenuItem component={Link} href="/stories">
           <ListItemIcon>
             <HistoryEdu />

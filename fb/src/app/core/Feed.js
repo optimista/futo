@@ -47,7 +47,7 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
 
   return (
     <Box sx={{ "& > .MuiCard-root": t => ({ borderTop: "1px solid "+t.palette.divider, '&:last-of-type': { borderBottom: "1px solid "+t.palette.divider } }) }}>
-      {batches.map(batch => batch.map(item => <Item key={item.id} item={item} />))}
+      { batches.map(batch => batch.map(item => <Item key={item.id} item={item} />)) }
       
       {/* Additional two Item Skeletons for initial load (together = 3) */}
       { fetching && batches.length === 0 && (new Array(3-1)).fill().map((_, i) => <Item key={"p"+i} />) }

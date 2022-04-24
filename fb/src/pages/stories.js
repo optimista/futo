@@ -10,20 +10,18 @@ import { FeedLayout } from 'core/layouts'
 import { GENERAL } from 'core/i18n'
 import { l, I, IProvider, useLocale } from 'core/utils/i18n'
 import { Stories } from 'story'
-import { storyPath, storyEditPath } from 'story/utils'
+import { storyPath, storyEditPath, storyDesc, storyTitle } from 'story/utils'
 import { Authorize, useAuth } from 'user'
 
 const STORY_CARD = {
   lastEdited: ({ editedAtTime, nodes }, lastEditedStr, nodesStr) => lastEditedStr + ": " + editedAtTime + " · " + keys(nodes).length + " " + nodesStr,
   "en": {
     "Last edited": story => STORY_CARD.lastEdited(story, "Last edited", "nodes"),
-    "Untitled Story": "Untitled Story",
     "Edit story": "Edit story",
     "Remove story": "Remove story"
   },
   "es": {
     "Last edited": story => STORY_CARD.lastEdited(story, "Última modificación", "nodos"),
-    "Untitled Story": "Historia sin título",
     "Edit story": "Editar historia",
     "Remove story": "Eliminar historia"
   }
@@ -34,15 +32,13 @@ const STORY_CARD = {
  * - Includes [`@mui/MenuItem`](https://mui.com/api/menu-item) to edit & to remove the story.
  */
 const StoryCard = ({ story }) => {
-  const auth = useAuth(), locale = useLocale(), menu = useMenu();
+  const auth = useAuth(), locale = useLocale(), menu = useMenu(),
+        description = storyDesc(story), title = storyTitle(story, locale);
 
   const handleRemove = () => {
     menu.close();
     deleteDoc(doc(Stories, story.id));
   }
-
-  // Helpers
-  const sKeys = story ? keys(story.nodes).sort((a,b) => parseInt(a) - parseInt(b)) : [];
 
   return (
     <IProvider value={STORY_CARD}>
@@ -50,10 +46,8 @@ const StoryCard = ({ story }) => {
         <CardContent>
           {
             <>
-              <Link href={storyPath(story)} sx={{ display: "block" }} underline="none" variant="h6">
-                { story && (0 < sKeys.length || locale) ? story.nodes[sKeys[0]].content || l("Untitled Story", STORY_CARD, locale) : <Skeleton width={240} /> }
-              </Link>
-              { (!story || 1 < sKeys.length) && <Typography variant="subtitle1">{story ? story.nodes[sKeys[1]].content : <Skeleton width={320} />}</Typography> }
+              { story ? <Link href={storyPath(story)} sx={{ display: "block" }} underline="none" variant="h6">{title}</Link> : <Skeleton width={240} /> }
+              { (!story || description) && <Typography variant="subtitle1">{story ? description : <Skeleton width={320} /> }</Typography> }
               <Typography variant="overline"><I arg={story} k={story ? "Last edited" : undefined} width={180} /></Typography>
             </>
           }

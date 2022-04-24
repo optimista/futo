@@ -46,11 +46,11 @@ const PostJoinDialog = props => {
 const PostPrompt = () => {
   const auth = useAuth(), locale = useLocale(), joinDialog = useModal(false), [postDialog, post] = usePostDialog();
   
-  const handleMouseDown = e => { e.preventDefault(); if (e.nativeEvent.which === 1) auth.isLoggedIn ? postDialog.open() : joinDialog.open(); }
+  const handleMouseDown = e => { e.preventDefault(); if (e.nativeEvent.which === 1) auth.isLoggedIn && !auth.isAnonymous ? postDialog.open() : joinDialog.open(); }
 
   return (
     <>
-      <PostCardLayout avatar={ auth.isLoggedIn && <ProfileAvatar /> } sx={{ mb: 2 }} title={
+      <PostCardLayout avatar={ auth.isLoggedIn && !auth.isAnonymous && <ProfileAvatar /> } sx={{ mb: 2 }} title={
         <TextField inputProps={{ disabled: true }} margin="normal" onMouseDown={handleMouseDown} placeholder={l("prompt", PROMPT, locale)} sx={{ flex: "auto", my: 2, '& > .MuiInput-root > input': { cursor: "pointer" } }} />}
         />
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} />      

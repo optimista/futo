@@ -4,8 +4,7 @@ import { FocusLayout } from 'core/layouts'
 import { LoginForm, useLoginModel } from 'user'
 
 const Login = () => {
-  const router = useRouter(), 
-        user = useLoginModel({ success: () => router.push("/") });
+  const router = useRouter(), user = useLoginModel({ onSuccess: () => router.push("/") });
 
   return (
     <FocusLayout maxWidth="xs">

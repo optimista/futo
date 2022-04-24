@@ -8,7 +8,7 @@ const GENERAL = {
   },
   "es": {
     "Join": "Regístrate",
-    "Log in": "Inicia sesión",
+    "Log in": "Acceder",
     "More": "Más",
     "Profile": "Perfil",
     "Stories": "Historias",

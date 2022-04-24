@@ -63,7 +63,7 @@ case $1 in
 
       # storybook
       cd .. && gl $name && cd $name
-      npm install babel-plugin-import
+      npm install babel-plugin-import storybook-addon-next-router
       npm install npm-add-script patch-package --save-dev
       npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
       $dir/exp/storybook-init

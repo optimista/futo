@@ -1,7 +1,7 @@
 import { useModel } from '@futo-ui/hooks'
 import { Link, Typography } from '@mui/material'
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
-import { doc, writeBatch } from 'firebase/firestore'
+import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, linkWithCredential } from 'firebase/auth'
+import { deleteField, doc, getDocs, query, where, writeBatch } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 
 import { Field, Form, Submit } from 'core/form'
@@ -10,6 +10,7 @@ import { db, errorMessage } from 'core/utils'
 import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { maxLength, minLength, presence } from 'core/validators'
 import { Profiles, Usernames } from 'profile'
+import { SnackbarPendingStories, Stories } from 'story'
 import { userErrorMessage } from 'user'
 import { USER_ERRORS, USER_FIELDS } from 'user/i18n'
 import { emailFormatAt, emailFormatDomain, emailUniqueness, usernameFormatCharacters, usernameFormatNoConsecutive, usernameFormatNoBeginEnd, usernameUniqueness } from 'user/validators'
@@ -35,7 +36,7 @@ const JOIN_FORM = {
  * - Defines [`core/form/Form`](/docs/core-form-form--default) for joining / registration. 
  */
 const JoinForm = () => {
-  const locale = useLocale(), router = useRouter(), 
+  const locale = useLocale(), router = useRouter(),
         user = useModel({ email: "", password: "", username: "" }, {
           validation: {
             generalError: err => errorMessage({ key: err.code, locale, title: l("user/registration-not-successful/title", USER_ERRORS, locale) }),
@@ -61,18 +62,24 @@ const JoinForm = () => {
           },
           onSubmit: () => {
             // Request!
-            createUserWithEmailAndPassword(getAuth(), user.email, user.password).then(userCredential => {
+            const auth = getAuth(), { isAnonymous } = auth.currentUser; 
+            (isAnonymous ? linkWithCredential(auth.currentUser, EmailAuthProvider.credential(user.email, user.password)) : createUserWithEmailAndPassword(auth, user.email, user.password)).then(async (userCredential) => {
               const batch = writeBatch(db()),
                     profileId = userCredential.user.uid;
 
-              batch.set(doc(Profiles, profileId), { displayName: "", photoURL: "", username: user.username });
+              const displayName = "", photoURL = "", username = user.username, auid = window.localStorage.getItem("auid");
+             
+              batch.set(doc(Profiles, profileId), { displayName, photoURL, username });
               batch.set(doc(Usernames, user.username), { profileId });
+
+              if (auid) {
+                const stories = await getDocs(query(Stories, where("profileId", "==", auid)));
+                stories.forEach(doc => batch.set(doc.ref, { isAnonymous: deleteField(), profileId, profileDisplayName: displayName, profilePhotoURL: photoURL, profileUsername: username }, { merge: true })) };
               
-              batch.commit().then(() => {
-                router.push("/")
-              }).catch(() => { // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
+              batch.commit().then(() => { if (isAnonymous) { const ls = window.localStorage; ls.removeItem("auid"); ls.removeItem("ascount"); } router.push("/"); }).catch(() => {
+                // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
                 user.fail(errorMessage({ title: l("user/registration-not-successful/title", USER_ERRORS, locale) }));
-                getAuth().currentUser.delete();
+                auth.currentUser.delete();
               });
             }, err => user.fail(userErrorMessage(err.code, locale)));
           }
@@ -90,16 +97,14 @@ const JoinForm = () => {
         <Field label={<I dict={USER_FIELDS} k="password" width={80} />} name="password" type="password" />
         <Field label={<I k="username" width={80} />} name="username" inputProps={{ maxLength: 16 }} />
       </Form>
+      <SnackbarPendingStories />
     </IProvider>
   );
 }
 
-const Join = () => {
-  return (
-    <FocusLayout maxWidth="xs">
-      <JoinForm />
-    </FocusLayout>
-  );
-}
+const Join = () =>
+  <FocusLayout maxWidth="xs">
+    <JoinForm />
+  </FocusLayout>
 
 export { Join as default, JoinForm };

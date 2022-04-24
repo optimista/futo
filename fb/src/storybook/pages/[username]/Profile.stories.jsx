@@ -6,10 +6,8 @@ import { Profiles } from 'profile'
 const ProfileStory = {
   component: Profile,
   title: 'pages/[username]/Profile',
-  decorators: [
-    Story => <div style={{ margin: "auto", width: 700 }}><Story /></div>
-  ],
-  parameters: { layout: "padded" }
+  decorators: [Story => <div style={{ margin: "auto", width: 700 }}><Story /></div>],
+  parameters: { layout: "fullscreen" }
 }
 
 const Default = (args, { loaded: { profiles } }) => {

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Field, Form, Submit } from 'core/form'
 import { GENERAL } from 'core/i18n'
 import { I, IProvider } from 'core/utils/i18n'
+import { SnackbarPendingStories } from 'story'
 import { USER_FIELDS } from 'user/i18n'
 
 const LOGIN_FORM = {
@@ -38,6 +39,7 @@ const LoginForm = ({ user }) =>
     <Box sx={{ borderTop: theme => "1px dashed "+theme.palette.divider, mt: 4, pt: 3, textAlign: "center" }}>
       <Link color="textSecondary" href="/account/reset" variant="body2"><I k="Forgot your password?" sx={{ display: "inline-block" }} width={146} /></Link>
     </Box>
+    <SnackbarPendingStories />
   </IProvider>
 
 LoginForm.propTypes = {

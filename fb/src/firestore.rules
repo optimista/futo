@@ -42,7 +42,7 @@ service cloud.firestore {
     match /stories/{story} {
       allow read;
       allow create: if auth() && present(request.resource.data.nodes);
-      allow update: if owns(resource) && present(request.resource.data.nodes);
+      allow update: if (owns(resource) && present(request.resource.data.nodes)) || resource.data.isAnonymous;
       allow delete: if owns(resource);
     }
     match /usernames/{username} {

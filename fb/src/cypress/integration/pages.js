@@ -45,13 +45,13 @@ describe('pages/', () => {
   context('create.js', () => {
     it('works', () => cy.visit("/create"))
     context('if user is not logged in', () => {
-      it('redirects to /index.js', () => {
+      it('redirects to /s/[id]/edit', () => {
         cy.visit('/create');
-        cy.url().should('eq', Cypress.config('baseUrl') + "/")
+        cy.url().should('match', new RegExp( Cypress.config('baseUrl') + "/s/[^/]{20}/edit"));
       })
     })
   });
-  
+
   context('s/[id].js', () => {
     it('works', () => cy.visit("/s/random"));
     context('if story does not exist', () => {

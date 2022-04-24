@@ -5,6 +5,7 @@ module.exports = {
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-links",
+    "storybook-addon-next-router"
   ],
   framework: "@storybook/react", 
   staticDirs: ['../public'],
@@ -49,6 +50,7 @@ module.exports = {
           ...config.resolve.alias,
           '@emotion/core': toPath('node_modules/@emotion/react'),
           'emotion-theming': toPath('node_modules/@emotion/react'),
+          'next/image': toPath('.storybook/NextImage')
         },
       },
     };

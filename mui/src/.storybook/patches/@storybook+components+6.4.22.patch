@@ -1,0 +1,54 @@
+diff --git a/node_modules/@storybook/components/dist/cjs/blocks/.Story.js.swp b/node_modules/@storybook/components/dist/cjs/blocks/.Story.js.swp
+new file mode 100644
+index 0000000..814705a
+Binary files /dev/null and b/node_modules/@storybook/components/dist/cjs/blocks/.Story.js.swp differ
+diff --git a/node_modules/@storybook/components/dist/cjs/blocks/Story.js b/node_modules/@storybook/components/dist/cjs/blocks/Story.js
+index 1176e15..f913c80 100644
+--- a/node_modules/@storybook/components/dist/cjs/blocks/Story.js
++++ b/node_modules/@storybook/components/dist/cjs/blocks/Story.js
+@@ -81,7 +81,8 @@ var IFrameStory = function IFrameStory(_ref2) {
+   return /*#__PURE__*/_react.default.createElement("div", {
+     style: {
+       width: '100%',
+-      height: height
++      height: height,
++      paddingBottom: 20
+     }
+   }, /*#__PURE__*/_react.default.createElement(_ZoomContext.ZoomContext.Consumer, null, function (_ref3) {
+     var scale = _ref3.scale;
+diff --git a/node_modules/@storybook/components/dist/esm/blocks/.Story.js.swp b/node_modules/@storybook/components/dist/esm/blocks/.Story.js.swp
+new file mode 100644
+index 0000000..f0f21cf
+Binary files /dev/null and b/node_modules/@storybook/components/dist/esm/blocks/.Story.js.swp differ
+diff --git a/node_modules/@storybook/components/dist/esm/blocks/Story.js b/node_modules/@storybook/components/dist/esm/blocks/Story.js
+index 7d311de..553f0f3 100644
+--- a/node_modules/@storybook/components/dist/esm/blocks/Story.js
++++ b/node_modules/@storybook/components/dist/esm/blocks/Story.js
+@@ -42,7 +42,8 @@ var IFrameStory = function IFrameStory(_ref2) {
+   return /*#__PURE__*/React.createElement("div", {
+     style: {
+       width: '100%',
+-      height: height
++      height: height,
++      paddingBottom: 20
+     }
+   }, /*#__PURE__*/React.createElement(ZoomContext.Consumer, null, function (_ref3) {
+     var scale = _ref3.scale;
+diff --git a/node_modules/@storybook/components/dist/modern/blocks/.Story.js.swp b/node_modules/@storybook/components/dist/modern/blocks/.Story.js.swp
+new file mode 100644
+index 0000000..806df85
+Binary files /dev/null and b/node_modules/@storybook/components/dist/modern/blocks/.Story.js.swp differ
+diff --git a/node_modules/@storybook/components/dist/modern/blocks/Story.js b/node_modules/@storybook/components/dist/modern/blocks/Story.js
+index 92e677e..1639c08 100644
+--- a/node_modules/@storybook/components/dist/modern/blocks/Story.js
++++ b/node_modules/@storybook/components/dist/modern/blocks/Story.js
+@@ -33,7 +33,8 @@ const IFrameStory = ({
+ }) => /*#__PURE__*/React.createElement("div", {
+   style: {
+     width: '100%',
+-    height
++    height,
++    paddingBottom: 20
+   }
+ }, /*#__PURE__*/React.createElement(ZoomContext.Consumer, null, ({
+   scale

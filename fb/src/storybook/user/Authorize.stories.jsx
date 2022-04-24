@@ -1,4 +1,3 @@
-import { RouterContext } from "next/dist/shared/lib/router-context"
 import { withReactContext } from 'storybook-react-context'
 
 import { Loading } from 'core'
@@ -13,11 +12,6 @@ const AuthorizeStory = {
     fallback: { control: { disable: true } }
   },
   decorators: [
-    (Story, { args }) => {
-      return <RouterContext.Provider value={{ replace: () => { // Because it uses replace function and otherwise we won't have RouterContext
-        window.parent.location.href = args.redirect || "/?path=/docs/user-authorize--default"
-      } }}><Story /></RouterContext.Provider>
-    },
     withReactContext({
       Context: AuthContext,
       initialState: { isReady: true, uid: "defaultProfileId" },
@@ -31,6 +25,12 @@ const Fallback = Default.bind({});
 Default.args = {
   children: "Authorized",
   uid: "defaultProfileId"
+}
+
+Default.parameters = {
+  nextRouter: {
+    replace: pathname => window.parent.location.href = pathname 
+  }
 }
 
 Fallback.args = {

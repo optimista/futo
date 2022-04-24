@@ -7,8 +7,8 @@ const Stories = collection('stories').withConverter({
   fromFirestore: snapshot => (doc => ({ ...doc, editedAt: timestamp(doc.editedAt), editedAtTime: time(doc.editedAt) })).call(null, timestampToDate(docWId(snapshot), 'editedAt')), 
   toFirestore: doc => ({ 
     ...wTimestamp(wo(doc, ['id', 'editedAtTime']), 'editedAt'),
-    nodes: filter(doc.nodes, (_, v) => !empty(v.content)),
-    positions: filter(doc.positions, k => !empty(doc.nodes[k].content)),
+    ...(doc.nodes ? { nodes: filter(doc.nodes, (_, v) => !empty(v.content)) } : {}),
+    ...(doc.positions ? { positions: filter(doc.positions, k => !empty(doc.nodes[k].content)) } : {}),
   })
 });
 

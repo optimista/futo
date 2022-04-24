@@ -25,7 +25,7 @@ Default.loaders = [
 Default.parameters = {
   docs: {
     inlineStories: false,
-    iframeHeight: 163
+    iframeHeight: 183
   }
 }
 

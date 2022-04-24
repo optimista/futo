@@ -43,10 +43,10 @@ const PageLayout = ({ children, maxWidth = "md" }) => {
   return (
     <>
       <AppBar>
-        <Toolbar variant="dense">
-          <Logo sx={{ height: t => t.spacing(4), width: t => t.spacing(4) }} />
+        <Toolbar>
+          <Logo />
           <Typography sx={{ flexGrow: 1, letterSpacing: 5, px: 2 }}><Link href="/" underline="none">{NAMES.name}</Link></Typography>
-          { auth.isLoggedIn && <ProfileButton /> }
+          { auth.isLoggedIn && !auth.isAnonymous && <ProfileButton /> }
           <ProfileMenuButton avatar={<Settings />} />
         </Toolbar>
       </AppBar>

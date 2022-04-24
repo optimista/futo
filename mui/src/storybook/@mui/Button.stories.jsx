@@ -20,7 +20,7 @@ const ButtonStory = {
     endIcon: { table: { disable: true } },
     fullWidth: { table: { disable: true } },
     onClick: { control: { type: null }, description: "Optional click handler", table: { type: { summary: "func" } } },
-    size: { table: { disable: true } },
+    size: radio(["medium", "large"], "medium"),
     startIcon: { control: { type: null } },
     sx,
     variant: radio(["contained", "outlined", "text"], "contained"),
