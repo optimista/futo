@@ -1,3 +1,4 @@
+import { isarray } from '@futo-ui/utils'
 import { Timestamp } from 'firebase/firestore'
 
 const datetime = date => {
@@ -31,7 +32,7 @@ const time = date => {
 const timestamp = date => date.getTime();
 
 const timestampToDate = (doc, key = "timestamp") =>
-  ({ ...doc, [key]: doc[key] ? doc[key].toDate() : new Date() });
+  ({ ...doc, ...(isarray(key) ? key : [key]).reduce((acc, key) => ({ ...acc, [key]: doc[key] ? doc[key].toDate() : new Date() }), {}) });
 
 const wo = (doc, keys) => keys.reduce((doc, key) => { delete doc[key]; return doc; }, doc);
 

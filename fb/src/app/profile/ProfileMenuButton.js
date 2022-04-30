@@ -15,18 +15,25 @@ import { LoginForm, useAuth, useLoginModel } from 'user'
 /**
  * - Button that opens a [`@mui/Dialog`](https://mui.com/api/dialog) with [`user/LoginForm`](/docs/user-loginform--default).
  */
-const LoginDialogButton = () => {
-  const auth = useAuth(), count = useAnonymousStoriesCount(), user = useLoginModel(), dialog = useDialog(user), router = useRouter();
+const LoginDialogButton = ({ user }) => {
+  const count = useAnonymousStoriesCount(), dialog = useDialog(user), router = useRouter();
 
   return (
     <>
-      <Badge badgeContent={count} invisible={router.pathname === "/create" || !auth.isAnonymous || !count}> 
+      <Badge badgeContent={count} invisible={router.pathname === "/create" || !count}> 
         <Button onClick={dialog.open} startIcon={<PersonAddAlt />} variant="outlined"><I dict={GENERAL} k="Log in" width={80} /></Button>
       </Badge>
       <Dialog onClose={dialog.close} open={dialog.isOpen}><LoginForm user={user} /></Dialog>
     </>
   )
 } 
+
+LoginDialogButton.propTypes = {
+  /**
+   * User `@futo-ui/hooks/useModel` model instance / object.
+   */
+  user: PropTypes.object.isRequired,
+};
 
 const PROFILE_MENU_BUTTON = {
   "en": {
@@ -44,11 +51,11 @@ const PROFILE_MENU_BUTTON = {
  * - Shows [`profile/ProfileMenuButton/LoginDialogButton`](/docs/profile-profilemenubutton-logindialogbutton--default) if user is not logged in.
  * - Integrates links to stories, profile & option to log out.
  */
-const ProfileMenuButton = ({ avatar }) => {
-  const auth = useAuth(), locale = useLocale(), menu = useMenu();
+const ProfileMenuButton = ({ avatar, onLogin }) => {
+  const auth = useAuth(), locale = useLocale(), menu = useMenu(), user = useLoginModel({ onSuccess: onLogin });
 
   if (!auth.isReady) return <></>
-  if (auth.isReady && (!auth.isLoggedIn || auth.isAnonymous) ) return <LoginDialogButton />;
+  if (auth.isReady && (!auth.isLoggedIn || auth.isAnonymous)) return <LoginDialogButton user={user} />;
 
   const handleLogout = () => { menu.close(); signOut(getAuth()); }
 
@@ -93,6 +100,11 @@ ProfileMenuButton.propTypes = {
    * @default <ProfileAvatar />
    */
   avatar: PropTypes.node, 
+  
+  /**
+   * Callback function that runs after successful login. 
+   */
+  onLogin: PropTypes.func,
 };
 
 export { ProfileMenuButton as default, LoginDialogButton };

@@ -128,8 +128,8 @@ const FeedLayout = ({ children, ...props }) => {
           <Grid item sx={{ width: t => ({ xs: t.spacing(7.5), md: 200 }) }}>
             <List>
               <DrawerItem href="/" Icon={HomeOutlined}><I k="Home" width={60} /></DrawerItem>
-              <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Profile" width={60} /></DrawerItem>
-              <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn}><I dict={GENERAL} k="Stories" width={60} /></DrawerItem>
+              <DrawerItem href={"/" + auth?.profile?.username} Icon={PersonOutlined} disabled={!auth.isLoggedIn || auth.isAnonymous}><I dict={GENERAL} k="Profile" width={60} /></DrawerItem>
+              <DrawerItem href="/stories" Icon={HistoryEdu} disabled={!auth.isLoggedIn || auth.isAnonymous}><I dict={GENERAL} k="Stories" width={60} /></DrawerItem>
               <DrawerItem href="/join" Icon={PersonAddOutlined}><I dict={GENERAL} k="Join" width={60} /></DrawerItem>
               <DrawerItem href="/login" Icon={LockOutlined}><I k="Login" width={60} /></DrawerItem>
             </List>

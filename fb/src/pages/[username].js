@@ -3,7 +3,7 @@ import { pct } from '@futo-ui/utils'
 import { PhotoCamera } from '@mui/icons-material'
 import { Badge, Box, Button, Dialog, Grid, Skeleton, Typography } from '@mui/material'
 import { EmailAuthProvider, getAuth, reauthenticateWithCredential } from 'firebase/auth'
-import { doc, getDoc, getDocs, onSnapshot, query, where, writeBatch } from 'firebase/firestore'
+import { doc, getDoc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
 import { deleteObject } from 'firebase/storage'
 import Head from 'next/head'
 import { useRouter } from 'next/router' 
@@ -14,7 +14,7 @@ import { IconButton, ImageInput } from 'core'
 import { Field, Form, Submit, useForm } from 'core/form'
 import { ACTIONS, NAMES } from 'core/i18n'
 import { FeedLayout } from 'core/layouts'
-import { db, storage } from 'core/utils'
+import { createBatch, storage } from 'core/utils'
 import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { Posts, PostDialog, PostFeed, usePostDialog } from 'post'
 import { ProfileAvatar, Profiles, Usernames, useProfileDialog } from 'profile'
@@ -153,18 +153,17 @@ const ProfileDialog = ({ profile, ...props }) => {
   const auth = useAuth(), locale = useLocale(), router = useRouter(),
         user = useModel({ email: "", password: "" }, { onSubmit: () => {
           reauthenticateWithCredential(getAuth().currentUser, EmailAuthProvider.credential(user.email, user.password)).then(async () => {
-            const batches = [writeBatch(db())]; let i = 0, ops = 2;
-            batches[i].delete(doc(Profiles, auth.profile.id));
-            batches[i].delete(doc(Usernames, auth.profile.username));
+            const batch = createBatch();
+            batch.delete(doc(Profiles, auth.profile.id));
+            batch.delete(doc(Usernames, auth.profile.username));
 
             const snapshotPosts = await getDocs(query(Posts, where("profileId", "==", auth.uid))),
-                  snapshotStories = await getDocs(query(Stories, where("profileId", "==", auth.uid))),
-                  addDoc = doc => { batches[i].delete(doc.ref); ops++; if (ops === 500) { batches.push(writeBatch(db())); i++; ops = 0; } };
+                  snapshotStories = await getDocs(query(Stories, where("profileId", "==", auth.uid)));
 
-            snapshotPosts.forEach(addDoc); 
-            snapshotStories.forEach(addDoc); 
+            snapshotStories.forEach(doc => batch.delete(doc.ref)); 
+            snapshotPosts.forEach(doc => batch.delete(doc.ref)); 
 
-            Promise.all(batches.map(b => b.commit()))
+            batch.commit()
               .then(() => auth.profile.photoURL ? deleteObject(storage(auth.profile.photoURL)) : Promise.resolve())
               .then(() => getAuth().currentUser.delete())
               .then(() => router.push("/"))
@@ -277,7 +276,7 @@ Profile.propTypes = {
 };
 
 /**
- * - Shows user's profile with a feed of their post. If it's own profile, it can be edited. 
+ * - Shows user's profile with a feed of their posts. If it's own profile, it can be edited. 
  */
 const ProfilePage = ({ bio, displayName, photoURL, profileId }) => {
   const router = useRouter(),

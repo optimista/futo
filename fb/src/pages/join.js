@@ -1,12 +1,12 @@
 import { useModel } from '@futo-ui/hooks'
 import { Link, Typography } from '@mui/material'
 import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, linkWithCredential } from 'firebase/auth'
-import { deleteField, doc, getDocs, query, where, writeBatch } from 'firebase/firestore'
+import { deleteField, doc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 
 import { Field, Form, Submit } from 'core/form'
 import { FocusLayout } from 'core/layouts'
-import { db, errorMessage } from 'core/utils'
+import { createBatch, errorMessage, getDocsWhereIn } from 'core/utils'
 import { I, IProvider, l, useLocale } from 'core/utils/i18n'
 import { maxLength, minLength, presence } from 'core/validators'
 import { Profiles, Usernames } from 'profile'
@@ -64,19 +64,17 @@ const JoinForm = () => {
             // Request!
             const auth = getAuth(), { isAnonymous } = auth.currentUser; 
             (isAnonymous ? linkWithCredential(auth.currentUser, EmailAuthProvider.credential(user.email, user.password)) : createUserWithEmailAndPassword(auth, user.email, user.password)).then(async (userCredential) => {
-              const batch = writeBatch(db()),
-                    profileId = userCredential.user.uid;
-
-              const displayName = "", photoURL = "", username = user.username, auid = window.localStorage.getItem("auid");
+              const batch = createBatch(), profileId = userCredential.user.uid,
+                    displayName = "", photoURL = "", username = user.username, auids = JSON.parse(window.localStorage.getItem("auids"));
              
               batch.set(doc(Profiles, profileId), { displayName, photoURL, username });
               batch.set(doc(Usernames, user.username), { profileId });
 
-              if (auid) {
-                const stories = await getDocs(query(Stories, where("profileId", "==", auid)));
+              if (auids) {
+                const stories = await getDocsWhereIn(Stories, "profileId", auids);
                 stories.forEach(doc => batch.set(doc.ref, { isAnonymous: deleteField(), profileId, profileDisplayName: displayName, profilePhotoURL: photoURL, profileUsername: username }, { merge: true })) };
               
-              batch.commit().then(() => { if (isAnonymous) { const ls = window.localStorage; ls.removeItem("auid"); ls.removeItem("ascount"); } router.push("/"); }).catch(() => {
+              batch.commit().then(() => { if (isAnonymous) { const ls = window.localStorage; ls.removeItem("auids"); ls.removeItem("ascount"); } router.push("/"); }).catch(() => {
                 // Most likely: FirebaseError: [code=permission-denied]: Missing or insufficient permissions.
                 user.fail(errorMessage({ title: l("user/registration-not-successful/title", USER_ERRORS, locale) }));
                 auth.currentUser.delete();

@@ -3,6 +3,7 @@ import { LoginDialogButton } from 'profile/ProfileMenuButton'
 const LoginDialogButtonStory = {
   component: LoginDialogButton,
   title: 'profile/ProfileMenuButton/LoginDialogButton',
+  argTypes: { user: { control: { disable: true } } }
 }
 
 const Default = args => <LoginDialogButton {...args} />

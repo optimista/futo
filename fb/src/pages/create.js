@@ -15,7 +15,7 @@ const StoryCreatePage = () => {
 
   useEffect(() => { 
     const ls = window.localStorage;
-    if (auth.isReady && !auth.isLoggedIn) signInAnonymously(getAuth()).then(auth => ls.setItem("auid", auth.user.uid));
+    if (auth.isReady && !auth.isLoggedIn) signInAnonymously(getAuth()).then(auth => ls.setItem("auids", JSON.stringify((JSON.parse(ls.getItem("auids")) || []).concat([auth.user.uid]))));
     if (auth.isReady && auth.isLoggedIn && (auth.isAnonymous || auth.profile)) {
       addDoc(Stories, { ...story, profileId: auth.uid, ...(auth.isAnonymous ? { isAnonymous: true } : {}),
         ...(auth.profile ? { profileDisplayName: auth.profile.displayName, profilePhotoURL: auth.profile.photoURL, profileUsername: auth.profile.username } : {}) })
