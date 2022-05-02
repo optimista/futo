@@ -1,3 +1,4 @@
+import { isfunction } from '@futo-ui/utils'
 import { Link } from '@mui/material'
 import PropTypes from 'prop-types'
 
@@ -10,7 +11,7 @@ import { NAMES } from 'core/i18n'
  */
 const Logo = ({ sx, ...props }) => 
   <Link href="/" underline="none">
-    <Avatar alt={NAMES.ccname} src={"/"+NAMES.name+".png"} sx={t => ({ backgroundColor: t.palette.background.default, ...sx })} {...props} />
+    <Avatar alt={NAMES.ccname} src={"/"+NAMES.name+".png"} sx={t => ({ backgroundColor: t.palette.background.default, ...(isfunction(sx) ? sx(t) : sx) })} {...props} />
   </Link>
 
 Logo.propTypes = {

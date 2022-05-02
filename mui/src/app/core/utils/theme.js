@@ -196,7 +196,6 @@ export default createTheme({
     // Menu / Tooltip
     MuiMenuItem: { defaultProps: { dense: true }, styleOverrides: { root: { paddingBottom: theme.spacing(0.5), paddingTop: theme.spacing(0.5) }, dense: { [`& .${listItemIconClasses.root} > svg`]: { height: "1.375rem", width: "1.375rem" } } } },
     MuiPaper: { defaultProps: { variant: "outlined" }, styleOverrides: { rounded: { borderRadius: 2 } } },
-    MuiPopper: { styleOverrides: { root: { zIndex: 1150 } } },
     MuiTooltip: { 
       defaultProps: {
         enterDelay: 500,

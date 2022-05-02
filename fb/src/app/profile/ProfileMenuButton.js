@@ -68,7 +68,7 @@ const ProfileMenuButton = ({ avatar, onLogin }) => {
           {avatar || <ProfileAvatar />}
         </IconButton>
       </Badge>
-      <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end" style={{ zIndex: 1150 }}>
+      <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end">
         <MenuItem component={Link} href="/stories">
           <ListItemIcon>
             <HistoryEdu />
