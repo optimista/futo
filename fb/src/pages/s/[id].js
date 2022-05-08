@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Loading, Logo } from 'core'
 import { FixedLayout } from 'core/layouts'
 import { ProfileMenuButton } from 'profile'
-import { NodeContainer, StoryContainer, useStoryLoad } from 'story/core'
+import { Node, StoryContainer, useStoryLoad } from 'story/core'
 import { Text } from 'story/nodes'
 import { StoreProvider } from 'story/context'
 
@@ -21,9 +21,9 @@ const StoryPage = () => {
         <StoreProvider value={state}>
           <StoryContainer>
             { keys(state.story.nodes).map(key => 
-              <NodeContainer key={key} id={key}>
+              <Node key={key} id={key}>
                 <Text id={key} />
-              </NodeContainer>
+              </Node>
             )}
           </StoryContainer>
         </StoreProvider>

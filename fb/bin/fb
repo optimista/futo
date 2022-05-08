@@ -69,7 +69,6 @@ case $1 in
       cp $dir/src/firestore.rules firestore.rules
       cp $dir/src/storage.rules storage.rules
       sed -i '' "s/projectid/$projectid/" storage.rules
-      firebase deploy
       
       # SERVER SIDE SERVICE ACCOUNT 
       gcloud config set project $projectid
@@ -79,7 +78,7 @@ case $1 in
 
       # CYPRESS INSTALL & CONFIGURATION
       npm install cypress --legacy-peer-deps --save-dev
-      cp $dir/src/cypress.json .
+      cp $dir/src/.gitignore $dir/src/cypress.json .
       cp -r $dir/src/cypress .
       sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
 
@@ -158,6 +157,8 @@ case $1 in
       echo
 
       if ! $base; then
+        firebase deploy
+
         echo 
         echo "(II/II) To finish setting up the fb-demo project we are going to configure create a compound query for the post feed and populate the application with the basic data."
         echo

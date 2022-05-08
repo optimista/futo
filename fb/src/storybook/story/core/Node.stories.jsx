@@ -2,14 +2,14 @@ import { empty } from '@futo-ui/utils'
 import { useEffect } from 'react'
 
 import { DispatchProvider, StoreProvider } from 'story/context'
-import { NodeContainer, useReducer } from 'story/core'
+import { Node, useReducer } from 'story/core'
 import { Text } from 'story/nodes'
 
 import { heightDecorator, transformSource } from 'storybook/story/utils'
 
-const NodeContainerStory = {
-  component: NodeContainer,
-  title: 'story/core/NodeContainer',
+const NodeStory = {
+  component: Node,
+  title: 'story/core/Node',
   decorators: [heightDecorator],
   parameters: { layout: "fullscreen" }
 }
@@ -22,9 +22,9 @@ const Default = args => {
   return empty(state.story.nodes) ? <></> : 
     <DispatchProvider value={dispatch}>
       <StoreProvider value={state}>
-        <NodeContainer {...args}>
+        <Node {...args}>
           <Text id="x1" />
-        </NodeContainer>
+        </Node>
       </StoreProvider>
     </DispatchProvider>
 }
@@ -37,4 +37,4 @@ Default.parameters = {
   docs: { transformSource }
 }
 
-export { NodeContainerStory as default, Default } 
+export { NodeStory as default, Default } 

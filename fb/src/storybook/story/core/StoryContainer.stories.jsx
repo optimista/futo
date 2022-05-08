@@ -2,7 +2,7 @@ import { empty } from '@futo-ui/utils'
 import { useEffect } from 'react'
 
 import { DispatchProvider, StoreProvider } from 'story/context'
-import { NodeContainer, StoryContainer, useReducer } from 'story/core'
+import { Node, StoryContainer, useReducer } from 'story/core'
 import { Text } from 'story/nodes'
 
 import { heightDecorator, transformSource } from 'storybook/story/utils'
@@ -24,9 +24,9 @@ const Default = args => {
     <DispatchProvider value={dispatch}>
       <StoreProvider value={state}>
         <StoryContainer {...args}>
-          <NodeContainer id="x1">
+          <Node id="x1">
             <Text id="x1" />
-          </NodeContainer>
+          </Node>
         </StoryContainer>
       </StoreProvider>
     </DispatchProvider>

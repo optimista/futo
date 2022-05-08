@@ -11,7 +11,7 @@ import { FixedLayout } from 'core/layouts'
 import { I, l, useLocale } from 'core/utils/i18n'
 import { ProfileMenuButton } from 'profile'
 import { Stories } from 'story'
-import { NodeContainer, StoryContainer, useReducer, useStoryLoad } from 'story/core'
+import { Node, StoryContainer, useReducer, useStoryLoad } from 'story/core'
 import { DispatchProvider, StoreProvider, useDispatch, useState } from 'story/context'
 import { Text } from 'story/nodes'
 import { storyPath } from 'story/utils'
@@ -190,9 +190,9 @@ const StoryEditPage = () => {
                 </Alert>
               </Snackbar>
               { keys(state.story.nodes).map(key => 
-                <NodeContainer id={key} key={key}>
+                <Node id={key} key={key}>
                   <TextEditable id={key} />
-                </NodeContainer>
+                </Node>
               )}
             </StoryContainer>
           </StoreProvider>

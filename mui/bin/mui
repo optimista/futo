@@ -50,7 +50,7 @@ case $1 in
       # prepare app folder 
       mkdir app
       npm install path
-      cp $dir/src/next.config.js .
+      cp $dir/src/.gitignore $dir/src/next.config.js .
       
       # install @mui/material
       npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material @mui/lab @mui/material nprogress --legacy-peer-deps 
@@ -63,7 +63,7 @@ case $1 in
 
       # storybook
       cd .. && gl $name && cd $name
-      npm install babel-plugin-import storybook-addon-next-router
+      npm install babel-plugin-import storybook-addon-next-router --legacy-peer-deps
       npm install npm-add-script patch-package --save-dev
       npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
       $dir/exp/storybook-init
