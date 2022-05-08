@@ -59,7 +59,7 @@ export default createTheme({
       variants: [
         {
           props: { variant: "outlined" },
-          style: { borderColor: theme.palette.grey[200], borderRadius: 6, color: theme.palette.text.primary, '& > .MuiAlert-icon': { color: theme.palette.primary.main } }
+          style: { backgroundColor: theme.palette.background.default, borderColor: theme.palette.grey[200], borderRadius: 6, color: theme.palette.text.primary, '& > .MuiAlert-icon': { color: theme.palette.primary.main } }
         },
         {
           props: { variant: "standard" },
@@ -99,7 +99,6 @@ export default createTheme({
     MuiLink: { defaultProps: { component: Link, underline: "hover" } },
     MuiSkeleton: { defaultProps: { animation: "wave" } },
     MuiSnackbar: { defaultProps: { anchorOrigin: { horizontal: "right", vertical: "bottom" }, TransitionComponent: Fade, TransitionProps: { exit: false } }, styleOverrides: {
-      root: { backgroundColor: theme.palette.background.default },
       anchorOriginBottomRight: { bottom: 24, left: "auto", right: 24 }
     }},
     MuiSnackbarContent: { styleOverrides: { root: {
