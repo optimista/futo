@@ -13,13 +13,13 @@ import NEGATIVE from './negative'
 import POSITIVE from './positive'
 
 const createUser = user =>
-  createUserWithEmailAndPassword(getAuth(), user.email, user.password).then(async userCredential => {
+  createUserWithEmailAndPassword(getAuth(), user.email, user.password).then(async ({ user: auth }) => {
     const batch = writeBatch(db()),
-          profileId = userCredential.user.uid;
+          profileId = auth.uid;
           
     batch.set(doc(Profiles, profileId), { ...(user.bio ? { bio: user.bio } : {}), ...(user.displayName ? { displayName: user.displayName } : {}), username: user.username });
     batch.set(doc(Usernames, user.username), { profileId });
-    return batch.commit().then(() => user.photoURL && upload("profiles/"+profileId+"/original", user.photoURL)).then(photoURL => {
+    return batch.commit().then(() => user.photoURL && upload(auth, "profiles/"+profileId+"/original", user.photoURL)).then(photoURL => {
       const batch2 = writeBatch(db());
       if (photoURL) batch2.update(doc(Profiles, profileId), { photoURL });
       if (user.posts) user.posts.forEach(content => {

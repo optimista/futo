@@ -65,7 +65,6 @@ case $1 in
       cd .. && gl $name && cd $name
       npm install babel-plugin-import storybook-addon-next-router --legacy-peer-deps
       npm install npm-add-script patch-package --save-dev
-      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
       $dir/exp/storybook-init
 
       DIFF1=$(diff $dir/latest/.storybook/main.js .storybook/main.js)
@@ -81,9 +80,10 @@ case $1 in
         cp .storybook/preview.js $dir/latest/.storybook/preview.js
       fi
 
+      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
       cp -r $dir/src/.storybook/* .storybook/ # If you move patches to the root, "-r" option is not necessary anymore
       rm -rf stories && cp -r $dir/src/storybook . 
-      npm run postinstall # patching
+      npm run postinstall
 
       $chromatic && chr $name
       
