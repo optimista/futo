@@ -20,7 +20,7 @@ import { Posts, PostDialog, PostFeed, usePostDialog } from 'post'
 import { ProfileAvatar, Profiles, Usernames, useProfileDialog } from 'profile'
 import { AVATAR_IMAGE_TYPES } from 'profile/constants'
 import { Stories } from 'story'
-import { useAuth, userErrorMessage } from 'user'
+import { Authorize, useAuth, userErrorMessage } from 'user'
 import { USER_FIELDS } from 'user/i18n'
 
 const COMMONS = {
@@ -163,11 +163,10 @@ const ProfileDialog = ({ profile, ...props }) => {
             snapshotStories.forEach(doc => batch.delete(doc.ref)); 
             snapshotPosts.forEach(doc => batch.delete(doc.ref)); 
 
-            batch.commit()
+            return batch.commit()
               .then(() => auth.profile.photoURL ? deleteObject(storage(auth.profile.photoURL)) : Promise.resolve())
               .then(() => getAuth().currentUser.delete())
               .then(() => router.push("/"))
-              .catch(err => user.fail(userErrorMessage(err.code, locale)));
           }).catch(err => user.fail(userErrorMessage(err.code, locale)));
         }}),
         deleteDialog = useDialog(user);
@@ -224,15 +223,12 @@ const PROFILE = {
  * - Profile header that includes [`profile/ProfileAvatar`](/docs/profile-profileavatar--default), information and if logged in - options to edit the profile and add a post. 
  */
 const Profile = ({ profileId }) => {
-  const auth = useAuth(),
-        [postDialog, post] = usePostDialog(),
+  const [postDialog, post] = usePostDialog(),
         [profile, setProfile] = useState(null),
         [profileDialog, profileModel] = useProfileDialog(() => profile);
   
   useEffect(() => profileId &&
     onSnapshot(doc(Profiles, profileId), doc => doc.data() && setProfile(doc.data()), () => router.replace("/")), [profileId]);
-
-  const isMyProfile = auth.isLoggedIn && auth.uid === profile?.id;
 
   return (
     <>
@@ -243,12 +239,15 @@ const Profile = ({ profileId }) => {
               <ProfileAvatar ready={Boolean(profile)} src={profile?.photoURL} />
             </AspectRatioBox>
           </Grid>
-          { isMyProfile && <Grid item sx={{ pb: 1, pt: 2 }}>
-            <Badge badgeContent={1} invisible={Boolean(profile.displayName)}>
-              <Button onClick={profileDialog.open} variant="outlined" ><I dict={COMMONS} k="Edit profile" width={90} /></Button>
-            </Badge>
-            <Button onClick={postDialog.open} variant="outlined" sx={{ ml: 2 }}><I dict={PROFILE} k="Add post" width={90} /></Button>
-          </Grid> }
+          <Authorize if={auth => auth.isLoggedIn && auth.uid === profile.id} ready={Boolean(profile)}>
+            <Grid item sx={{ pb: 1, pt: 2 }}>
+              <Badge badgeContent={1} invisible={Boolean(profile?.displayName)}>
+                <Button onClick={profileDialog.open} variant="outlined" ><I dict={COMMONS} k="Edit profile" width={90} /></Button>
+                <ProfileDialog profile={profileModel} open={profileDialog.isOpen} onClose={profileDialog.close} />
+              </Badge>
+              <Button onClick={postDialog.open} variant="outlined" sx={{ ml: 2 }}><I dict={PROFILE} k="Add post" width={90} /></Button>
+            </Grid>
+          </Authorize>
         </Grid>
         <Grid item container xs={12}>
           { (!profile || profile.displayName) && <Grid item xs={12}>
@@ -263,7 +262,6 @@ const Profile = ({ profileId }) => {
         </Grid> }
       </Grid>
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} />
-      { isMyProfile && profileDialog.isOpen && <ProfileDialog profile={profileModel} open={profileDialog.isOpen} onClose={profileDialog.close} /> }
     </>
   )
 };

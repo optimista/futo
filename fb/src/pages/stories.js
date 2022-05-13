@@ -113,7 +113,7 @@ const STORIES_PAGE = {
 const StoriesPage = () => {
   const auth = useAuth();
   return (
-    <Authorize redirect="/">
+    <Authorize if={auth => auth.isLoggedIn} redirect="/">
       <FeedLayout maxWidth="lg">
         <Box sx={{ display: "flex", justifyContent: "space-between", p: t => t.spacing(2, 1, 4, 1) }}>
           <IProvider value={STORIES_PAGE}>

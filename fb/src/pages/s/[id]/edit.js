@@ -1,7 +1,8 @@
+import { useStateRef } from '@futo-ui/hooks'
 import { delay, empty, equal, focus, keys, max, offset } from '@futo-ui/utils'
 import { Alert, Box, Snackbar } from '@mui/material'
 import { refType } from '@mui/utils'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import { Component, createRef, forwardRef, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
@@ -11,7 +12,7 @@ import { FixedLayout } from 'core/layouts'
 import { I, l, useLocale } from 'core/utils/i18n'
 import { ProfileMenuButton } from 'profile'
 import { Stories } from 'story'
-import { Node, StoryContainer, useReducer, useStoryLoad } from 'story/core'
+import { Node, StoryContainer, useReducer } from 'story/core'
 import { DispatchProvider, StoreProvider, useDispatch, useState } from 'story/context'
 import { Text } from 'story/nodes'
 import { storyPath } from 'story/utils'
@@ -151,23 +152,24 @@ const StoryEditPage = () => {
   // Reducer
   const [state, dispatch] = useReducer();
     
-  // Loader
-  useStoryLoad(story => dispatch({ type: "story-load", story }));
-    
   // Autosave
-  const router = useRouter(), { id } = router.query, storyRef = useRef(null), timer = useRef(null);
-  useEffect(() => { storyRef.current = state.story }, [state.story]);
+  const router = useRouter(), { id } = router.query, story = useStateRef(state.story), timer = useRef(null);
   useEffect(() => {
     let ignore = false;
     if (state.autosave.pending) {
       clearTimeout(timer.current);
       timer.current = setTimeout(() => { if (!ignore) {
         dispatch({ type: "autosave-notification-show" });
-        updateDoc(doc(Stories, id), storyRef.current).then(() => !ignore && dispatch({ type: "autosave-success" })).then(() => delay(5000)).then(() => dispatch({ type: "autosave-notification-hide" }))
+        setDoc(doc(Stories, id), { ...story, editedAt: serverTimestamp() }).then(() => !ignore && dispatch({ type: "autosave-success" })).then(() => delay(5000)).then(() => dispatch({ type: "autosave-notification-hide" }))
       }}, 2000); }
     return () => ignore = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.autosave.trigger]);
+  
+  // Loader
+  useEffect(() => { if (id) getDoc(doc(Stories, id)).then(doc => doc.exists() ? dispatch({ type: "story-load", story: doc.data() }) : router.replace("/"), () => router.replace("/"))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
  
   // Handlers
   const handleContainerMouseUp = e => {
@@ -177,10 +179,10 @@ const StoryEditPage = () => {
       dispatch({ type: "caret-focus", key });
     }
   }
-  
+ 
   return (
     <FixedLayout toolbarLeft={<Logo />} toolbarRight={<ProfileMenuButton />}>
-      <Authorize fallback={<Loading />} ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)} uid={state.story.profileId}>
+      <Authorize if={auth => auth.uid === state.story.profileId} fallback={<Loading />} ready={Boolean(state.story.profileId)} redirect={storyPath(state.story)}>
         <DispatchProvider value={dispatch}>
           <StoreProvider value={state}>
             <StoryContainer onMouseUp={handleContainerMouseUp} sx={{ cursor: "pointer" }}>

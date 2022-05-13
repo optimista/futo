@@ -2,7 +2,7 @@ import { filter } from '@futo-ui/utils'
 
 import { useReducer as useReactReducer } from 'react'
 
-const useReducer = () => useReactReducer((state, action) => {
+const useReducer = state => useReactReducer((state, action) => {
   switch(action.type) {
     case "autosave-trigger":
       return { ...state, autosave: { ...state.autosave, pending: true, trigger: !state.autosave.trigger } };
@@ -29,6 +29,6 @@ const useReducer = () => useReactReducer((state, action) => {
     default:
       return state;
   }
-}, { autosave: { notification: false, pending: false, trigger: false }, caret: { key: null, offset: 0, pending: false }, story: { nodes: {}, positions: {}, sx: {} } });
+}, { autosave: { notification: false, pending: false, trigger: false }, caret: { key: null, offset: 0, pending: false }, story: { nodes: {}, positions: {}, sx: {} }, ...state });
 
 export default useReducer;

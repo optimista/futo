@@ -1,5 +1,6 @@
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onIdTokenChanged } from 'firebase/auth'
 import { doc, onSnapshot } from 'firebase/firestore'
+import nookies from 'nookies'
 import PropTypes from 'prop-types'
 import { createContext, useEffect, useState } from 'react'
 
@@ -17,7 +18,10 @@ const AuthProvider = ({ children }) => {
         [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, auth => { setAuth(auth); setIsReady(true); });
+    const unsubscribe = onIdTokenChanged(firebaseAuth, async auth => {
+      setAuth(auth); setIsReady(true);
+      nookies.set(undefined, 'token', auth ? await auth.getIdToken() : "", { path: '/' });
+    });
     return () => unsubscribe();
   }, []);
   

@@ -62,7 +62,7 @@ case $1 in
       # createapp == e.g. "firebase apps:sdkconfig WEB 1:233313016915:web:e6430e12bd463eb6027aa6"
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
-      npm install firebase firebase-admin --legacy-peer-deps # SERVER SIDE HERE TOO
+      npm install firebase firebase-admin nookies --legacy-peer-deps # SERVER SIDE HERE TOO
       cp $dir/src/app/core/utils/*.js app/core/utils/
       $( echo $createapp ) | sed -n '/^  "projectId"/,/^  "messagingSenderId"/p' | sed -i '' '/^const firebase/r /dev/stdin' app/core/utils/firebase.js
       
@@ -74,9 +74,12 @@ case $1 in
       
       # SERVER SIDE SERVICE ACCOUNT 
       gcloud config set project $projectid
+
       iamaccount=$( gcloud iam service-accounts list | grep firebase-adminsdk | sed 's/  */ /g' | cut -d ' ' -f 2 )
       gcloud iam service-accounts keys create /tmp/keys --iam-account=$iamaccount
-      keysbase64="$( cat /tmp/keys | base64 )" # Is used at the ending prompts
+      googleprivatekey=$( cat /tmp/keys | sed -n '/-----BEGIN PRIVATE KEY-----/s/.*"\(-----BEGIN\)/\1/p' | sed -e 's/",$//g' )
+      cat /tmp/keys | sed 's/"-----BEGIN PRIVATE KEY-----.*-----END PRIVATE KEY-----\\n"/process.env.GOOGLE_PRIVATE_KEY/g' | sed -n '/^  "type"/,/^  "client_x509_cert_url"/s/^/  /p' | sed -i '' -e '/^  credential: cert({/r /dev/stdin' -e "s/projectid/$projectid/" app/core/utils/server.js
+      rm -rf /tmp/keys
 
       # CYPRESS INSTALL & CONFIGURATION
       npm install cypress --legacy-peer-deps --save-dev
@@ -122,9 +125,9 @@ case $1 in
       
       url="https://vercel.com/$username/$name/settings/environment-variables"
       echo "(1/3) First, finish configuration for server side firebase, add an environment variable on just opened link $url with following values:"
-      echo "NAME: GOOGLE_APP_CREDENTIALS"
+      echo "NAME: GOOGLE_PRIVATE_KEY"
       echo "VALUE: "
-      echo $keysbase64
+      echo $googleprivatekey
       echo "ENVIRONMENT: Production, Preview, Development"
       open $url
       echo

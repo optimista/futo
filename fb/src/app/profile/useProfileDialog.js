@@ -1,6 +1,6 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
 import { base64, empty } from '@futo-ui/utils'
-import { doc, getDocs, query, where } from 'firebase/firestore'
+import { doc, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
 
 import { createBatch, errorMessage, upload } from 'core/utils'
 import { l, useLocale } from 'core/utils/i18n'
@@ -30,9 +30,9 @@ const useProfileDialog = initProfile => {
             const batch = createBatch(), bio = profile.bio || "", displayName = profile.displayName || "",
                   { displayName: oldDisplayName, initiallyChangedAt, photoURL: oldPhotoURL } = initProfile();
            
-            batch.set(doc(Profiles, profile.id), { bio, displayName, ...(initiallyChangedAt ? {} : { initiallyChangedAt: Date.now() }), ...(photoURL ? { photoURL } : {}) }, { merge: true });
+            batch.set(doc(Profiles, profile.id), { bio, displayName, ...(initiallyChangedAt ? {} : { initiallyChangedAt: serverTimestamp() }), ...(photoURL ? { photoURL } : {}) }, { merge: true });
 
-            if ((empty(oldDisplayName) && empty(initiallyChangedAt) && empty(oldPhotoURL)) || (Date.now() < initiallyChangedAt + 24 * 3600 * 1000)) {
+            if ((empty(oldDisplayName) && empty(initiallyChangedAt) && empty(oldPhotoURL)) || (((empty(oldPhotoURL) && oldPhotoURL !== photoURL) || oldDisplayName !== displayName) && Date.now() < initiallyChangedAt + 24 * 3600 * 1000)) {
               const posts = await getDocs(query(Posts, where("profileId", "==", profile.id))),
                     stories = await getDocs(query(Stories, where("profileId", "==", profile.id)));
 

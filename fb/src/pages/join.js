@@ -62,7 +62,7 @@ const JoinForm = () => {
           },
           onSubmit: () => {
             // Request!
-            const auth = getAuth(), { isAnonymous } = auth.currentUser; 
+            const auth = getAuth(), { isAnonymous } = auth.currentUser || {}; 
             (isAnonymous ? linkWithCredential(auth.currentUser, EmailAuthProvider.credential(user.email, user.password)) : createUserWithEmailAndPassword(auth, user.email, user.password)).then(async (userCredential) => {
               const batch = createBatch(), profileId = userCredential.user.uid,
                     displayName = "", photoURL = "", username = user.username, auids = JSON.parse(window.localStorage.getItem("auids"));

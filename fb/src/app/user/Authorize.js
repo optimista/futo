@@ -1,3 +1,4 @@
+import { isfunction } from '@futo-ui/utils'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
@@ -7,10 +8,10 @@ import { useAuth } from 'user'
 /**
  * - Allows us to redirect if user is not authorized. 
  */
-const Authorize = ({ children, fallback, ready = true, redirect, uid }) => {
-  const auth = useAuth(), router = useRouter(), isAuthorized = uid ? auth.uid === uid : auth.isLoggedIn;
-  useEffect(() => { if (redirect && auth.isReady && ready && !isAuthorized) router.replace(redirect); }, [auth.isLoggedIn, auth.isReady, ready]);
-  return <>{auth.isReady && ready && isAuthorized ? children : (fallback || null)}</>; 
+const Authorize = ({ children, fallback, if: iff = true, ready = true, redirect }) => {
+  const auth = useAuth(), router = useRouter(), isAuthorized = () => isfunction(iff) ? iff(auth) : iff;
+  useEffect(() => { if (redirect && auth.isReady && ready && !isAuthorized()) router.replace(redirect); }, [auth.isLoggedIn, auth.isReady, ready]);
+  return <>{auth.isReady && ready && isAuthorized() ? children : (fallback || null)}</>; 
 }
 
 Authorize.propTypes = {
@@ -23,6 +24,11 @@ Authorize.propTypes = {
    * Contents which will display while we are authorizing (fetching all data to authorize) 
    */
   fallback: PropTypes.node,
+  
+  /**
+   * A boolean value or a function that returns a boolean which determines whether the viewer is authorized or not.
+   */
+  if: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
 
   /**
    * Determines whether we are ready to check if user is authorized. Usually allows us to wait for all necessary information to fetch before making a decision. 
@@ -34,11 +40,6 @@ Authorize.propTypes = {
    * URL to which we redirect if user is not authorized. 
    */ 
   redirect: PropTypes.string,
-
-  /**
-   * Optional identifier that determines that the user has to be of the same identifier in order to be authorized. Without it, being logged in is enough.
-   */
-  uid: PropTypes.string,
 };
 
 export default Authorize;

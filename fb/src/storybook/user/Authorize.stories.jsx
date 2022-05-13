@@ -9,7 +9,8 @@ const AuthorizeStory = {
   title: 'user/Authorize',
   argTypes: { 
     children: { control: { type: "text" } },
-    fallback: { control: { disable: true } }
+    fallback: { control: { disable: true } },
+    if: { control: { type: "boolean" } },
   },
   decorators: [
     withReactContext({
@@ -19,19 +20,26 @@ const AuthorizeStory = {
   ],
 }
 
-const Default = args => <Authorize {...args} />
+const Default = (args, ctx) => { ctx.originalStoryFn.currentArgs = args; return <Authorize {...args} /> }
+const Auth = Default.bind({});
 const Fallback = Default.bind({});
 
 Default.args = {
   children: "Authorized",
-  uid: "defaultProfileId"
+  if: true 
 }
 
 Default.parameters = {
-  nextRouter: {
-    replace: pathname => window.parent.location.href = pathname 
-  }
+  docs: { transformSource: (src, ctx) => src.replace(">", ctx.originalStoryFn.currentArgs.if ? "={true}>" : " if={false}>") },
+  nextRouter: { replace: pathname => window.parent.location.href = pathname }
 }
+
+Auth.args = {
+  children: "Authorized",
+  if: auth => auth.uid === "defaultProfileId"
+}
+
+Auth.parameters = { docs: { transformSource: src => src.replace("() => {}", "auth => auth.uid === \"defaultProfileId\"") } }
 
 Fallback.args = {
   fallback: <Loading />,
@@ -40,4 +48,4 @@ Fallback.args = {
 
 Fallback.parameters = { docs: { transformSource: src => src.replace(/\/>}\n/g, "\/>}\n  ready={false}\n") } }
 
-export { AuthorizeStory as default, Default, Fallback } 
+export { AuthorizeStory as default, Default, Auth, Fallback } 
