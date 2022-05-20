@@ -1,5 +1,4 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
-import { pct } from '@futo-ui/utils'
 import { PhotoCamera } from '@mui/icons-material'
 import { Badge, Box, Button, Dialog, Grid, Skeleton, Typography } from '@mui/material'
 import { EmailAuthProvider, getAuth, reauthenticateWithCredential } from 'firebase/auth'
@@ -10,7 +9,7 @@ import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 
-import { IconButton, ImageInput } from 'core'
+import { AspectRatioBox, IconButton, ImageInput } from 'core'
 import { Field, Form, Submit, useForm } from 'core/form'
 import { ACTIONS, NAMES } from 'core/i18n'
 import { FeedLayout } from 'core/layouts'
@@ -20,7 +19,7 @@ import { Posts, PostDialog, PostFeed, usePostDialog } from 'post'
 import { ProfileAvatar, Profiles, Usernames, useProfileDialog } from 'profile'
 import { AVATAR_IMAGE_TYPES } from 'profile/constants'
 import { Stories } from 'story'
-import { Authorize, useAuth, userErrorMessage } from 'user'
+import { useAuth, userErrorMessage } from 'user'
 import { USER_FIELDS } from 'user/i18n'
 
 const COMMONS = {
@@ -31,30 +30,6 @@ const COMMONS = {
     "Edit profile": "Editar perfil",
   }
 }
-
-/**
- * - Preserves [`@mui/Box`](https://mui.com/api/box) ratio within given dimensional constraint.
- */
-const AspectRatioBox = ({ children, ratio = 1 }) =>
-  <Box sx={{ position: "relative" }}> 
-    <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, '& > *:not([role="tooltip"])': { height: "100%", maxHeight: "none", maxWidth: "none", width: "100%" } }}>
-      {children}
-    </Box>
-    <Box sx={{ paddingBottom: pct(1/ratio) }} />
-  </Box>
-
-AspectRatioBox.propTypes = {
-  /**
-   * The content of the component. 
-   */
-  children: PropTypes.node,
-
-  /**
-   * The width-to-height ratio of the [`@mui/Box`](https://mui.com/api/box).
-   * @default 1
-   */
-  ratio: PropTypes.number,
-};
 
 /**
  * - Integrates [`core/ImageInput`](/docs/core-imageinput--default) within [`core/form/Form`](/docs/core-form-form--default) model. 
@@ -210,6 +185,8 @@ ProfileDialog.propTypes = {
   profile: PropTypes.object,
 };
 
+const profileAuthorized = (profile, uid) => profile && profile.id === uid;
+
 const PROFILE = {
   "en": {
     "Add post": "Add post"
@@ -223,8 +200,7 @@ const PROFILE = {
  * - Profile header that includes [`profile/ProfileAvatar`](/docs/profile-profileavatar--default), information and if logged in - options to edit the profile and add a post. 
  */
 const Profile = ({ profileId }) => {
-  const [postDialog, post] = usePostDialog(),
-        [profile, setProfile] = useState(null),
+  const auth = useAuth(), [postDialog, post] = usePostDialog(), [profile, setProfile] = useState(null),
         [profileDialog, profileModel] = useProfileDialog(() => profile);
   
   useEffect(() => profileId &&
@@ -239,15 +215,13 @@ const Profile = ({ profileId }) => {
               <ProfileAvatar ready={Boolean(profile)} src={profile?.photoURL} />
             </AspectRatioBox>
           </Grid>
-          <Authorize if={auth => auth.isLoggedIn && auth.uid === profile.id} ready={Boolean(profile)}>
-            <Grid item sx={{ pb: 1, pt: 2 }}>
-              <Badge badgeContent={1} invisible={Boolean(profile?.displayName)}>
-                <Button onClick={profileDialog.open} variant="outlined" ><I dict={COMMONS} k="Edit profile" width={90} /></Button>
-                <ProfileDialog profile={profileModel} open={profileDialog.isOpen} onClose={profileDialog.close} />
-              </Badge>
-              <Button onClick={postDialog.open} variant="outlined" sx={{ ml: 2 }}><I dict={PROFILE} k="Add post" width={90} /></Button>
-            </Grid>
-          </Authorize>
+          { profileAuthorized(profile, auth.uid) && <Grid item sx={{ pb: 1, pt: 2 }}>
+            <Badge badgeContent={1} invisible={Boolean(profile?.displayName)}>
+              <Button onClick={profileDialog.open} variant="outlined" ><I dict={COMMONS} k="Edit profile" width={90} /></Button>
+              <ProfileDialog profile={profileModel} open={profileDialog.isOpen} onClose={profileDialog.close} />
+            </Badge>
+            <Button onClick={postDialog.open} variant="outlined" sx={{ ml: 2 }}><I dict={PROFILE} k="Add post" width={90} /></Button>
+          </Grid> }
         </Grid>
         <Grid item container xs={12}>
           { (!profile || profile.displayName) && <Grid item xs={12}>
@@ -349,7 +323,7 @@ const getStaticPaths = async () => {
   }
 }
 
-export { ProfilePage as default, AspectRatioBox, ImageField, Profile, ProfileDeleteDialog, ProfileDialog, getStaticPaths, getStaticProps };
+export { ProfilePage as default, ImageField, Profile, ProfileDeleteDialog, ProfileDialog, getStaticPaths, getStaticProps };
 
 /*
  * PURELY CLIENT-SIDE PAGE

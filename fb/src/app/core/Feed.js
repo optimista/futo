@@ -1,6 +1,5 @@
 import { useInfiniteScroll, useMounted } from '@futo-ui/hooks'
 import { last } from '@futo-ui/utils'
-import { Box } from '@mui/material'
 import { endAt, getDocs, limit, onSnapshot, orderBy, query, startAfter, where } from 'firebase/firestore'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
@@ -46,15 +45,15 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
   }, [fetching, ready]);
 
   return (
-    <Box sx={{ "& > .MuiCard-root": t => ({ borderTop: "1px solid "+t.palette.divider, '&:last-of-type': { borderBottom: "1px solid "+t.palette.divider } }) }}>
-      { batches.map(batch => batch.map(item => <Item key={item.id} item={item} />)) }
+    <>
+      { batches.map(batch => batch.map(doc => Item(doc, doc.id))) }
       
       {/* Additional two Item Skeletons for initial load (together = 3) */}
-      { fetching && batches.length === 0 && (new Array(3-1)).fill().map((_, i) => <Item key={"p"+i} />) }
+      { fetching && batches.length === 0 && (new Array(3-1)).fill().map((_, i) => Item(_, "s" + i)) }
       
       {/* Single Card skeleton for fetching */}
-      { fetching && <Item /> } 
-    </Box>
+      { fetching && Item(undefined, "x") } 
+    </>
   )
 }
 
@@ -63,12 +62,12 @@ Feed.propTypes = {
    * The content / value of the `contenteditable` element.
    */
   collection: PropTypes.object.isRequired, 
-  
+
   /**
-   * The component used for a single item in the feed.
-   * @default ({ item }) => null 
+   * The function that returns component used for a single item in the feed.
+   * @default (item, key) => null
    */
-  Item: PropTypes.elementType.isRequired,
+  Item: PropTypes.func.isRequired,
 
   /**
    * Optional foreign key that can filter items which belongs to a given user / profile.

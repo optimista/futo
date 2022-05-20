@@ -1,0 +1,43 @@
+diff --git a/node_modules/@mui/material/Container/Container.js b/node_modules/@mui/material/Container/Container.js
+index 98386f4..55983c6 100644
+--- a/node_modules/@mui/material/Container/Container.js
++++ b/node_modules/@mui/material/Container/Container.js
+@@ -1,10 +1,11 @@
+ /* eslint-disable material-ui/mui-name-matches-component-name */
+ import PropTypes from 'prop-types';
++import * as React from 'react';
+ import { createContainer } from '@mui/system';
+ import capitalize from '../utils/capitalize';
+ import styled from '../styles/styled';
+ import useThemeProps from '../styles/useThemeProps';
+-const Container = createContainer({
++const ContainerRoot = createContainer({
+   createStyledComponent: styled('div', {
+     name: 'MuiContainer',
+     slot: 'Root',
+@@ -20,6 +21,7 @@ const Container = createContainer({
+     name: 'MuiContainer'
+   })
+ });
++const Container = props => React.createElement(ContainerRoot, props);
+ process.env.NODE_ENV !== "production" ? Container.propTypes
+ /* remove-proptypes */
+ = {
+diff --git a/node_modules/@mui/material/CssBaseline/CssBaseline.js b/node_modules/@mui/material/CssBaseline/CssBaseline.js
+index b660b79..281a9e6 100644
+--- a/node_modules/@mui/material/CssBaseline/CssBaseline.js
++++ b/node_modules/@mui/material/CssBaseline/CssBaseline.js
+@@ -69,11 +69,11 @@ function CssBaseline(inProps) {
+     children,
+     enableColorScheme = false
+   } = props;
+-  return /*#__PURE__*/_jsxs(React.Fragment, {
++  return React.createElement(React.Fragment, { children: _jsxs(React.Fragment, {
+     children: [/*#__PURE__*/_jsx(GlobalStyles, {
+       styles: theme => styles(theme, enableColorScheme)
+     }), children]
+-  });
++  }) });
+ }
+ 
+ process.env.NODE_ENV !== "production" ? CssBaseline.propTypes

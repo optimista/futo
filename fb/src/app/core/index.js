@@ -1,3 +1,4 @@
+export { default as AspectRatioBox } from './AspectRatioBox'
 export { default as Avatar } from './Avatar'
 export { default as Feed } from './Feed'
 export { default as IconButton } from './IconButton'

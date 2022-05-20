@@ -1,12 +1,15 @@
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 
-import { StoryCard } from 'pages/stories'
+import { StoryCard } from 'story/StoryFeed'
 import { Stories } from 'story'
+
+import { centerDecorator } from 'storybook/utils'
 
 const StoryCardStory = {
   component: StoryCard,
-  title: 'pages/stories/StoryFeed/StoryCard',
+  title: 'story/StoryFeed/StoryCard',
   argTypes: { story: { control: { type: null } } },
+  decorators: [centerDecorator()],
   parameters: { layout: "padded" }
 }
 

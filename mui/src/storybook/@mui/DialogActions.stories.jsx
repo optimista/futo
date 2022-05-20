@@ -1,5 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 
+import { centerDecorator } from 'storybook/utils'
+
 DialogActions.__docgenInfo.description = "- For more see: [`DialogActions`](https://mui.com/api/dialog-actions)\n- We use only following props:"
 
 const DialogActionsStory = {
@@ -11,6 +13,7 @@ const DialogActionsStory = {
     disableSpacing: { table: { disable: true } },
     sx: { table: { disable: true } },
   },
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 

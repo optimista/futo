@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { forwardRef } from 'react'
 
 import { Avatar } from 'core'
 import { useAuth } from 'user'
@@ -7,11 +8,11 @@ import { useAuth } from 'user'
  * - If `src` not given, fetches & shows the [`core/Avatar`](/docs/core-avatar--default) of currently logged in user.
  * - Props of the [`core/Avatar`](/docs/core-avatar--default) are also available.
  */
-const ProfileAvatar = ({ src = null, ...props }) => {
+const ProfileAvatar = forwardRef(({ src = null, ...props }, ref) => {
   const auth = useAuth();
   if (src !== null) return <Avatar src={src} {...props} />;
-  return <Avatar ready={Boolean(auth.profile)} src={auth.profile?.photoURL} {...props} />
-}
+  return <Avatar ready={Boolean(auth.profile)} ref={ref} src={auth.profile?.photoURL} {...props} />
+})
 
 ProfileAvatar.propTypes = {
   /**

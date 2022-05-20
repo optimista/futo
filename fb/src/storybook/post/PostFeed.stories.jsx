@@ -1,8 +1,11 @@
 import { PostFeed } from 'post'
 
+import { centerDecorator } from 'storybook/utils'
+
 const PostFeedStory = {
   component: PostFeed,
   title: 'post/PostFeed',
+  decorators: [centerDecorator()],
   parameters: { layout: "padded" }
 }
 

@@ -2,7 +2,7 @@ import { Button, Toolbar, Typography } from '@mui/material'
 
 import { NAMES } from 'core/i18n'
 
-import AppBarStory from './AppBar.stories'
+import { centerDecorator } from 'storybook/utils'
 
 Toolbar.__docgenInfo.description = "- For more see: [`Toolbar`](https://mui.com/api/toolbar)\n- We use only following props:"
 
@@ -17,8 +17,8 @@ const ToolbarStory = {
     sx: { table: { disable: true } },
     variant: { table: { disable: true } }
   },
-  decorators: AppBarStory.decorators,
-  parameters: AppBarStory.parameters,
+  decorators: [centerDecorator()],
+  parameters: { layout: "padded" }
 }
 
 const Default = ({ children, ...args }) =>

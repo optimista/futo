@@ -1,12 +1,13 @@
 import { withReactContext } from 'storybook-react-context'
 
 import { Loading } from 'core'
-import { Authorize } from 'user'
 import { AuthContext } from 'user/AuthProvider'
+
+import { Authorize } from 'pages/s/[id]/edit'
 
 const AuthorizeStory = {
   component: Authorize,
-  title: 'user/Authorize',
+  title: 'pages/s/[id]/edit/Authorize',
   argTypes: { 
     children: { control: { type: "text" } },
     fallback: { control: { disable: true } },

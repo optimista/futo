@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
-import { doc, writeBatch } from 'firebase/firestore'
+import { doc, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
 import { Loading } from 'core'
@@ -26,7 +26,7 @@ const createUser = user =>
         batch2.set(doc(Posts), { content, profileDisplayName: user.displayName, profileId: profileId, ...(photoURL ? { profilePhotoURL: photoURL } : {}), profileUsername: user.username });
       })
       if (user.stories) user.stories.forEach((id, i) => {
-        batch2.set(doc(Stories, id), { nodes: { "1n": { content: "Story #"+(i+1) }, "2n": { content: "Description #"+i } }, positions: { "1n": { x: 250, y: 80 }, "2n": { x: 300, y: 138 } }, profileId: profileId });
+        batch2.set(doc(Stories, id), { nodes: { "1n": { content: "Story #"+(i+1) }, "2n": { content: "Description #"+i } }, positions: { "1n": { x: 250, y: 80 }, "2n": { x: 300, y: 138 } }, editedAt: serverTimestamp(), profileId: profileId });
       })
       return batch2.commit();
     });

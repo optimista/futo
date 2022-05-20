@@ -3,6 +3,7 @@ import { useModel } from '@futo-ui/hooks'
 import { LoginForm } from 'user'
 
 import { focusLayoutDecorator } from 'storybook/utils'
+import { transformSourceUser } from 'storybook/user/utils'
 
 const LoginFormStory = {
   component: LoginForm,
@@ -13,7 +14,7 @@ const LoginFormStory = {
 }
 
 const Default = args => {
-  const user = useModel({ photoURL: "" });
+  const user = useModel();
   return <LoginForm {...args} user={user} />
 }
 
@@ -21,7 +22,7 @@ Default.parameters = {
   docs: {
     iframeHeight: 760,
     inlineStories: false,
-    transformSource: src => src.replace(/[\s]*user={{[\s\S]*?}}[\s]*/g, " user={user} "), 
+    transformSource: transformSourceUser
   }
 }
 

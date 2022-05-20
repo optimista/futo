@@ -1,9 +1,8 @@
-import { StoryFeed } from 'pages/stories'
+import { StoryFeed } from 'story'
 
 const StoryFeedStory = {
   component: StoryFeed,
-  title: 'pages/stories/StoryFeed',
-  parameters: { layout: "padded" }
+  title: 'story/StoryFeed',
 }
 
 const Default = args => <StoryFeed {...args} />

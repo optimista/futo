@@ -31,7 +31,7 @@ const PostCard = ({ post, onEdit }) => {
   const handleRemove = () => { menu.close(); deleteDoc(doc(Posts, post.id)); }
 
   return (
-    <PostCardLayout
+    <PostCardLayout sx={t => ({ borderTop: "1px solid "+t.palette.divider, '&:last-of-type': { borderBottom: "1px solid "+t.palette.divider } })}
       action={
         auth.isLoggedIn && post?.profileId === auth.uid && <>
           <IconButton color="secondary" onClick={menu.open} TooltipProps={{ hide: menu.isOpen, title: l("More", GENERAL, locale) }}>
@@ -93,8 +93,7 @@ const PostFeed = props => {
 
   return (
     <>
-      <Feed collection={Posts} Item={({ item, ...props }) => <PostCard onEdit={handleEdit(item)} post={item} {...props} />}
-            sx={{ maxWidth: 600, minWidth: 400 }} {...props} />
+      <Feed collection={Posts} Item={(post, key) => <PostCard key={key} onEdit={handleEdit(post)} post={post} />} sx={{ maxWidth: 600, minWidth: 400 }} {...props} />
       <PostDialog post={post} open={postDialog.isOpen} onClose={postDialog.close} /> 
     </>
   )

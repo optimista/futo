@@ -1,8 +1,8 @@
-import { AspectRatioBox } from 'pages/[username]'
+import { AspectRatioBox } from 'core'
 
 const AspectRatioBoxStory = {
   component: AspectRatioBox,
-  title: 'pages/[username]/AspectRatioBox',
+  title: 'core/AspectRatioBox',
   args: { children: <div style={{ backgroundColor: "rgba(0, 0, 0, 0.11)" }} /> },
   argTypes: { children: { control: { type: null } } },
   decorators: [ Story => <div style={{ width: 200 }}><Story /></div> ]

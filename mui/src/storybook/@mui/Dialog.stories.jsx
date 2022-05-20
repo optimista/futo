@@ -2,6 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { dialog, radio } from './utils'
 
+import { centerDecorator } from 'storybook/utils'
+
 Dialog.__docgenInfo.description = "- For more see: [`Dialog`](https://mui.com/api/dialog)\n- We use only following props:"
 
 const DialogStory = {
@@ -30,6 +32,7 @@ const DialogStory = {
     transitionDuration: { table: { disable: true } },
     TransitionProps: { table: { disable: true } },
   },
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 

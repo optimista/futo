@@ -1,5 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material'
 
+import { centerDecorator } from 'storybook/utils'
+
 DialogTitle.__docgenInfo.description = "- For more see: [`DialogTitle`](https://mui.com/api/dialog-title)\n- We use only following props:"
 
 const DialogTitleStory = {
@@ -10,6 +12,7 @@ const DialogTitleStory = {
     classes: { table: { disable: true } },
     sx: { table: { disable: true } },
   },
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 
