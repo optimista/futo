@@ -7,7 +7,7 @@ expect {
     send "y\r";
     exp_continue
   }
-  -re "\\?.*Do you want to run the.*eslintPlugin.*fix on your project\\?.*" {
+  -re "\\?.*Do you want to run the.*eslintPlugin.*migration on your project\\?.*" {
     send "y\r";
   }
 }
