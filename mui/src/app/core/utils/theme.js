@@ -4,8 +4,8 @@ import { alpha, createTheme, darken, lighten } from '@mui/material/styles';
 import NextLink from 'next/link'
 import { forwardRef } from 'react'
 
-const Link = forwardRef(({ className, children, ...props }, _) =>
-  <NextLink {...props}><a className={className}>{children}</a></NextLink>);
+const Link = forwardRef(({ className, children, target, ...props }, _) =>
+  <NextLink {...props}><a className={className} target={target}>{children}</a></NextLink>);
 
 const theme = createTheme({
   palette: {
@@ -199,7 +199,6 @@ export default createTheme({
       defaultProps: {
         enterDelay: 500,
         enterNextDelay: 500,
-        PopperProps: { disablePortal: true },
         TransitionComponent: Fade
       },
       styleOverrides: {

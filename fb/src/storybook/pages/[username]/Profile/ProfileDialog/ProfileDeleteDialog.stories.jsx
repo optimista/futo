@@ -3,10 +3,13 @@ import { useModel } from '@futo-ui/hooks'
 import { ProfileDeleteDialog } from 'pages/[username]'
 import { dialog } from 'storybook/@mui/utils'
 
+import { centerDecorator } from 'storybook/utils'
+
 const ProfileDeleteDialogStory = {
   component: ProfileDeleteDialog,
   title: 'pages/[username]/Profile/ProfileDialog/ProfileDeleteDialog',
   argTypes: { user: { control: { type: null } } },
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 

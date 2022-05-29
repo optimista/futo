@@ -3,10 +3,13 @@ import { useModel } from '@futo-ui/hooks'
 import { ProfileDialog } from 'pages/[username]'
 import { dialog } from 'storybook/@mui/utils'
 
+import { centerDecorator } from 'storybook/utils'
+
 const ProfileDialogStory = {
   component: ProfileDialog,
   title: 'pages/[username]/Profile/ProfileDialog',
   argTypes: { profile: { control: { type: null } } },
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 

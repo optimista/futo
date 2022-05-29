@@ -3,10 +3,12 @@ import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 import { Profile } from 'pages/[username]'
 import { Profiles } from 'profile'
 
+import { centerDecorator } from 'storybook/utils'
+
 const ProfileStory = {
   component: Profile,
   title: 'pages/[username]/Profile',
-  decorators: [Story => <div style={{ margin: "auto", width: 700 }}><Story /></div>],
+  decorators: [centerDecorator()],
   parameters: { layout: "fullscreen" }
 }
 
@@ -24,7 +26,7 @@ Default.loaders = [
 // Patch for loaders (see: https://github.com/storybookjs/storybook/issues/12726)
 Default.parameters = {
   docs: {
-    iframeHeight: 358,
+    iframeHeight: 420,
     inlineStories: false,
   }
 }
