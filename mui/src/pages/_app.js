@@ -13,17 +13,12 @@ import { LocaleProvider } from 'core/utils/i18n'
 
 import '../styles/nprogress.css'
 
-const clientSideEmotionCache = createCache({ key: 'css' });
+const clientSideEmotionCache = createCache({ key: 'css', prepend: true });
 
 NProgress.configure({ showSpinner: false });
 
 const MyApp = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props, router = useRouter();
-
-  React.useEffect(() => {
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles) jssStyles.parentElement.removeChild(jssStyles);
-  }, []);
 
   React.useEffect(() => {
     const handleRouteChange = (_, { shallow }) => !shallow && NProgress.start();

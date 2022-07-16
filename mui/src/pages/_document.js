@@ -5,7 +5,7 @@ import createEmotionServer from '@emotion/server/create-instance';
 
 import { theme } from 'core/utils';
 
-const createEmotionCache = () => createCache({ key: 'css' });
+const createEmotionCache = () => createCache({ key: 'css', prepend: true });
 
 class MyDocument extends Document {
   render() {
@@ -14,6 +14,7 @@ class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
+          <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
