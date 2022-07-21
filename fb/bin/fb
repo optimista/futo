@@ -7,7 +7,7 @@ case $1 in
     name=$2
     
     if projectid=$( projectid $name ); then
-      url="https://console.firebase.google.com/project/$projectid/settings/general"
+      url="https://console.firebase.google.com/u/0/project/$projectid/settings/general"
       open $url
       echo "\n // FIREBASE REMOVAL"
       echo "To delete project on firebase go to your browser and newly opened link $url and click on \"Delete project\" in the absolute bottom of the page"
