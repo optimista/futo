@@ -12,8 +12,8 @@ const Default = args => {
   const [render, setRender] = useState(false);
   useEffect(() => {
     const ls = window.localStorage;
-    ls.setItem("auid", "storybook"); ls.setItem("ascount", 2);
-    setRender(true); return () => { ls.removeItem("auid"); ls.removeItem("ascount"); }
+    ls.setItem("auids", "storybook"); ls.setItem("ascount", 2);
+    setRender(true); return () => { ls.removeItem("auids"); ls.removeItem("ascount"); }
   }, []);
   return render ? <SnackbarPendingStories {...args} /> : <></>; // in case you have args, try to use Box instead of <></>
 }

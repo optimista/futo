@@ -16,9 +16,10 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
         listeners = useRef([]),
         mounted = useMounted();
  
-  useEffect(() => () => listeners.current.map(l => l()), []);
+  useEffect(() => () => listeners.current.map(l => l()), []); // reactStrictMode safe
 
   useEffect(() => {
+    let unsubscribed = false;
     if (ready) {
       if (!fetching) return;
       const l = batches.length, batch = last(batches) || [];
@@ -27,9 +28,9 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
       if (profileId !== undefined) q = query(q, where("profileId", "==", profileId));  
       q = query(q, orderBy(sortBy, "desc"));
       if (0 < l) q = query(q, startAfter(last(batch)[sortBy]));
-           
-      getDocs(query(q, limit(BATCH_LIMIT))).then(snapshot => {
-        if (mounted.current) { // prevent setting the state when component has been unmounted
+          
+      !unsubscribed && getDocs(query(q, limit(BATCH_LIMIT))).then(snapshot => {
+        if (mounted.current && !unsubscribed) { // prevent setting the state when component has been unmounted + prevent second initial fetch (reactStrictMode)
           const items = snapshot.docs.map(doc => doc.data());
           setBatches(bs => bs.concat([items]));
           const unsubscribe = onSnapshot(query(q, endAt(last(items)?.[sortBy] || new Date())), snapshot => {
@@ -42,6 +43,7 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
         }
       });
     }
+    return () => { unsubscribed = true; }
   }, [fetching, ready]);
 
   return (

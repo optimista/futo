@@ -20,7 +20,7 @@ const SNACKBAR_PENDING_STORIES = {
  */
 const SnackbarPendingStories = () => {
   const [isOpen, setIsOpen] = useState(false), anonymousStoriesCount = useAnonymousStoriesCount();
-  useEffect(() => setIsOpen(Boolean(window.localStorage.getItem("auid"))), []);
+  useEffect(() => setIsOpen(Boolean(window.localStorage.getItem("auids"))), []);
  
   return (
     <IProvider value={SNACKBAR_PENDING_STORIES}>
