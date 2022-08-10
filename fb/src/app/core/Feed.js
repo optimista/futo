@@ -13,22 +13,21 @@ const BATCH_LIMIT = 20;
 const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy = "timestamp" }) => {
   const [batches, setBatches] = useState([]),
         [fetching, setFetching, setHasMore] = useInfiniteScroll({ fetching: true, hasMore: true }),
-        initial = useRef(false), // reactStrictMode
+        isInitial = useRef(true), // reactStrictMode
         listeners = useRef([]),
         mounted = useMounted();
- 
-  useEffect(() => () => listeners.current.map(l => l()), []);
 
+  useEffect(() => () => { listeners.current.map(l => l()); listeners.current = []; }, []);
   useEffect(() => {
     if (ready) {
       if (!fetching) return;
       const l = batches.length, batch = last(batches) || [];
-  
+ 
       let q = collection;
       if (profileId !== undefined) q = query(q, where("profileId", "==", profileId));  
       q = query(q, orderBy(sortBy, "desc"));
-      if (0 < l) { q = query(q, startAfter(last(batch).doc)); } else { if (initial.current) return; } // reactStrictMode
-         
+      if (0 < l) { q = query(q, startAfter(last(batch).doc)); } else { if (!isInitial.current) return; } // reactStrictMode
+
       getDocs(query(q, limit(BATCH_LIMIT))).then(snapshot => {
         if (mounted.current) { // prevent setting the state when component has been unmounted
           if (0 < snapshot.docs.length) {
@@ -44,8 +43,8 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
           setFetching(false);
         }
       });
+      return () => { isInitial.current = false; } // reactStrictMode
     }
-    return () => { initial.current = true; } // reactStrictMode
   }, [fetching, ready]);
 
   return (
