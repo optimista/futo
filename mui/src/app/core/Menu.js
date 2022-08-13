@@ -13,7 +13,7 @@ const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open, pla
   const [arrowMargin, setArrowMargin] = useState(null);
 
   // To prevent any flickers (before offsetWidth is received)
-  useEffect(() => anchorEl?.offsetWidth && setArrowMargin(anchorEl?.offsetWidth / 2 - ARROW_WIDTH), [anchorEl?.offsetWidth]);
+  useEffect(() => { anchorEl?.offsetWidth && setArrowMargin(anchorEl?.offsetWidth / 2 - ARROW_WIDTH) }, [anchorEl?.offsetWidth]);
 
   return (
     <Popper open={open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
