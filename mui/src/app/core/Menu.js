@@ -16,7 +16,7 @@ const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open, pla
   useEffect(() => { anchorEl?.offsetWidth && setArrowMargin(anchorEl?.offsetWidth / 2 - ARROW_WIDTH) }, [anchorEl?.offsetWidth]);
 
   return (
-    <Popper open={open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
+    <Popper open={Boolean(document.body.contains(anchorEl)) && open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
           <Paper sx={{
