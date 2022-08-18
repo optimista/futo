@@ -26,7 +26,7 @@ const time = date => {
 
   if (0 < s) return s + "s";
 
-  return "Now";
+  return;
 }
 
 const timestamp = date => date.getTime();

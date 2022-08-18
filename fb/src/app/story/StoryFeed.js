@@ -13,14 +13,14 @@ import { storyAuthorized, storyPath, storyEditPath, storyTitle, storyDesc } from
 import { useAuth } from 'user'
 
 const STORY_CARD = {
-  lastEdited: ({ editedAtTime, nodes }, lastEditedStr, nodesStr) => lastEditedStr + ": " + editedAtTime + " · " + keys(nodes).length + " " + nodesStr,
+  lastEdited: ({ editedAtTime, nodes }, lastEditedStr, nodesStr, now) => lastEditedStr + ": " + editedAtTime || now + " · " + keys(nodes).length + " " + nodesStr,
   "en": {
-    "Last edited": story => STORY_CARD.lastEdited(story, "Last edited", "nodes"),
+    "Last edited": story => STORY_CARD.lastEdited(story, "Last edited", "nodes", "Now"),
     "Edit story": "Edit story",
     "Remove story": "Remove story"
   },
   "es": {
-    "Last edited": story => STORY_CARD.lastEdited(story, "Última modificación", "nodos"),
+    "Last edited": story => STORY_CARD.lastEdited(story, "Última modificación", "nodos", "Ahora"),
     "Edit story": "Editar historia",
     "Remove story": "Eliminar historia"
   }
