@@ -11,7 +11,7 @@ import { forwardRef } from 'react'
 const Avatar = forwardRef(({ ready = true, src, ...props }, ref) => {
   const emptyAvatar = <MuiAvatar ref={ref} {...props} />;
   if (!ready) return <Skeleton variant="circular">{emptyAvatar}</Skeleton>;
-  return empty(src) ? emptyAvatar : <MuiAvatar ref={ref} {...props}><Image layout="fill" priority src={src} /></MuiAvatar>;
+  return empty(src) ? emptyAvatar : <MuiAvatar ref={ref} {...props}><Image layout="fill" objectFit="cover" priority src={src} /></MuiAvatar>;
 })
 
 Avatar.propTypes = {
