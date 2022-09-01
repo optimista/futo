@@ -1,5 +1,5 @@
 import { useInfiniteScroll, useMounted } from '@futo-ui/hooks'
-import { last } from '@futo-ui/utils'
+import { arrayize, last } from '@futo-ui/utils'
 import { endAt, getDocs, limit, onSnapshot, orderBy, query, startAfter, where } from 'firebase/firestore'
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
@@ -11,11 +11,8 @@ const BATCH_LIMIT = 20;
  * - Integrates infinite scrolling & realtime firestore updates.
  */
 const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy = "timestamp" }) => {
-  const [batches, setBatches] = useState([]),
-        [fetching, setFetching, setHasMore] = useInfiniteScroll({ fetching: true, hasMore: true }),
-        isInitial = useRef(true), // reactStrictMode
-        listeners = useRef([]),
-        mounted = useMounted();
+  const [batches, setBatches] = useState([]), [fetching, setFetching, setHasMore] = useInfiniteScroll({ fetching: true, hasMore: true }),
+        isInitial = useRef(true), listeners = useRef([]), mounted = useMounted(); sortBy = arrayize(sortBy);
 
   useEffect(() => () => { listeners.current.map(l => l()); listeners.current = []; }, []);
   useEffect(() => {
@@ -25,7 +22,7 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
  
       let q = collection;
       if (profileId !== undefined) q = query(q, where("profileId", "==", profileId));  
-      q = query(q, orderBy(sortBy, "desc"));
+      sortBy.forEach(s => { q = query(q, orderBy(s, "desc")); })
       if (0 < l) { q = query(q, startAfter(last(batch).doc)); } else { if (!isInitial.current) return; } // reactStrictMode
 
       getDocs(query(q, limit(BATCH_LIMIT))).then(snapshot => {
@@ -88,7 +85,7 @@ Feed.propTypes = {
    * The field to sort by.
    * @default "timestamp" 
    */
-  sortBy: PropTypes.string,
+  sortBy: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
 };
 
 export default Feed;
