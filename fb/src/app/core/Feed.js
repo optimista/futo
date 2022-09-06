@@ -10,7 +10,7 @@ const BATCH_LIMIT = 20;
  * - Component that generates a feed, given an array of items.
  * - Integrates infinite scrolling & realtime firestore updates.
  */
-const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy = "timestamp" }) => {
+const Feed = ({ collection, Item = () => null, profileId, ready = true, skeletons = 3, sortBy = "timestamp" }) => {
   const [batches, setBatches] = useState([]), [fetching, setFetching, setHasMore] = useInfiniteScroll({ fetching: true, hasMore: true }),
         isInitial = useRef(true), listeners = useRef([]), mounted = useMounted(); sortBy = arrayize(sortBy);
 
@@ -49,7 +49,7 @@ const Feed = ({ collection, Item = () => null, profileId, ready = true, sortBy =
       { batches.map(batch => batch.map(({ data }) => Item(data, data.id))) }
       
       {/* Additional two Item Skeletons for initial load (together = 3) */}
-      { fetching && batches.length === 0 && (new Array(3-1)).fill().map((_, i) => Item(_, "s" + i)) }
+      { fetching && batches.length === 0 && (new Array(skeletons-1)).fill().map((_, i) => Item(_, "s" + i)) }
       
       {/* Single Card skeleton for fetching */}
       { fetching && Item(undefined, "x") } 
@@ -80,6 +80,12 @@ Feed.propTypes = {
    * @default true
    */
   ready: PropTypes.bool,
+  
+  /**
+   * Number of skeletons showing if not loaded 
+   * @default 3 
+   */
+  skeletons: PropTypes.number,
   
   /**
    * The field to sort by.
