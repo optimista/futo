@@ -1,5 +1,7 @@
 import { Avatar } from 'core'
 
+import { DEFAULT_AVATAR } from 'storybook/utils'
+
 const AvatarStory = {
   component: Avatar,
   title: 'core/Avatar',
@@ -10,7 +12,7 @@ const Empty = Default.bind({});
 const NotReady = Default.bind({});
 
 Default.args = {
-  src: "/mockup-avatar.jpg"
+  src: DEFAULT_AVATAR 
 }
 
 NotReady.args = {
