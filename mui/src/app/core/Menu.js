@@ -1,4 +1,4 @@
-import { ClickAwayListener, Fade, MenuList, Paper, Popper } from '@mui/material'
+import { Box, ClickAwayListener, Fade, MenuList, Paper, Popper } from '@mui/material'
 import { HTMLElementType } from '@mui/utils';
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
@@ -16,26 +16,28 @@ const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open, pla
   useEffect(() => { anchorEl?.offsetWidth && setArrowMargin(anchorEl?.offsetWidth / 2 - ARROW_WIDTH) }, [anchorEl?.offsetWidth]);
 
   return (
-    <Popper open={Boolean(document.body.contains(anchorEl)) && open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
-      {({ TransitionProps }) => (
-        <Fade {...TransitionProps}>
-          <Paper sx={{
-            '&::before': {
-              ...(arrowMargin ? { left: placement === "start" && arrowMargin, right: placement === "end" && arrowMargin } : {}),
-              ...(arrow ? { content: "''", width: 0, height: 0, border: ARROW_WIDTH + "px solid transparent", borderBottomColor: 'divider', position: "absolute", top: -(ARROW_WIDTH * 2 - 1) } : {})
-            }, 
-            '&::after': {
-              ...(arrowMargin ? { left: placement === "start" && arrowMargin + 1, right: placement === "end" && arrowMargin + 1 }: {}),
-              ...(arrow ? { content: "''", width: 0, height: 0, border: (ARROW_WIDTH - 1) + "px solid transparent", borderBottomColor: "background.default", position: "absolute", top: -((ARROW_WIDTH - 1) * 2 - 1) } : {}),
-            }
-          }}>
-            <ClickAwayListener onClickAway={onClose}>
-              <MenuList>{children}</MenuList>
-            </ClickAwayListener> 
-          </Paper>
-        </Fade>
-      )}
-    </Popper>
+    <Box sx={{ position: "absolute" }}>{/* Fix for safari flicker / flex for ProfileMenuButton in AppBarLayout*/}
+      <Popper open={Boolean(document.body.contains(anchorEl)) && (!arrow || arrowMargin) && open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps}>
+            <Paper sx={arrow && arrowMargin ? {
+              '&::before': {
+                left: placement === "start" && arrowMargin, right: placement === "end" && arrowMargin,
+                content: "''", width: 0, height: 0, border: ARROW_WIDTH + "px solid transparent", borderBottomColor: 'divider', position: "absolute", top: -(ARROW_WIDTH * 2 - 1)
+              },
+              '&::after': {
+                left: placement === "start" && arrowMargin + 1, right: placement === "end" && arrowMargin + 1,
+                content: "''", width: 0, height: 0, border: (ARROW_WIDTH - 1) + "px solid transparent", borderBottomColor: "background.default", position: "absolute", top: -((ARROW_WIDTH - 1) * 2 - 1),
+              }
+            } : {}}>
+              <ClickAwayListener onClickAway={onClose}>
+                <MenuList>{children}</MenuList>
+              </ClickAwayListener> 
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
+    </Box>
   );
 };
 
