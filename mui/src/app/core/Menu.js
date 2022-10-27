@@ -17,7 +17,7 @@ const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open, pla
 
   return (
     <Box sx={{ position: "absolute" }}>{/* Fix for safari flicker / flex for ProfileMenuButton in AppBarLayout*/}
-      <Popper open={Boolean(document.body.contains(anchorEl)) && (!arrow || arrowMargin) && open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
+      <Popper open={Boolean(document.body.contains(anchorEl)) && Boolean(!arrow || arrowMargin) && open} anchorEl={anchorEl} transition placement={ (arrow ? "bottom-" : "top-") + placement } modifiers={[{ name: "offset", options: { offset: ({ popper }) => arrow ? [0, 8] : [0, -popper.height] }}, { name: 'flip', enabled: false }]} style={{ zIndex: 1150 }} {...props}>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps}>
             <Paper sx={arrow && arrowMargin ? {
