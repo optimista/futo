@@ -80,8 +80,9 @@ case $1 in
         cp .storybook/preview.js $dir/latest/.storybook/preview.js
       fi
 
-      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .storybook/patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
-      cp -r $dir/src/.storybook/* .storybook/ # If you move patches to the root, "-r" option is not necessary anymore
+      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .patches" # You might want to extend patches to whole project by moving it to root of the project - cp -r $dir/src/patches .
+      cp -pr $dir/src/.patches .patches # If you move patches to the root, "-r" option is not necessary anymore
+      cp $dir/src/.storybook/* .storybook/
       rm -rf stories && cp -r $dir/src/storybook . 
       npm run postinstall
 
