@@ -6,14 +6,13 @@ import { db } from 'core/utils'
 const MAX_SIZE = 500;
 
 const createBatch = () => {
-  const batches = [],
-        batch = () => {
-          const lastBatchObj = last(batches),
-                newLastBatch = batches.length === 0 || lastBatchObj.ops === MAX_SIZE ? last(batches = batches.concat([{ batch: writeBatch(db()), ops: 0 }])) : lastBatchObj;
+  let batches = []; const batch = () => {
+    const lastBatchObj = last(batches),
+          newLastBatch = batches.length === 0 || lastBatchObj.ops === MAX_SIZE ? last(batches = batches.concat([{ batch: writeBatch(db()), ops: 0 }])) : lastBatchObj;
 
-          newLastBatch.ops++;
-          return newLastBatch.batch; 
-        };
+    newLastBatch.ops++;
+    return newLastBatch.batch; 
+  };
   
   return {
     commit: () => Promise.all(batches.map(({ batch }) => batch.commit())),
