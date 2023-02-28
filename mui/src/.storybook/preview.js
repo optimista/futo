@@ -3,8 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { ThemeProvider as Emotion10ThemeProvider } from 'emotion-theming';
 import { RouterContext } from "next/dist/shared/lib/router-context";
 
-import { theme } from '../app/core/utils'
-import { LocaleProvider } from '../app/core/utils/i18n'
+import { theme } from '../base/core/utils'
+import { LocaleProvider } from '../base/core/utils/i18n'
 
 export const decorators = [
   (Story, context) => {

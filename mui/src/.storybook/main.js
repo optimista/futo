@@ -41,7 +41,7 @@ module.exports = {
       !/node_modules\/@mui\/lab/     .test(modulePath);
     config.resolve.alias.pages = path.resolve("./pages");
     config.resolve.alias.storybook = path.resolve("./storybook");
-    config.resolve.modules.push(path.resolve("./app"));
+    config.resolve.modules.push(path.resolve("./base"));
     return {
       ...config,
       resolve: {
