@@ -1,9 +1,8 @@
 diff --git a/node_modules/@mui/material/Container/Container.js b/node_modules/@mui/material/Container/Container.js
-index 98386f4..8e2307d 100644
+index b82d5d3..5f7a527 100644
 --- a/node_modules/@mui/material/Container/Container.js
 +++ b/node_modules/@mui/material/Container/Container.js
-@@ -1,10 +1,11 @@
- /* eslint-disable material-ui/mui-name-matches-component-name */
+@@ -1,9 +1,10 @@
  import PropTypes from 'prop-types';
 +import * as React from 'react';
  import { createContainer } from '@mui/system';
@@ -15,19 +14,19 @@ index 98386f4..8e2307d 100644
    createStyledComponent: styled('div', {
      name: 'MuiContainer',
      slot: 'Root',
-@@ -20,6 +21,7 @@ const Container = createContainer({
+@@ -19,6 +20,7 @@ const Container = createContainer({
      name: 'MuiContainer'
    })
  });
 +const Container = props => React.createElement(ContainerRoot, props);
- process.env.NODE_ENV !== "production" ? Container.propTypes
- /* remove-proptypes */
- = {
+ process.env.NODE_ENV !== "production" ? Container.propTypes /* remove-proptypes */ = {
+   // ----------------------------- Warning --------------------------------
+   // | These PropTypes are generated from the TypeScript type definitions |
 diff --git a/node_modules/@mui/material/CssBaseline/CssBaseline.js b/node_modules/@mui/material/CssBaseline/CssBaseline.js
-index b660b79..281a9e6 100644
+index 2a612c5..37b4a56 100644
 --- a/node_modules/@mui/material/CssBaseline/CssBaseline.js
 +++ b/node_modules/@mui/material/CssBaseline/CssBaseline.js
-@@ -69,11 +69,11 @@ function CssBaseline(inProps) {
+@@ -75,11 +75,11 @@ function CssBaseline(inProps) {
      children,
      enableColorScheme = false
    } = props;
@@ -39,5 +38,5 @@ index b660b79..281a9e6 100644
 -  });
 +  }) });
  }
- 
- process.env.NODE_ENV !== "production" ? CssBaseline.propTypes
+ process.env.NODE_ENV !== "production" ? CssBaseline.propTypes /* remove-proptypes */ = {
+   // ----------------------------- Warning --------------------------------
