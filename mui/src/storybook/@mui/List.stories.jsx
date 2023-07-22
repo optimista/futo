@@ -1,7 +1,7 @@
 import { Link, List, ListItemButton, ListItemIcon, ListItemText, MenuItem } from '@mui/material'
 import { DeleteOutlined, EditOutlined, HistoryEdu, HomeOutlined, PersonOutlined } from '@mui/icons-material'
 
-List.__docgenInfo.description = "- For more see: [`List`](https://mui.com/api/list)\n- We use only following props:"
+List.__docgenInfo = { description: "- For more see: [`List`](https://mui.com/api/list)\n- We use only following props:" }
 
 const ListStory = {
   component: List,
@@ -40,17 +40,17 @@ const Drawer = args =>
   </List>
 
 Default.parameters = {
-  docs: { transformSource: src => {
+  docs: { source: { transform: src => {
     const icons = ["EditOutlined", "DeleteOutlined"];
     return src.replace(/\[object Object\]/g, () => icons.shift());
-  }}
+  }}}
 }
 
 Drawer.parameters = {
-  docs: { transformSource: src => {
+  docs: { source: { transform: src => {
     const icons = ["HomeOutlined", "PersonOutlined", "HistoryEdu"];
     return src.replaceAll(/component={{[\s\S]*?}}/g, "component={Link}").replace(/\[object Object\]/g, () => icons.shift());
-  }}
+  }}}
 }
 
 export { ListStory as default, Default, Drawer } 

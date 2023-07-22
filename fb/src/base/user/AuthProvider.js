@@ -4,7 +4,7 @@ import nookies from 'nookies'
 import PropTypes from 'prop-types'
 import { createContext, useEffect, useState } from 'react'
 
-import { Profiles } from 'profile'
+import { Profiles } from 'core/fb/colls'
 
 const AuthContext = createContext({ user: null });
 

@@ -2,7 +2,7 @@ import { TextField } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-TextField.__docgenInfo.description = "- For more see: [`TextField`](https://mui.com/api/text-field)\n- We use only following props:"
+TextField.__docgenInfo = { description: "- For more see: [`TextField`](https://mui.com/api/text-field)\n- We use only following props:" }
 
 const TextFieldStory = {
   component: TextField,

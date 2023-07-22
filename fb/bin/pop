@@ -4,7 +4,7 @@ echo
 url=https://console.cloud.google.com/storage/browser?project=$( projectid $name )
 max=$(expr $2 + 1)
 
-echo "("$2"/"$max") To populate the application with a basic data, first go to a newly opened link $url, select both buckets, click on \"ADD PRINCIPAL\" on the right pane and fill in the following details:"
+echo "("$2"/"$max") To populate the application with a basic data, first go to a newly opened link $url, select both buckets, click \"PERMISSIONS\" in the top bar and then click on \"ADD PRINCIPAL\" on the right pane and fill in the following details:"
 echo "New principals: firebase-storage@system.gserviceaccount.com" 
 echo "Select a role: Service agents > Cloud Storage for Firebase Service Agent" 
 open $url

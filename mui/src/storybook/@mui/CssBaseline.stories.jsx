@@ -1,6 +1,6 @@
 import { CssBaseline } from '@mui/material'
 
-CssBaseline.__docgenInfo.description = "- For more see: [`CssBaseline`](https://mui.com/api/css-baseline)\n- We use only following props:"
+CssBaseline.__docgenInfo = { description: "- For more see: [`CssBaseline`](https://mui.com/api/css-baseline)\n- We use only following props:" }
 
 const CssBaselineStory = {
   component: CssBaseline,

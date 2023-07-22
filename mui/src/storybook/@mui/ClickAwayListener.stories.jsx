@@ -1,6 +1,6 @@
 import { ClickAwayListener } from '@mui/material'
 
-ClickAwayListener.__docgenInfo.description = "- For more see: [`ClickAwayListener`](https://mui.com/api/click-away-listener)\n- We use only following props:"
+ClickAwayListener.__docgenInfo = { description: "- For more see: [`ClickAwayListener`](https://mui.com/api/click-away-listener)\n- We use only following props:" }
 
 const ClickAwayListenerStory = {
   component: ClickAwayListener,
@@ -21,7 +21,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace("{}", "console.log(\"Click Away!\")") }
+  docs: { source: { transform: src => src.replace("{}", "console.log(\"Click Away!\")") } }
 }
 
 export { ClickAwayListenerStory as default, Default } 

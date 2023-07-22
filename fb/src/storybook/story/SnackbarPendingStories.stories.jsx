@@ -20,9 +20,8 @@ const Default = args => {
 
 Default.parameters = {
   docs: {
-    iframeHeight: 400,
-    inlineStories: false,
-    transformSource: src => src.replace('React.Fragment', 'SnackbarPendingStories')
+    story: { iframeHeight: 400, inline: false },
+    source: { transform: src => src.replace('React.Fragment', 'SnackbarPendingStories') }
   }
 }
 

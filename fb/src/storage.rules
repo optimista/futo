@@ -5,7 +5,8 @@ service firebase.storage {
 
     match /profiles/{profileId}/{type} {
       allow read;
-      allow write: if owns(request.resource) && request.auth.uid == profileId && type == "original";
+      allow create, update: if owns(request.resource) && request.auth.uid == profileId && type == "original";
+      allow delete:         if owns(resource)         && request.auth.uid == profileId && type == "original";
     }
   }
 }

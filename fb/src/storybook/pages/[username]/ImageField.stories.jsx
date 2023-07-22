@@ -1,4 +1,4 @@
-import { ImageField } from 'pages/[username]'
+import { ImageField } from 'pages/[username]/ProfilePage'
 
 const ImageFieldStory = {
   component: ImageField,

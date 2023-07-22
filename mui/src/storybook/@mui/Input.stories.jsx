@@ -1,7 +1,7 @@
 import { CircularProgress, Input } from '@mui/material'
 import { Check } from '@mui/icons-material'
 
-Input.__docgenInfo.description = "- For more see: [`Input`](https://mui.com/api/input)\n- We use only following props:"
+Input.__docgenInfo = { description: "- For more see: [`Input`](https://mui.com/api/input)\n- We use only following props:" }
 
 const InputStory = {
   component: Input,
@@ -48,7 +48,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Check') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Check') } }
 }
 
 Validating.args = {

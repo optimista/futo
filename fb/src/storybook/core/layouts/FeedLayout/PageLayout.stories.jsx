@@ -1,5 +1,3 @@
-import { withReactContext } from 'storybook-react-context'
-
 import { PageLayout } from 'core/layouts/FeedLayout'
 import { AuthContext } from 'user/AuthProvider'
 
@@ -14,10 +12,11 @@ const PageLayoutStory = {
   },
   decorators: [
     heightDecorator,
-    withReactContext({
-      Context: AuthContext,
-      initialState: { isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
   parameters: { layout: "fullscreen" }
 }

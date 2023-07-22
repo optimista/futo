@@ -4,7 +4,7 @@ import { NAMES } from 'core/i18n'
 
 import { centerDecorator } from 'storybook/utils'
 
-Toolbar.__docgenInfo.description = "- For more see: [`Toolbar`](https://mui.com/api/toolbar)\n- We use only following props:"
+Toolbar.__docgenInfo = { description: "- For more see: [`Toolbar`](https://mui.com/api/toolbar)\n- We use only following props:" }
 
 const ToolbarStory = {
   component: Toolbar,

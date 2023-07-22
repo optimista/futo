@@ -14,7 +14,7 @@ const Default = args => {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('() => {}', 'dispatch') }
+  docs: { source: { transform: src => src.replace('() => {}', 'dispatch') } }
 }
 
 export { DispatchProviderStory as default, Default } 

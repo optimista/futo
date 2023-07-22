@@ -4,7 +4,7 @@ import { NAMES } from 'core/i18n'
 
 import { centerDecorator } from 'storybook/utils'
 
-AppBar.__docgenInfo.description = "- For more see: [`AppBar`](https://mui.com/api/app-bar)\n- We use only following props:"
+AppBar.__docgenInfo = { description: "- For more see: [`AppBar`](https://mui.com/api/app-bar)\n- We use only following props:" }
 
 const AppBarStory = {
   component: AppBar,

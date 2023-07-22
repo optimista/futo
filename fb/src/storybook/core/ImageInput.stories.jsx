@@ -25,7 +25,7 @@ Icon.args = {
 }
 
 Icon.parameters = {
-  docs: { transformSource: src => src.replace('() => {}', "IconButton").replace('[object Object]', 'ImageOutlined') }
+  docs: { source: { transform: src => src.replace('() => {}', "IconButton").replace('[object Object]', 'ImageOutlined') } }
 }
 
 export { ImageInputStory as default, Default, Icon } 

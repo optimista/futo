@@ -58,18 +58,27 @@ case $1 in
       echo "(Once you are done, close the tab and hit enter to continue)"
       read
 
-      $dir/exp/firestore-init $projectid && $dir/exp/storage-init $projectid && firebase use $projectid
+      $dir/exp/firestore-init $projectid
+
+      url=https://console.firebase.google.com/project/$projectid/storage
+      open $url
+      echo
+      echo "Last thing, enable storage by clicking on 'Get Started' on just opened link $url.'"
+      echo
+      echo "(Once you are done, close the tab and hit enter to continue)"
+      read
+      
+      $dir/exp/storage-init $projectid && firebase use $projectid
       # createapp == e.g. "firebase apps:sdkconfig WEB 1:233313016915:web:e6430e12bd463eb6027aa6"
       createapp=$( firebase apps:create WEB $ccname | tail -n1 | awk '{$1=$1};1' ) # awk = trim leading and trailing whitespace
 
+      npm install -D encoding # I HAD A WEIRD ERROR WHEN NOT INSTALLING THIS, RELATED TO NEXTJS, See: https://flaviocopes.com/fix-module-not-found-cant-resolve-encoding-in-nextjs/
       npm install firebase firebase-admin nookies --legacy-peer-deps # SERVER SIDE HERE TOO
-      cp $dir/src/app/core/utils/*.js app/core/utils/
-      $( echo $createapp ) | sed -n '/^  "projectId"/,/^  "messagingSenderId"/p' | sed -i '' '/^const firebase/r /dev/stdin' app/core/utils/firebase.js
+      rm -rf base/pages storybook/core/layouts/PageLayout.stories.jsx # from mui
+      cp -r $dir/src/* $dir/src/.* .
+      $( echo $createapp ) | sed -n '/^  "projectId"/,/^  "messagingSenderId"/p' | sed -i '' '/^const firebase/r /dev/stdin' base/core/fb/firebase.js
       
-      # firestore.rules setup
-      cp $dir/src/firestore.indexes.json firestore.indexes.json
-      cp $dir/src/firestore.rules firestore.rules
-      cp $dir/src/storage.rules storage.rules
+      # firestore.rules setup (already copied)
       sed -i '' "s/projectid/$projectid/" storage.rules
       
       # SERVER SIDE SERVICE ACCOUNT 
@@ -78,41 +87,22 @@ case $1 in
       iamaccount=$( gcloud iam service-accounts list | grep firebase-adminsdk | sed 's/  */ /g' | cut -d ' ' -f 2 )
       gcloud iam service-accounts keys create /tmp/keys --iam-account=$iamaccount
       googleprivatekey=$( cat /tmp/keys | sed -n '/-----BEGIN PRIVATE KEY-----/s/.*"\(-----BEGIN\)/\1/p' | sed -e 's/",$//g' )
-      cat /tmp/keys | sed 's/"-----BEGIN PRIVATE KEY-----.*-----END PRIVATE KEY-----\\n"/process.env.GOOGLE_PRIVATE_KEY/g' | sed -n '/^  "type"/,/^  "client_x509_cert_url"/s/^/  /p' | sed -i '' -e '/^  credential: cert({/r /dev/stdin' -e "s/projectid/$projectid/" app/core/utils/server.js
+      cat /tmp/keys | sed 's/"-----BEGIN PRIVATE KEY-----.*-----END PRIVATE KEY-----\\n"/process.env.GOOGLE_PRIVATE_KEY/g' | sed -n '/^  "type"/,/^  "client_x509_cert_url"/s/^/  /p' | sed -i '' -e '/^  credential: cert({/r /dev/stdin' -e "s/projectid/$projectid/" base/core/fb/admin.js
       rm -rf /tmp/keys
 
       # CYPRESS INSTALL & CONFIGURATION
       npm install cypress --legacy-peer-deps --save-dev
-      cp $dir/src/.gitignore $dir/src/cypress.json .
-      cp -r $dir/src/cypress .
       sed -i '' "s/\(^\/coverage\)/\1\n\/cypress\/screenshots\n\/cypress\/videos/g" .gitignore
 
       ## MAIN
       npm install @futo-ui/hooks @futo-ui/utils --legacy-peer-deps
-      cp $dir/src/next.config.js .
-      cp $dir/src/app/core/*.js app/core/
-      cp $dir/src/app/core/layouts/*.js app/core/layouts/
-      cp $dir/src/app/core/i18n/*.js app/core/i18n/ && rm app/core/layouts/PageLayout.js
-      cp $dir/src/pages/*.js pages/ # theme.js because of error handling + stories.js & create.js
-      cp $dir/src/public/* public/ && mv public/name.png public/$name.png
-      cp -r $dir/src/app/post app/post
-      cp -r $dir/src/app/profile app/profile 
-      cp -r $dir/src/app/story app/story 
-      cp -r $dir/src/app/user app/user
-      cp -r $dir/src/pages/account pages/ # account pages
+      mv public/name.png public/$name.png
       
       ### Add AuthProvider
-      sed -i '' "s/import { LocaleProvider } from 'core\/utils\/i18n'/&\nimport { AuthProvider } from 'user'/" pages/_app.js
-      sed -i '' "s/      <ThemeProvider theme={theme}>/      <AuthProvider>\n&/" pages/_app.js
-      sed -i '' "s/      <\/ThemeProvider>/&\n      <\/AuthProvider>/" pages/_app.js
-      sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' pages/_app.js
-
-      ### Stories
-      cp -r $dir/src/pages/s pages/ 
-
-      ### Storybook
-      npm install -D storybook-react-context --legacy-peer-deps 
-      cp -r $dir/src/storybook/* storybook/ && rm storybook/core/layouts/PageLayout.stories.jsx 
+      sed -i '' "s/import { LocaleProvider } from 'core\/utils\/i18n'/&\nimport { AuthProvider } from 'user'/" app/layout.js
+      sed -i '' "s/          <ThemeProvider theme={theme}>/          <AuthProvider>\n&/" app/layout.js
+      sed -i '' "s/          <\/ThemeProvider>/&\n          <\/AuthProvider>/" app/layout.js
+      sed -i '' '/<ThemeProvider/,/<\/ThemeProvider/s/^/  /g' app/layout.js
       
       if ! $base; then
         firebase deploy
@@ -158,13 +148,14 @@ case $1 in
         echo 
         echo "(II/II) To finish setting up the fb-demo project we are going to populate the application with the basic data."
 
-        cp -r $dir/src/pages/populate pages/ 
         pop $name 1
         echo
         echo "======================================" 
         echo "🎉 Congratulations! That's everything." 
         echo "======================================" 
         echo
+      else
+        rm -rf $dir/src/app/populate
       fi
     else
       exit 1

@@ -1,7 +1,7 @@
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 
+import { Stories } from 'core/fb/colls'
 import { StoryCard } from 'story/StoryFeed'
-import { Stories } from 'story'
 
 import { centerDecorator } from 'storybook/utils'
 
@@ -27,8 +27,7 @@ Default.loaders = [
 // Patch for loaders (see: https://github.com/storybookjs/storybook/issues/12726)
 Default.parameters = {
   docs: {
-    inlineStories: false,
-    iframeHeight: 183
+    story: { iframeHeight: 183, inline: false }
   }
 }
 

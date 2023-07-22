@@ -2,7 +2,7 @@ import { Typography } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-Typography.__docgenInfo.description = "- For more see: [`Typography`](https://mui.com/api/typography)\n- We use only following props:"
+Typography.__docgenInfo = { description: "- For more see: [`Typography`](https://mui.com/api/typography)\n- We use only following props:" }
 
 const TypographyStory = {
   component: Typography,

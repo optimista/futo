@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined, HistoryEdu, HomeOutlined, PersonOutlined 
 import { Default as ListDefault, Drawer as ListDrawer } from './List.stories'
 import { sx } from './utils'
 
-ListItemIcon.__docgenInfo.description = "- For more see: [`ListItemIcon`](https://mui.com/api/list-item-icon)\n- We use only following props:"
+ListItemIcon.__docgenInfo = { description: "- For more see: [`ListItemIcon`](https://mui.com/api/list-item-icon)\n- We use only following props:" }
 
 const ListItemIconStory = {
   component: ListItemIcon,

@@ -1,5 +1,3 @@
-import { withReactContext } from 'storybook-react-context'
-
 import { Logo } from 'core'
 import { FixedLayout } from 'core/layouts'
 import { ProfileMenuButton } from 'profile'
@@ -17,10 +15,11 @@ const FixedLayoutStory = {
   },
   decorators: [
     heightDecorator,
-    withReactContext({
-      Context: AuthContext,
-      initialState: { isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
   parameters: { layout: "fullscreen" }
 }

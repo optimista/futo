@@ -3,7 +3,7 @@ import { Person } from '@mui/icons-material'
 
 import { radio } from './utils'
 
-Badge.__docgenInfo.description = "- For more see: [`Badge`](https://mui.com/api/badge)\n- We use only following props:"
+Badge.__docgenInfo = { description: "- For more see: [`Badge`](https://mui.com/api/badge)\n- We use only following props:" }
 
 const BadgeStory = {
   component: Badge,
@@ -44,7 +44,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 Button.args = {

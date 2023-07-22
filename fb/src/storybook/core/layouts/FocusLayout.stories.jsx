@@ -1,7 +1,10 @@
 import { FocusLayout } from 'core/layouts'
 
+import { marginFixDecorator } from 'storybook/utils'
+
 const FocusLayoutStory = {
   component: FocusLayout,
+  decorators: [marginFixDecorator],
   title: 'core/layouts/FocusLayout',
   argTypes: { children: { control: { type: "text" } } }
 }

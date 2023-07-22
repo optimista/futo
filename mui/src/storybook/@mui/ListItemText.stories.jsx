@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined, HistoryEdu, HomeOutlined, PersonOutlined 
 import { Default as ListDefault, Drawer as ListDrawer } from './List.stories'
 import { sx } from './utils'
 
-ListItemText.__docgenInfo.description = "- For more see: [`ListItemText`](https://mui.com/api/list-item-text)\n- We use only following props:"
+ListItemText.__docgenInfo = { description: "- For more see: [`ListItemText`](https://mui.com/api/list-item-text)\n- We use only following props:" }
 
 const ListItemTextStory = {
   component: ListItemText,

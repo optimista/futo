@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-Button.__docgenInfo.description = "- For more see: [`Button`](https://mui.com/api/button)\n- We use only following props:"
+Button.__docgenInfo = { description: "- For more see: [`Button`](https://mui.com/api/button)\n- We use only following props:" }
 
 const ButtonStory = {
   component: Button,
@@ -55,7 +55,7 @@ IconStart.args = {
 };
 
 IconStart.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Send') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Send') } }
 }
 
 Link.args = {

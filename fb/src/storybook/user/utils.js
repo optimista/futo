@@ -1,3 +1,3 @@
-const transformSourceUser = src => src.replace(/[\s]*user={{[\s\S]*?}}[\s]*/g, " user={user} "); 
+const transformUser = src => src.replace(/[\s]*user={{[\s\S]*?}}[\s]*/g, " user={user} "); 
 
-export { transformSourceUser };
+export { transformUser };

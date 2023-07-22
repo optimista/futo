@@ -11,7 +11,7 @@ import { useAuth } from 'user'
 const ProfileAvatar = forwardRef(({ src = null, ...props }, ref) => {
   const auth = useAuth();
   if (src !== null) return <Avatar src={src} {...props} />;
-  return <Avatar ready={Boolean(auth.profile)} ref={ref} src={auth.profile?.photoURL} {...props} />
+  return <Avatar alt={auth.profile?.displayName || "@" + auth.profile?.username} ready={Boolean(auth.profile)} ref={ref} src={auth.profile?.photoURL} {...props} />
 })
 
 ProfileAvatar.propTypes = {

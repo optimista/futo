@@ -1,7 +1,7 @@
 import { Avatar, Card, CardContent, CardHeader, IconButton } from '@mui/material'
 import { MoreHoriz } from '@mui/icons-material'
 
-CardHeader.__docgenInfo.description = "- For more see: [`CardHeader`](https://mui.com/api/card-header)\n- We use only following props:"
+CardHeader.__docgenInfo = { description: "- For more see: [`CardHeader`](https://mui.com/api/card-header)\n- We use only following props:" }
 
 import CardStory from './Card.stories' 
 
@@ -36,7 +36,7 @@ PostCard.args = {
 }
 
 PostCard.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'MoreHoriz') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'MoreHoriz') } }
 }
 
 PostCard.storyName = "PostCard"

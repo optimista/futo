@@ -1,5 +1,3 @@
-import { withReactContext } from 'storybook-react-context'
-
 import { PostCard } from 'post/PostFeed'
 import { AuthContext } from 'user/AuthProvider'
 
@@ -9,10 +7,11 @@ const PostCardStory = {
   argTypes: { post: { control: { type: null } } },
   parameters: { layout: "padded" },
   decorators: [
-    withReactContext({
-      Context: AuthContext,
-      initialState: { profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
 }
 

@@ -5,7 +5,7 @@ import { DispatchProvider, StoreProvider } from 'story/context'
 import { Node, useReducer } from 'story/core'
 import { Text } from 'story/nodes'
 
-import { heightDecorator, transformSource } from 'storybook/story/utils'
+import { heightDecorator, transform } from 'storybook/story/utils'
 
 const NodeStory = {
   component: Node,
@@ -34,7 +34,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource }
+  docs: { source: { transform } }
 }
 
 export { NodeStory as default, Default } 

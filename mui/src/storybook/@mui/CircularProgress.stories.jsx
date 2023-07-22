@@ -2,7 +2,7 @@ import { CircularProgress } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-CircularProgress.__docgenInfo.description = "- For more see: [`CircularProgress`](https://mui.com/api/circular-progress)\n- We use only following props:"
+CircularProgress.__docgenInfo = { description: "- For more see: [`CircularProgress`](https://mui.com/api/circular-progress)\n- We use only following props:" }
 
 const CircularProgressStory = {
   component: CircularProgress,

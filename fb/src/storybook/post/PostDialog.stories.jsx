@@ -1,6 +1,5 @@
 import { useModel } from '@futo-ui/hooks'
 import { dialog } from 'storybook/@mui/utils'
-import { withReactContext } from 'storybook-react-context'
 
 import { PostDialog } from 'post'
 import { AuthContext } from 'user/AuthProvider'
@@ -14,10 +13,11 @@ const PostDialogStory = {
   parameters: { layout: "fullscreen" },
   decorators: [
     centerDecorator(),
-    withReactContext({
-      Context: AuthContext,
-      initialState: { profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
 }
 
@@ -31,7 +31,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace(/post={{[\s\S]*?}}/g, "post={post}") } 
+  docs: { source: { transform: src => src.replace(/post={{[\s\S]*?}}/g, "post={post}") } }
 }
 
 export { PostDialogStory as default, Default } 

@@ -1,5 +1,3 @@
-import { withReactContext } from 'storybook-react-context'
-
 import { ProfileAvatar } from 'profile'
 import { AuthContext } from 'user/AuthProvider'
 
@@ -8,10 +6,11 @@ const ProfileAvatarStory = {
   title: 'profile/ProfileAvatar',
   argTypes: { src: { table: { defaultValue: { summary: "null" } } } },
   decorators: [
-    withReactContext({
-      Context: AuthContext,
-      initialState: { profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
 }
 

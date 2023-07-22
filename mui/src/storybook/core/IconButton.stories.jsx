@@ -17,14 +17,14 @@ const Avatar = args => <IconButton {...args}><MuiAvatar /></IconButton>;
 const Primary = Default.bind({}); 
 const Secondary = Default.bind({});
 
-const transformSource = src => src.replace('[object Object]', 'Person');
+const transform = src => src.replace('[object Object]', 'Person');
 
 Default.args = {
   TooltipProps: { hide: false, title: "Account" }
 };
 
 Default.parameters = {
-  docs: { transformSource }
+  docs: { source: { transform } }
 }
 
 Avatar.args = {
@@ -36,7 +36,7 @@ Primary.args = {
 };
 
 Primary.parameters = {
-  docs: { transformSource }
+  docs: { source: { transform } }
 }
 
 Secondary.args = {
@@ -45,7 +45,7 @@ Secondary.args = {
 };
 
 Secondary.parameters = {
-  docs: { transformSource }
+  docs: { source: { transform } }
 }
 
 export { IconButtonStory as default, Default, Primary, Secondary, Avatar } 

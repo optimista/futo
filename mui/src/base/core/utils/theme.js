@@ -5,7 +5,7 @@ import NextLink from 'next/link'
 import { forwardRef } from 'react'
 
 const Link = forwardRef(({ className, children, target, ...props }, _) =>
-  <NextLink {...props}><a className={className} target={target}>{children}</a></NextLink>);
+  <NextLink {...props} className={className} target={target}>{children}</NextLink>);
 
 const theme = createTheme({
   palette: {

@@ -1,0 +1,6 @@
+export { default as I } from './I'
+export { default as IProvider } from './IProvider'
+export { default as l } from './l'
+export { default as LocaleProvider } from './LocaleProvider'
+export { default as useLocale } from './useLocale'
+export { default as useDict } from './useDict'

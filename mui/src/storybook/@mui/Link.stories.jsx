@@ -2,7 +2,7 @@ import { Link } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-Link.__docgenInfo.description = "- For more see: [`Link`](https://mui.com/api/link)\n- We use only following props:"
+Link.__docgenInfo = { description: "- For more see: [`Link`](https://mui.com/api/link)\n- We use only following props:" }
 
 const LinkStory = {
   component: Link,

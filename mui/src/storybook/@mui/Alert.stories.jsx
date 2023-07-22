@@ -2,7 +2,7 @@ import { Alert } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-Alert.__docgenInfo.description = "- For more see: [`Alert`](https://mui.com/api/alert)\n- We use only following props:"
+Alert.__docgenInfo = { description: "- For more see: [`Alert`](https://mui.com/api/alert)\n- We use only following props:" }
 
 const AlertStory = {
   component: Alert,

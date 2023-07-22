@@ -2,7 +2,7 @@ import { useDialog, useMenu } from '@futo-ui/hooks'
 import { ExitToAppSharp, HistoryEdu, PersonAddAlt } from '@mui/icons-material'
 import { Badge, Button, Dialog, Link, ListItemIcon, ListItemText, MenuItem } from '@mui/material'
 import { getAuth, signOut } from 'firebase/auth'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import PropTypes from 'prop-types'
 
 import { IconButton, Menu } from 'core'
@@ -69,7 +69,7 @@ const ProfileMenuButton = ({ avatar, onLogin }) => {
         </IconButton>
       </Badge>
       <Menu arrow anchorEl={menu.el} onClose={menu.close} open={menu.isOpen} placement="end">
-        <MenuItem component={Link} href="/stories">
+        <MenuItem component={Link} href={"/" + auth.profile?.username + "/stories"}>
           <ListItemIcon>
             <HistoryEdu />
           </ListItemIcon>

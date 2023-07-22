@@ -3,7 +3,7 @@ import { useModel } from '@futo-ui/hooks'
 import { LoginForm } from 'user'
 
 import { focusLayoutDecorator } from 'storybook/utils'
-import { transformSourceUser } from 'storybook/user/utils'
+import { transformUser } from 'storybook/user/utils'
 
 const LoginFormStory = {
   component: LoginForm,
@@ -20,9 +20,8 @@ const Default = args => {
 
 Default.parameters = {
   docs: {
-    iframeHeight: 760,
-    inlineStories: false,
-    transformSource: transformSourceUser
+    story: { iframeHeight: 760, inline: false },
+    source: { transform: transformUser }
   }
 }
 

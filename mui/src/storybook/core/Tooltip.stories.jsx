@@ -18,7 +18,7 @@ Default.args = {
 };
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 export { TooltipStory as default, Default } 

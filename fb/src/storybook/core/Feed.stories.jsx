@@ -1,7 +1,7 @@
 import { Skeleton } from '@mui/material'
 
 import { Feed } from 'core'
-import { Stories } from 'story'
+import { Stories } from 'core/fb/colls'
 import { storyTitle } from 'story/utils'
 
 const FeedStory = {
@@ -23,7 +23,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace(/\[object Object\]/g, "Stories").replace("() => {}", "story => story ? <div>{storyTitle(story)}</div> : <Skeleton width={120} />") }
+  docs: { source: { transform: src => src.replace(/\[object Object\]/g, "Stories").replace("() => {}", "story => story ? <div>{storyTitle(story)}</div> : <Skeleton width={120} />") } }
 }
 
 export { FeedStory as default, Default } 

@@ -1,6 +1,6 @@
 import { Alert, AlertTitle } from '@mui/material'
 
-AlertTitle.__docgenInfo.description = "- For more see: [`AlertTitle`](https://mui.com/api/alert-title)\n- We use only following props:"
+AlertTitle.__docgenInfo = { description: "- For more see: [`AlertTitle`](https://mui.com/api/alert-title)\n- We use only following props:" }
 
 const AlertTitleStory = {
   component: AlertTitle,

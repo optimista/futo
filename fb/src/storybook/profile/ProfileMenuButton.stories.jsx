@@ -1,5 +1,4 @@
 import { Settings } from '@mui/icons-material'
-import { withReactContext } from 'storybook-react-context'
 
 import { ProfileMenuButton } from 'profile'
 import { AuthContext } from 'user/AuthProvider'
@@ -9,10 +8,11 @@ const ProfileMenuButtonStory = {
   title: 'profile/ProfileMenuButton',
   argTypes: { avatar: { control: { type: null } } },
   decorators: [
-    withReactContext({
-      Context: AuthContext,
-      initialState: { isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ isReady: true, isLoggedIn: true, profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
 }
 
@@ -24,7 +24,7 @@ Icon.args = {
 }
 
 Icon.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Settings') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Settings') } }
 }
 
 export { ProfileMenuButtonStory as default, Default, Icon } 

@@ -3,15 +3,6 @@
 dir=$HOME/.bin/mui
 
 case $1 in
-  check)
-    wget -q -O /tmp/_app.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/pages/_app.js
-    wget -q -O /tmp/_document.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/pages/_document.js
-    wget -q -O /tmp/theme.js https://raw.githubusercontent.com/mui-org/material-ui/master/examples/nextjs/src/theme.js
-
-    diff -u $dir/latest/pages/_app.js /tmp/_app.js &&
-    diff -u $dir/latest/pages/_document.js /tmp/_document.js &&
-    diff -u $dir/latest/src/theme.js /tmp/theme.js 
-    ;;
   rm)
     name=$2
 
@@ -30,77 +21,63 @@ case $1 in
     fi
     ;;
   *)
-    if mui check; then
-      name=$1
-      ccname=${${(C)name}//-} # camel case name
-      chromatic=true
-      
-      for arg in "$@"; do
-        case $arg in
-          --without-chromatic)
-            chromatic=false
-            ;;
-        esac
-      done
-   
-      vc $name 
-      cd $name
+    name=$1
+    ccname=${${(C)name}//-} # camel case name
+    chromatic=true
+    
+    for arg in "$@"; do
+      case $arg in
+        --without-chromatic)
+          chromatic=false
+          ;;
+      esac
+    done
+ 
+    vc $name 
+    cd $name
 
-      ### CORE
-      # prepare app folder 
-      mkdir app
-      npm install path
-      cp $dir/src/.gitignore $dir/src/next.config.js .
-      
-      # install @mui/material
-      npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material @mui/lab @mui/material nprogress --legacy-peer-deps 
-      cp -r $dir/src/app/core app
-      cp -r $dir/src/styles . 
-      cp -r $dir/src/pages . 
-      sed -i '' -e "s/my-app/$name/" -e "s/MyApp/$ccname/" app/core/i18n/NAMES.js
-      sed -i '' "s/MyApp/"$ccname"App/" pages/_app.js
-      sed -i '' "s/MyDocument/"$ccname"Document/g" pages/_document.js # change name of Document class
+    ### CORE
+    # prepare base folder 
+    npm install path
+    cp $dir/src/.gitignore $dir/src/next.config.js .
+    
+    # install @mui/material
+    npm install @emotion/react @emotion/server @emotion/styled @futo-ui/hooks @futo-ui/utils @mui/icons-material @mui/lab @mui/material nprogress --legacy-peer-deps 
+    cp -r $dir/src/app $dir/src/base $dir/src/styles . 
+    sed -i '' -e "s/my-app/$name/" -e "s/MyApp/$ccname/" base/core/i18n/NAMES.js
+    sed -i '' "s/MyApp/"$ccname"App/" app/layout.js
 
-      # storybook
-      cd .. && gl $name && cd $name
-      npm install babel-plugin-import storybook-addon-next-router --legacy-peer-deps
-      npm install npm-add-script patch-package --save-dev
-      $dir/exp/storybook-init
+    # storybook
+    cd .. && gl $name && cd $name
+    npm install babel-plugin-import --legacy-peer-deps
+    npm install npm-add-script patch-package --save-dev
+    IN_STORYBOOK_SANDBOX=true npx sb init -y --disable-telemetry
 
-      DIFF1=$(diff $dir/latest/.storybook/main.js .storybook/main.js)
-      DIFF2=$(diff $dir/latest/.storybook/preview.js .storybook/preview.js)
-      if [ "$DIFF1" != "" ]; then
-        echo "There is a new .storybook/main.js! We already copied our version, but check the differences and maybe update our version."
-        echo "\n$DIFF1\n"
-        cp .storybook/main.js $dir/latest/.storybook/main.js
-      fi
-      if [ "$DIFF2" != "" ]; then
-        echo "There is a new .storybook/preview.js! We already copied our version, but check the differences and maybe update our version."
-        echo "\n$DIFF2\n"
-        cp .storybook/preview.js $dir/latest/.storybook/preview.js
-      fi
-
-      npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .patches"
-      cp $dir/src/.storybook/* .storybook/
-      cp -pr $dir/src/.patches .patches
-      rm -rf stories && cp -r $dir/src/storybook . 
-      npm run postinstall
-
-      $chromatic && chr $name
-      
-      echo "================" 
-      echo "Mui is finished." 
-      echo "================" 
-      echo
-    else
-      echo
-      mv /tmp/_app.js $dir/latest/pages/_app.js
-      mv /tmp/_document.js $dir/latest/pages/_document.js
-      mv /tmp/theme.js $dir/latest/src/theme.js
-      echo "=> Update _app.js | _document.js | theme.js!"
-      echo "[in $dir/src according to $dir/latest]"
-      echo 
-      echo "=> RUN: vim -p $dir/latest/pages/_app.js $dir/src/pages/_app.js $dir/latest/pages/_document.js $dir/src/pages/_document.js $dir/latest/src/theme.js $dir/src/app/utils/theme.js"
-      exit 1
+    DIFF1=$(diff $dir/latest/.storybook/main.js .storybook/main.js)
+    DIFF2=$(diff $dir/latest/.storybook/preview.js .storybook/preview.js)
+    if [ "$DIFF1" != "" ]; then
+      echo "There is a new .storybook/main.js! We already copied our version, but check the differences and maybe update our version."
+      echo "\n$DIFF1\n"
+      cp .storybook/main.js $dir/latest/.storybook/main.js
     fi
+    if [ "$DIFF2" != "" ]; then
+      echo "There is a new .storybook/preview.js! We already copied our version, but check the differences and maybe update our version."
+      echo "\n$DIFF2\n"
+      cp .storybook/preview.js $dir/latest/.storybook/preview.js
+    fi
+
+    npx npm-add-script -k "postinstall" -v "patch-package --patch-dir .patches"
+    cp $dir/src/.storybook/* .storybook/
+    cp -pr $dir/src/.patches .patches
+    rm -rf stories && cp -r $dir/src/storybook . 
+    mkdir public/storybook
+    npm run postinstall
+
+    $chromatic && chr $name
+   
+    echo 
+    echo "================" 
+    echo "Mui is finished." 
+    echo "================" 
+    echo
 esac

@@ -18,7 +18,7 @@ const Default = args => {
 }
 
 Default.parameters = {
-  docs: { transformSource: transformStore }
+  docs: { source: { transform: transformStore } }
 }
 
 export { StoreProviderStory as default, Default } 

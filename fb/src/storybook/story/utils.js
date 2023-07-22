@@ -1,10 +1,10 @@
 const heightDecorator = (Story, { viewMode }) =>
-  <div style={{ height: viewMode === 'docs' ? 400 : "100vh", ...(viewMode === 'docs' ? { marginBottom: 16 } : {}), transform: 'scale(1)' }}>
+  <div style={{ height: viewMode === 'docs' ? 440 : "100vh", ...(viewMode === 'docs' ? { marginBottom: 16 } : {}), transform: 'scale(1)' }}>
     <Story />
   </div>
 
 const transformDispatch = src => src.replace('() => {}', 'dispatch');
 const transformStore = src => src.replace(/\n\s*value={{[\s\S]*?}}\s*>/, " value={state}>");
-const transformSource = src => transformStore(transformDispatch(src));
+const transform = src => transformStore(transformDispatch(src));
 
-export { heightDecorator, transformDispatch, transformSource, transformStore };
+export { heightDecorator, transform, transformDispatch, transformStore };

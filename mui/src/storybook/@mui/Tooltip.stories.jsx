@@ -1,7 +1,7 @@
 import { Person } from '@mui/icons-material'
 import { Tooltip } from '@mui/material'
 
-Tooltip.__docgenInfo.description = "- For more see: [`Tooltip`](https://mui.com/api/tooltip)\n- We use only following props:"
+Tooltip.__docgenInfo = { description: "- For more see: [`Tooltip`](https://mui.com/api/tooltip)\n- We use only following props:" }
 
 const TooltipStory = {
   component: Tooltip,
@@ -44,7 +44,7 @@ Default.args = {
 };
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 export { TooltipStory as default, Default } 

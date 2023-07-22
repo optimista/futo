@@ -1,5 +1,4 @@
 import { MoreHoriz } from '@mui/icons-material'
-import { withReactContext } from 'storybook-react-context'
 
 import { IconButton } from 'core'
 import { PostCardLayout } from 'post'
@@ -16,10 +15,11 @@ const PostCardLayoutStory = {
     title: { control: { type: "text" } }
   },
   decorators: [
-    withReactContext({
-      Context: AuthContext,
-      initialState: { profile: { photoURL: "/mockup-avatar.jpg" } },
-    }),
+    Story => (
+      <AuthContext.Provider value={{ profile: { photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
 }
 
@@ -33,7 +33,7 @@ Default.args = {
 }
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'MoreHoriz') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'MoreHoriz') } }
 }
 
 export { PostCardLayoutStory as default, Default } 

@@ -2,14 +2,13 @@ import { useDialog, useModel } from '@futo-ui/hooks'
 import { base64, empty } from '@futo-ui/utils'
 import { doc, getDocs, query, serverTimestamp, where } from 'firebase/firestore'
 
-import { createBatch, errorMessage, upload } from 'core/utils'
+import { createBatch, upload } from 'core/fb'
+import { Posts, Profiles, Stories } from 'core/fb/colls'
+import { errorMessage } from 'core/utils'
 import { l, useLocale } from 'core/utils/i18n'
 import { presence } from 'core/validators'
-import { Posts } from 'post'
-import { Profiles } from 'profile'
 import { AVATAR_IMAGE_TYPES } from 'profile/constants'
 import { PROFILE_ERRORS } from 'profile/i18n'
-import { Stories } from 'story' 
 import { useAuth } from 'user'
 
 const useProfileDialog = initProfile => {

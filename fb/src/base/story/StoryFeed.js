@@ -6,9 +6,9 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import PropTypes from 'prop-types'
 
 import { Feed, IconButton, Menu } from 'core'
+import { Stories } from 'core/fb/colls'
 import { GENERAL } from 'core/i18n'
 import { l, I, IProvider, useLocale } from 'core/utils/i18n'
-import { Stories } from 'story'
 import { storyAuthorized, storyPath, storyEditPath, storyTitle, storyDesc } from 'story/utils'
 import { useAuth } from 'user'
 

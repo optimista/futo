@@ -21,8 +21,4 @@ Tooltip.propTypes = {
   hide: PropTypes.bool,
 };
 
-Tooltip.defaultProps = {
-  hide: false
-}
-
 export default Tooltip;

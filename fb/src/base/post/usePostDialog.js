@@ -1,10 +1,10 @@
 import { useDialog, useModel } from '@futo-ui/hooks'
 import { addDoc, doc, updateDoc } from 'firebase/firestore'
 
+import { Posts } from 'core/fb/colls'
 import { errorMessage } from 'core/utils'
 import { useLocale } from 'core/utils/i18n'
 import { presence } from 'core/validators'
-import { Posts } from 'post'
 import { useAuth } from 'user'
 
 const usePostDialog = () => {

@@ -3,7 +3,7 @@ import { MoreHoriz } from '@mui/icons-material'
 
 import { sx } from './utils'
 
-Card.__docgenInfo.description = "- For more see: [`Card`](https://mui.com/api/card)\n- We use only following props:"
+Card.__docgenInfo = { description: "- For more see: [`Card`](https://mui.com/api/card)\n- We use only following props:" }
 
 const CardStory = {
   component: Card,
@@ -28,7 +28,7 @@ const PostCard = args =>
   </Card>
 
 PostCard.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'MoreHoriz') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'MoreHoriz') } }
 }
 
 PostCard.storyName = "PostCard"
@@ -44,7 +44,7 @@ StoryCard.args = {
 }
 
 StoryCard.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'MoreHoriz') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'MoreHoriz') } }
 }
 
 StoryCard.storyName = "StoryCard"

@@ -29,10 +29,10 @@ case $1 in
     vercel --yes
 
     # Clean-up
-    rm -rf pages/api pages/_app.js public/vercel.svg styles
+    rm -rf app/* public/*
 
     # pages/index.js 
-    cp $dir/src/pages/index.js pages/index.js 
-    sed -i '' "s/MyApp/$ccname/" pages/index.js
+    cp $dir/src/app/* app/
+    sed -i '' "s/MyApp/$ccname/" app/layout.js app/page.js
     ;; 
 esac

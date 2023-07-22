@@ -9,5 +9,7 @@ const centerDecorator = ({ sx = {}, ...props } = { sx: {} }) => (Story, { viewMo
 
 const focusLayoutDecorator = Story => 
   <FocusLayout maxWidth="xs"><Story /></FocusLayout>
+    
+const marginFixDecorator = Story => <div style={{ margin: -16 }}><Story /></div>
 
-export { DEFAULT_AVATAR, centerDecorator, focusLayoutDecorator };
+export { DEFAULT_AVATAR, centerDecorator, focusLayoutDecorator, marginFixDecorator };

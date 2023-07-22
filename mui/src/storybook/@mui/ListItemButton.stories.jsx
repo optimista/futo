@@ -3,7 +3,7 @@ import { HistoryEdu, HomeOutlined, PersonOutlined } from '@mui/icons-material'
 
 import { Drawer } from './List.stories'
 
-ListItemButton.__docgenInfo.description = "- For more see: [`ListItemButton`](https://mui.com/api/list-item-button)\n- We use only following props:"
+ListItemButton.__docgenInfo = { description: "- For more see: [`ListItemButton`](https://mui.com/api/list-item-button)\n- We use only following props:" }
 
 const ListItemButtonStory = {
   component: ListItemButton,

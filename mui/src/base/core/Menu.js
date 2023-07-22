@@ -9,7 +9,7 @@ const ARROW_WIDTH = 10;
  * - Adds arrow & precise positioning 
  * - Inspired by [`Menu`](http://mui.com/api/menu), but done with [`Popper`](http://mui.com/api/popper)
  */
-const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open, placement = "start", ...props }) => {
+const Menu = ({ arrow = false, anchorEl, children, onClose = () => {}, open = false, placement = "start", ...props }) => {
   const [arrowMargin, setArrowMargin] = useState(null);
 
   // To prevent any flickers (before offsetWidth is received)
@@ -68,12 +68,5 @@ Menu.propTypes = {
    */
   placement: PropTypes.oneOf(["end", "start"]),
 };
-
-Menu.defaultProps = {
-  arrow: false,
-  onClose: () => {},
-  open: false,
-  placement: "start"
-}
 
 export default Menu;

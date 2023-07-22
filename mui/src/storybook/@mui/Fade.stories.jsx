@@ -1,6 +1,6 @@
 import { Fade } from '@mui/material'
 
-Fade.__docgenInfo.description = "- For more see: [`Fade`](https://mui.com/api/fade)\n- We use only following props:"
+Fade.__docgenInfo = { description: "- For more see: [`Fade`](https://mui.com/api/fade)\n- We use only following props:" }
 
 const FadeStory = {
   component: Fade,

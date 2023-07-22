@@ -25,6 +25,7 @@ export const parameters = {
   controls: { expanded: true, sort: 'requiredFirst'},
   docs: { source: { excludeDecorators: true } },
   layout: 'centered',
+  nextjs: { appDirectory: true },
   nextRouter: { Provider: RouterContext.Provider },
-  options: { storySort: { order: ['*', '@mui'] } }
+  options: { storySort: { order: ['app', '*', '@mui'] } }
 };

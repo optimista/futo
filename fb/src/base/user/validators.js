@@ -1,7 +1,7 @@
 import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth'
 import { doc, getDoc } from "firebase/firestore"
 
-import { Usernames } from 'profile'
+import { Usernames } from 'core/fb/colls'
 
 const emailFormatAt = email => email.match(/@/);
 const emailFormatDomain = email => email.match(/@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/); 

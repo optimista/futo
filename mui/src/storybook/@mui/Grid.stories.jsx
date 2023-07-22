@@ -2,7 +2,7 @@ import { Grid } from '@mui/material'
 
 import { sx } from './utils'
 
-Grid.__docgenInfo.description = "- For more see: [`Grid`](https://mui.com/api/grid)\n- We use only following props:"
+Grid.__docgenInfo = { description: "- For more see: [`Grid`](https://mui.com/api/grid)\n- We use only following props:" }
 
 const GridStory = {
   component: Grid,

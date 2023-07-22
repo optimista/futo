@@ -2,7 +2,7 @@ import { useModel } from '@futo-ui/hooks'
 
 import { LoginDialogButton } from 'profile/ProfileMenuButton'
 
-import { transformSourceUser } from 'storybook/user/utils'
+import { transformUser } from 'storybook/user/utils'
 
 const LoginDialogButtonStory = {
   component: LoginDialogButton,
@@ -16,7 +16,7 @@ const Default = args => {
 }
 
 Default.parameters = {
-  docs: { transformSource: transformSourceUser },
+  docs: { souorce: { transform: transformUser } },
   nextRouter: {
     path: "/s/[id]/edit",
     asPath: "/s/L4sprNhGq2HX5pldzJJ1/edit",

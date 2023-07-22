@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 
 import { centerDecorator } from 'storybook/utils'
 
-DialogContent.__docgenInfo.description = "- For more see: [`DialogContent`](https://mui.com/api/dialog-content)\n- We use only following props:"
+DialogContent.__docgenInfo = { description: "- For more see: [`DialogContent`](https://mui.com/api/dialog-content)\n- We use only following props:" }
 
 const DialogContentStory = {
   component: DialogContent,

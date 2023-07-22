@@ -1,0 +1,10 @@
+diff --git a/node_modules/@storybook/core-common/templates/base-preview-head.html b/node_modules/@storybook/core-common/templates/base-preview-head.html
+index c19b0b5..d796c0e 100644
+--- a/node_modules/@storybook/core-common/templates/base-preview-head.html
++++ b/node_modules/@storybook/core-common/templates/base-preview-head.html
+@@ -1,4 +1,4 @@
+-<base target="_parent" />
++<base href="/" target="_parent" />
+ 
+ <style>
+   /* While we aren't showing the main block yet, but still preparing, we want everything the user

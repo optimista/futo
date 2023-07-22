@@ -2,7 +2,7 @@ import { Skeleton } from '@mui/material'
 
 import { radio } from './utils'
 
-Skeleton.__docgenInfo.description = "- For more see: [`Skeleton`](https://mui.com/api/skeleton)\n- We use only following props:"
+Skeleton.__docgenInfo = { description: "- For more see: [`Skeleton`](https://mui.com/api/skeleton)\n- We use only following props:" }
 
 const SkeletonStory = {
   component: Skeleton,

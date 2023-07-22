@@ -2,7 +2,7 @@ import { Container } from '@mui/material'
 
 import { radio, sx } from './utils'
 
-Container.__docgenInfo.description = "- For more see: [`Container`](https://mui.com/api/container)\n- We use only following props:"
+Container.__docgenInfo = { description: "- For more see: [`Container`](https://mui.com/api/container)\n- We use only following props:" }
 
 const ContainerStory = {
   component: Container,

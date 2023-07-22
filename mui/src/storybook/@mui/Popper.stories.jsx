@@ -2,7 +2,7 @@ import { Person } from '@mui/icons-material'
 import { Fade, IconButton, MenuItem, MenuList, Paper, Popper } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 
-Popper.__docgenInfo.description = "- For more see: [`Popper`](https://mui.com/api/popper)\n- We use only following props:"
+Popper.__docgenInfo = { description: "- For more see: [`Popper`](https://mui.com/api/popper)\n- We use only following props:" }
 
 const PopperStory = {
   component: Popper,
@@ -34,7 +34,7 @@ const PopperStory = {
       )
     },
   ],
-  parameters: { docs: { transformSource: src => src.replace('Popper', 'Popper anchorEl={anchorEl}') } },
+  parameters: { docs: { source: { transform: src => src.replace('Popper', 'Popper anchorEl={anchorEl}') } } },
 }
 
 const Default = (args, Story) =>
@@ -52,7 +52,7 @@ const Default = (args, Story) =>
     }
   </Popper>
   
-    Default.parameters = { docs: { transformSource: src => src.replace('/>', '>\n  {({ TransitionProps }) =>\n    <Fade {...TransitionProps}>\n      <Paper>\n        <MenuList>\n          <MenuItem>Item #1</MenuItem>\n          <MenuItem>Item #2</MenuItem>\n          <MenuItem>Item #3</MenuItem>\n        </MenuList>\n      </Paper>\n    </Fade>\n  }\n</Popper>') } };
+Default.parameters = { docs: { source: { transform: src => src.replace('/>', '>\n  {({ TransitionProps }) =>\n    <Fade {...TransitionProps}>\n      <Paper>\n        <MenuList>\n          <MenuItem>Item #1</MenuItem>\n          <MenuItem>Item #2</MenuItem>\n          <MenuItem>Item #3</MenuItem>\n        </MenuList>\n      </Paper>\n    </Fade>\n  }\n</Popper>') } } };
 
 const WithoutTransition = (args, Story) =>
   <Popper {...args} anchorEl={Story.anchorEl} disablePortal>

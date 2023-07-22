@@ -1,7 +1,7 @@
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 
-import { Profile } from 'pages/[username]'
-import { Profiles } from 'profile'
+import { Profiles } from 'core/fb/colls'
+import { Profile } from 'pages/[username]/ProfilePage'
 
 import { centerDecorator } from 'storybook/utils'
 
@@ -26,8 +26,7 @@ Default.loaders = [
 // Patch for loaders (see: https://github.com/storybookjs/storybook/issues/12726)
 Default.parameters = {
   docs: {
-    iframeHeight: 420,
-    inlineStories: false,
+    story: { iframeHeight: 420, inline: false },
   }
 }
 

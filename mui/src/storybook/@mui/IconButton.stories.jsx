@@ -3,7 +3,7 @@ import { Person } from '@mui/icons-material'
 
 import { radio, sx } from './utils'
 
-IconButton.__docgenInfo.description = "- For more see: [`IconButton`](https://mui.com/api/icon-button)\n- We use only following props:"
+IconButton.__docgenInfo = { description: "- For more see: [`IconButton`](https://mui.com/api/icon-button)\n- We use only following props:" }
 
 const IconButtonStory = {
   component: IconButton,
@@ -29,11 +29,11 @@ const Primary = Default.bind({});
 const Secondary = Default.bind({});
 
 Default.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 Primary.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 Secondary.args = {
@@ -41,7 +41,7 @@ Secondary.args = {
 };
 
 Secondary.parameters = {
-  docs: { transformSource: src => src.replace('[object Object]', 'Person') }
+  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
 }
 
 export { IconButtonStory as default, Default, Avatar, Primary, Secondary } 

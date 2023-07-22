@@ -2,10 +2,9 @@ import { useModel } from '@futo-ui/hooks'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { deleteField, doc, getDoc } from 'firebase/firestore'
 
-import { createBatch, getDocsWhereIn } from 'core/utils'
+import { createBatch, getDocsWhereIn } from 'core/fb'
+import { Profiles, Stories } from 'core/fb/colls'
 import { useLocale } from 'core/utils/i18n'
-import { Profiles } from 'profile'
-import { Stories } from 'story'
 import { userErrorMessage } from 'user'
 
 const useLoginModel = ({ onSuccess = () => {} } = { onSuccess: () => {} }) => {

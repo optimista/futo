@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/material'
 
-Avatar.__docgenInfo.description = "- For more see: [`Avatar`](https://mui.com/api/avatar)\n- We use only following props:"
+Avatar.__docgenInfo = { description: "- For more see: [`Avatar`](https://mui.com/api/avatar)\n- We use only following props:" }
 
 const AvatarStory = {
   component: Avatar,

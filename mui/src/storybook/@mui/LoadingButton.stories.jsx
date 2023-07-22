@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab'
 
 import { radio } from './utils'
 
-LoadingButton.__docgenInfo.description = "- For more see: [`LoadingButton`](https://mui.com/api/loading-button) ([`Button`](https://mui.com/api/button)).\n- We use only following props:"
+LoadingButton.__docgenInfo = { description: "- For more see: [`LoadingButton`](https://mui.com/api/loading-button) ([`Button`](https://mui.com/api/button)).\n- We use only following props:" }
 
 const LoadingButtonStory = {
   component: LoadingButton,

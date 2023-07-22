@@ -20,6 +20,6 @@ const Default = args => {
   )
 }
 
-Default.parameters = { docs: { transformSource: src => src.replace(/value={{[\s\S]*?}}/g, "value={model}") } }
+Default.parameters = { docs: { source: { transform: src => src.replace(/value={{[\s\S]*?}}/g, "value={model}") } } }
 
 export { FormProviderStory as default, Default } 

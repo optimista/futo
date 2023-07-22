@@ -3,7 +3,7 @@ import { DeleteOutlined, EditOutlined } from '@mui/icons-material'
 
 import { Default as ListDefault } from './List.stories'
 
-MenuList.__docgenInfo.description = "- For more see: [`MenuList`](https://mui.com/api/menu-list)\n- We use only following props:"
+MenuList.__docgenInfo = { description: "- For more see: [`MenuList`](https://mui.com/api/menu-list)\n- We use only following props:" }
 
 const MenuListStory = {
   component: MenuList,

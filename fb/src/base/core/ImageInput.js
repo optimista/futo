@@ -21,7 +21,7 @@ const ImageInput = forwardRef(({ accept = "image/*", children, component: Compon
   const handleDrop = e => { e.preventDefault(); setOver(0); load(e.dataTransfer.files[0]); } 
  
   return (
-    <Component className={over ? "Fui-over" : ""} color="secondary" component="label" ref={ref} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop} {...props}>
+    <Component className={over ? "Fui-over" : ""} component="label" ref={ref} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop} {...props}>
       {children}
       <input accept={accept} hidden name={name} onChange={handleChange} type="file" />
     </Component>

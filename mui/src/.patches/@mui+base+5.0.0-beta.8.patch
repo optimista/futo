@@ -1,0 +1,16 @@
+diff --git a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
+index c6c1f3b..eee8b23 100644
+--- a/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
++++ b/node_modules/@mui/base/ClickAwayListener/ClickAwayListener.js
+@@ -136,9 +136,9 @@ function ClickAwayListener(props) {
+     }
+     return undefined;
+   }, [handleClickAway, mouseEvent]);
+-  return /*#__PURE__*/_jsx(React.Fragment, {
++  return React.createElement(React.Fragment, { children: _jsx(React.Fragment, {
+     children: /*#__PURE__*/React.cloneElement(children, childrenProps)
+-  });
++  }) });
+ }
+ process.env.NODE_ENV !== "production" ? ClickAwayListener.propTypes /* remove-proptypes */ = {
+   // ----------------------------- Warning --------------------------------

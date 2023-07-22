@@ -12,6 +12,7 @@ const Empty = Default.bind({});
 const NotReady = Default.bind({});
 
 Default.args = {
+  alt: "Viktor Futó",
   src: DEFAULT_AVATAR 
 }
 
@@ -20,7 +21,7 @@ NotReady.args = {
 }
 
 NotReady.parameters = {
-  docs: { transformSource: src => src.replace(/Avatar/, "Avatar ready={false}")}
+  docs: { source: { transform: src => src.replace(/Avatar/, "Avatar ready={false}") } }
 }
 
 export { AvatarStory as default, Default, Empty, NotReady } 

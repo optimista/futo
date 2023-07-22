@@ -24,7 +24,7 @@ const MenuStory = {
       )
     },
   ],
-  parameters: { docs: { transformSource: src => src.replace('Menu', 'Menu anchorEl={anchorEl}') } },
+  parameters: { docs: { source: { transform: src => src.replace('Menu', 'Menu anchorEl={anchorEl}') } } }
 }
 
 // disablePortal because when switching from story to docs it creates mess (leaves a menu from story opened and floating in docs)

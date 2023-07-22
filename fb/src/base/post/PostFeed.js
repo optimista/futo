@@ -5,9 +5,10 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import PropTypes from 'prop-types'
 
 import { Feed, IconButton, Menu } from 'core'
+import { Posts } from 'core/fb/colls'
 import { GENERAL } from 'core/i18n'
 import { I, l, useLocale } from 'core/utils/i18n'
-import { PostCardLayout, PostDialog, Posts, usePostDialog } from 'post'
+import { PostCardLayout, PostDialog, usePostDialog } from 'post'
 import { POST_ACTIONS } from 'post/i18n'
 import { ProfileAvatar } from 'profile'
 import { useAuth } from 'user'
@@ -25,7 +26,7 @@ const POST_CARD = {
  * - Shows post as a [`@mui/Card`](https://mui.com/api/card) within the [`core/Feed`](/docs/core-feed--default). 
  */
 const PostCard = ({ post, onEdit }) => {
-  const auth = useAuth(), locale = useLocale(), menu = useMenu();
+  const auth = useAuth(), locale = useLocale(), menu = useMenu(), author = post?.profileDisplayName || "@" + post?.profileUsername;
 
   const handleEdit = e => { menu.close(); onEdit(e); }
   const handleRemove = () => { menu.close(); deleteDoc(doc(Posts, post.id)); }
@@ -55,13 +56,13 @@ const PostCard = ({ post, onEdit }) => {
       }
       avatar={
         post ?
-          <Link href={"/" + post?.profileUsername} underline="none"><ProfileAvatar src={post?.profilePhotoURL} /></Link>
+          <Link href={"/" + post?.profileUsername} underline="none"><ProfileAvatar alt={author} src={post?.profilePhotoURL} /></Link>
           :
-          <ProfileAvatar ready={false} />
+          <ProfileAvatar alt={author} ready={false} />
       }
       title={
         post ?
-          <><Link href={"/" + post.profileUsername}>{post.profileDisplayName || "@" + post.profileUsername}</Link>{" · "+post.time}</>
+          <><Link href={"/" + post.profileUsername}>{author}</Link>{" · "+post.time}</>
           :
           <Skeleton width={160} />
       }>

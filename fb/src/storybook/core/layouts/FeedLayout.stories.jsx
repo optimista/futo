@@ -1,5 +1,3 @@
-import { withReactContext } from 'storybook-react-context'
-
 import { FeedLayout } from 'core/layouts'
 import { AuthContext } from 'user/AuthProvider'
 
@@ -11,10 +9,11 @@ const FeedLayoutStory = {
   argTypes: { children: { control: { type: "text" } } },
   decorators: [
     heightDecorator,
-    withReactContext({
-      Context: AuthContext,
-      initialState: { isReady: true, isLoggedIn: true, profile: { displayName: "Viktor Futó", photoURL: "/mockup-avatar.jpg" } },
-    }),
+    (Story) => (
+      <AuthContext.Provider value={{ isReady: true, isLoggedIn: true, profile: { displayName: "Viktor Futó", photoURL: "/mockup-avatar.jpg" } }}>
+        <Story />
+      </AuthContext.Provider>
+    )
   ],
   parameters: { layout: "fullscreen" }
 }

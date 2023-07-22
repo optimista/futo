@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined } from '@mui/icons-material'
 import { Default as ListDefault } from './List.stories'
 import { sx } from './utils'
 
-Paper.__docgenInfo.description = "- For more see: [`Paper`](https://mui.com/api/paper)\n- We use only following props:"
+Paper.__docgenInfo = { description: "- For more see: [`Paper`](https://mui.com/api/paper)\n- We use only following props:" }
 
 const PaperStory = {
   component: Paper,
