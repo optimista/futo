@@ -5,10 +5,9 @@ import { CacheProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { useServerInsertedHTML } from 'next/navigation';
-import { usePathname, useSearchParams } from 'next/navigation'
 import NProgress from "nprogress";
 import PropTypes from 'prop-types';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 import { theme } from 'core/utils'
 import { LocaleProvider } from 'core/utils/i18n'
@@ -32,7 +31,7 @@ const createEmotionCache = () => {
 }
 
 const RootStyleRegistry = ({ children }) => {
-  const [cache] = React.useState(() => {
+  const [cache] = useState(() => {
     const c = createEmotionCache();
     c.compat = true;
     return c;
@@ -57,15 +56,32 @@ RootStyleRegistry.propTypes = {
   children: PropTypes.node,
 };
 
-NProgress.configure({ showSpinner: false });
-
 const RootLayout = ({ children }) => {
-  const pathname = usePathname(), searchParams = useSearchParams()
+  // This is a temporary fix for `beforeUnload` and NProgress because router.events do not exist in NextJS v13
+  let didRunOnceInStrictMode = false;
+  useEffect(() => {
+    if (!didRunOnceInStrictMode) {
+      didRunOnceInStrictMode = true;
+      NProgress.configure({ showSpinner: false });
 
-  React.useEffect(() => {
-    NProgress.done();
-    return () => { NProgress.start(); };
-  }, [pathname, searchParams]);
+      const handleAnchorClick = e => { if (e.currentTarget.href !== window.location.href) NProgress.start(); }
+
+      const handleMutation = () => {
+        const anchorElements = document.querySelectorAll('a[href]');
+        anchorElements.forEach(anchor => anchor.addEventListener('click', handleAnchorClick));
+      };
+
+      const mutationObserver = new MutationObserver(handleMutation);
+      mutationObserver.observe(document, { childList: true, subtree: true });
+
+      window.history.pushState = new Proxy(window.history.pushState, {
+        apply: (target, thisArg, argArray) => {
+          NProgress.done();
+          return target.apply(thisArg, argArray);
+        },
+      });
+    }
+  }, []);
 
   return (
     <html lang="en">

@@ -28,12 +28,14 @@ const Avatar = args => <IconButton {...args}><MuiAvatar /></IconButton>;
 const Primary = Default.bind({});
 const Secondary = Default.bind({});
 
+const transform = src => src.replace('[object Object]', 'User');
+
 Default.parameters = {
-  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
+  docs: { source: { transform } }
 }
 
 Primary.parameters = {
-  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
+  docs: { source: { transform } }
 }
 
 Secondary.args = {
@@ -41,7 +43,7 @@ Secondary.args = {
 };
 
 Secondary.parameters = {
-  docs: { source: { transform: src => src.replace('[object Object]', 'Person') } }
+  docs: { source: { transform } }
 }
 
 export { IconButtonStory as default, Default, Avatar, Primary, Secondary } 
